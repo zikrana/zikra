@@ -764,4 +764,39 @@
           if (desc.trim()) events[dateKey] = desc;
           else delete events[dateKey];
           database.ref(`events/${dateKey}`).set({ description: desc });
-         
+          renderCalendar();
+        }
+      };
+      grid.appendChild(cell);
+    }
+    document.getElementById('monthYear').innerHTML = `${currentYear}/${currentMonth+1}`;
+  }
+  document.getElementById('prevMonth')?.addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
+  document.getElementById('nextMonth')?.addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
+
+  let mapInitialized = false;
+  function initMap() {
+    if (mapInitialized) return;
+    const map = L.map('map').setView([27.0, 30.0], 4);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '© OSM' }).addTo(map);
+    mapInitialized = true;
+    L.marker([21.4225, 39.8262]).addTo(map).bindPopup('مكة المكرمة - مولد النبي ﷺ');
+    L.marker([31.7761, 35.2342]).addTo(map).bindPopup('القدس - المسجد الأقصى');
+    L.marker([30.0444, 31.2357]).addTo(map).bindPopup('مصر - نبي الله موسى');
+  }
+
+  document.querySelectorAll('.nav-link').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(btn.getAttribute('data-page')).classList.add('active');
+      if (btn.getAttribute('data-page') === 'stories') initMap();
+      if (btn.getAttribute('data-page') === 'days') loadEvents();
+    });
+  });
+
+  loadEvents();
+  renderCalendar();
+  console.log('✅ Platform ready!');
+</script>
+</body>
+</html>
