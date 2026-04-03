@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ذكرى - المنصة الإسلامية</title>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Leaflet CSS for Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -181,7 +184,7 @@
     }
     .more-btn:hover { background: #1e4a2a; }
     
-    /* Modal for Full Athkar - THIS IS WHAT WAS MISSING */
+    /* Modal for Full Athkar */
     .athkar-modal {
       position: fixed;
       top: 0;
@@ -250,6 +253,39 @@
       padding: 8px;
       outline: none;
       border-radius: 12px;
+    }
+    
+    /* Map Styles */
+    #map {
+      height: 500px;
+      border-radius: 28px;
+      margin: 20px 0;
+      border: 2px solid #e0d5b9;
+      z-index: 1;
+    }
+    .control-panel {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+      justify-content: center;
+    }
+    .control-panel button {
+      background: #2c5e2e;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-family: 'Tajawal';
+    }
+    .control-panel button:hover { background: #1e4a2a; }
+    .stories-detail {
+      background: white;
+      border-radius: 28px;
+      padding: 20px;
+      margin-top: 20px;
+      border: 1px solid #e8dcc8;
     }
     
     .box-grid {
@@ -321,6 +357,7 @@
       .athkar-grid { grid-template-columns: 1fr; }
       .modal-header { font-size: 1.3rem; }
       .modal-body { font-size: 1rem; padding: 15px; }
+      #map { height: 350px; }
     }
   </style>
 </head>
@@ -333,6 +370,7 @@
       <button class="nav-link" data-page="athkar">📿 الأذكار</button>
       <button class="nav-link" data-page="tafsir">📖 التفسير</button>
       <button class="nav-link" data-page="days">🌟 الأيام المباركة</button>
+      <button class="nav-link" data-page="stories">🌍 قصص الأنبياء</button>
     </div>
   </header>
 
@@ -356,7 +394,7 @@
     </div>
   </div>
 
-  <!-- Full Athkar Modal - This appears when clicking "المزيد" -->
+  <!-- Full Athkar Modal -->
   <div class="athkar-modal" id="athkarModal">
     <div class="athkar-modal-content">
       <span class="close-modal-btn" id="closeAthkarModal">&times;</span>
@@ -376,6 +414,7 @@
       <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'athkar\']').click();"><h3>📿 الأذكار اليومية</h3><p>أذكار الصباح والمساء والنوم - اضغط "المزيد" لقراءة الذكر كاملاً</p></div>
       <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'tafsir\']').click();"><h3>📖 كنوز التفسير</h3><p>تفسير ميسر لآيات وسور عظيمة</p></div>
       <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'days\']').click();"><h3>📅 الأيام المباركة</h3><p>تقويم هجري مع إضافة المناسبات</p></div>
+      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'stories\']').click();"><h3>🗺️ سير الأنبياء</h3><p>خريطة تفاعلية لقصص الأنبياء</p></div>
     </div>
   </div>
 
@@ -399,6 +438,24 @@
         <button id="nextMonth">التالي ›</button>
       </div>
       <div class="calendar-grid" id="calendarDays"></div>
+    </div>
+  </div>
+
+  <!-- Stories Page with Map -->
+  <div id="stories" class="page">
+    <div class="hero" style="padding: 25px 20px;">
+      <h2 style="font-size: 1.5rem;">🗺️ رحلة الأنبياء عليهم السلام</h2>
+      <p>استكشف خريطة مواقع قصص الأنبياء - اضغط على أي علامة لقراءة القصة</p>
+    </div>
+    <div class="control-panel">
+      <button id="addPinMode">📍 إضافة نقطة (للمشرف)</button>
+      <button id="addRouteMode">✏️ رسم مسار (للمشرف)</button>
+      <button id="cancelDraw">❌ إلغاء الرسم</button>
+    </div>
+    <div id="map"></div>
+    <div class="stories-detail">
+      <h3>📖 تفاصيل القصة</h3>
+      <div id="storyContent">🌟 اختر نقطة على الخريطة لعرض تفاصيل قصة نبي أو حدث إسلامي</div>
     </div>
   </div>
 </div>
@@ -459,7 +516,6 @@
     loginError.innerText = '';
   });
 
-  // Close modal when clicking outside
   loginModal.addEventListener('click', (e) => {
     if (e.target === loginModal) {
       loginModal.style.display = 'none';
@@ -480,7 +536,7 @@
       syncStatus.innerHTML = '🔄 جاري تسجيل الدخول...';
       syncStatus.className = 'sync-status saving';
       
-      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      await auth.signInWithEmailAndPassword(email, password);
       isAdmin = true;
       loginModal.style.display = 'none';
       adminToggle.checked = true;
@@ -491,11 +547,10 @@
       loadAllContent();
       
     } catch (error) {
-      console.error("Login error:", error);
       syncStatus.innerHTML = '❌ فشل الاتصال';
       syncStatus.className = 'sync-status error';
       if (error.code === 'auth/user-not-found') {
-        loginError.innerText = 'المستخدم غير موجود. أنشئ حساب مشرف في Firebase Authentication';
+        loginError.innerText = 'المستخدم غير موجود. أنشئ حساب مشرف في Firebase';
       } else if (error.code === 'auth/wrong-password') {
         loginError.innerText = 'كلمة المرور غير صحيحة';
       } else {
@@ -555,7 +610,6 @@
       saveIndicator.innerHTML = '💾 تم الحفظ';
       setTimeout(() => { saveIndicator.innerHTML = ''; }, 1500);
       
-      // Update the card preview
       const card = document.querySelector(`.athkar-card[data-id="${currentCardId}"]`);
       if (card) {
         const headerDiv = card.querySelector('.athkar-header');
@@ -605,11 +659,9 @@
     }
   }
 
-  // THIS IS THE KEY FUNCTION - Opens the modal when clicking "المزيد"
   async function openFullAthkar(cardId, defaultHeader, defaultBody, defaultFooter) {
     currentCardId = cardId;
     
-    // Try to load saved content from Firebase
     try {
       const snapshot = await database.ref(`athkar_full/${cardId}`).once('value');
       const savedData = snapshot.val();
@@ -632,11 +684,9 @@
     modalBody.setAttribute('contenteditable', adminMode ? 'true' : 'false');
     modalFooter.setAttribute('contenteditable', adminMode ? 'true' : 'false');
     
-    // Show the modal
     athkarModal.style.display = 'flex';
   }
 
-  // Close modal
   closeAthkarModal.addEventListener('click', () => {
     athkarModal.style.display = 'none';
     if (adminMode && currentCardId) {
@@ -645,7 +695,6 @@
     currentCardId = null;
   });
 
-  // Close modal when clicking outside
   athkarModal.addEventListener('click', (e) => {
     if (e.target === athkarModal) {
       athkarModal.style.display = 'none';
@@ -662,24 +711,24 @@
     const cards = [
       { id: 'morning', 
         header: '🌅 أذكار الصباح', 
-        body: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ.<br><br>أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.<br><br>اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذَا الْيَوْمِ وَخَيْرَ مَا فِيهِ، وَأَعُوذُ بِكَ مِنْ شَرِّ هَذَا الْيَوْمِ وَشَرِّ مَا فِيهِ.<br><br>رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ النَّارِ وَعَذَابِ الْقَبْرِ.',
+        body: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ.<br><br>أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.',
         footer: '🤲 رَطِّبْ لِسَانَكَ بِذِكْرِ اللَّهِ فِي صَبَاحِكَ',
-        preview: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ...' },
+        preview: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ...' },
       { id: 'evening', 
         header: '🌙 أذكار المساء',
-        body: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.<br><br>اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ.<br><br>اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذِهِ اللَّيْلَةِ وَأَعُوذُ بِكَ مِنْ شَرِّهَا.<br><br>أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ.',
+        body: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.<br><br>اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ.',
         footer: '🌙 احْفَظْ بِهَا نَفْسَكَ حِينَ تُمْسِي',
-        preview: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ...' },
+        preview: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ...' },
       { id: 'sleep', 
         header: '😴 أذكار النوم',
-        body: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا.<br><br>اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ.<br><br>اللَّهُمَّ بِاسْمِكَ وَضَعْتُ جَنْبِي وَبِكَ أَرْفَعُهُ، إِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا، وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ.<br><br>الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَكَفَانَا وَآوَانَا، فَكَمْ مِمَّنْ لا كَافِيَ لَهُ وَلا مُؤْوِيَ.',
+        body: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا.<br><br>اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ.<br><br>اللَّهُمَّ بِاسْمِكَ وَضَعْتُ جَنْبِي وَبِكَ أَرْفَعُهُ، إِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا، وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ.',
         footer: '💤 تَوَكَّلْ عَلَى اللَّهِ وَأَغْمِضْ جَفْنَيْكَ',
-        preview: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا. اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ...' },
+        preview: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا...' },
       { id: 'afterprayer', 
         header: '🕌 أذكار ما بعد الصلاة',
-        body: 'أَسْتَغْفِرُ اللَّهَ (ثَلاثاً)<br><br>اللَّهُمَّ أَنْتَ السَّلاَمُ وَمِنْكَ السَّلاَمُ تَبَارَكْتَ يَا ذَا الْجَلاَلِ وَالإِكْرَامِ.<br><br>لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.<br><br>اللَّهُمَّ لا مَانِعَ لِمَا أَعْطَيْتَ، وَلا مُعْطِيَ لِمَا مَنَعْتَ، وَلا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ.',
+        body: 'أَسْتَغْفِرُ اللَّهَ (ثَلاثاً)<br><br>اللَّهُمَّ أَنْتَ السَّلاَمُ وَمِنْكَ السَّلاَمُ تَبَارَكْتَ يَا ذَا الْجَلاَلِ وَالإِكْرَامِ.<br><br>لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.',
         footer: '🕋 أَتْبِعْ الصَّلَاةَ بِالذِّكْرِ',
-        preview: 'أَسْتَغْفِرُ اللَّهَ (ثَلاثاً). اللَّهُمَّ أَنْتَ السَّلاَمُ وَمِنْكَ السَّلاَمُ...' }
+        preview: 'أَسْتَغْفِرُ اللَّهَ (ثَلاثاً)...' }
     ];
     
     cards.forEach(card => {
@@ -702,9 +751,9 @@
     const items = [
       { title: '📖 تفسير سورة الفاتحة', content: 'الفاتحة هي أم الكتاب، سبع مثاني، وهي أعظم سورة في القرآن، تشتمل على الثناء على الله وطلب الهداية إلى الصراط المستقيم.' },
       { title: '✨ تفسير آية الكرسي', content: 'آية الكرسي هي أعظم آية في القرآن، تتضمن توحيد الله، حياته، قيوميته، وسع كرسيه السماوات والأرض.' },
-      { title: '🤍 تفسير سورة الإخلاص', content: 'سورة الإخلاص تعدل ثلث القرآن، وهي خلاصة التوحيد: قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ، لَمْ يَلِدْ وَلَمْ يُولَدْ، وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ.' },
-      { title: '🌟 تفسير سورة الفلق', content: 'سورة الفلق: الاستعاذة بالله من شر المخلوقات، ومن شر الليل المظلم، ومن شر السحرة والحاسدين.' },
-      { title: '🌙 تفسير سورة الناس', content: 'سورة الناس: الاستعاذة برب الناس وملك الناس وإله الناس، من شر الوسواس الخناس.' }
+      { title: '🤍 تفسير سورة الإخلاص', content: 'سورة الإخلاص تعدل ثلث القرآن، وهي خلاصة التوحيد.' },
+      { title: '🌟 تفسير سورة الفلق', content: 'سورة الفلق: الاستعاذة بالله من شر المخلوقات.' },
+      { title: '🌙 تفسير سورة الناس', content: 'سورة الناس: الاستعاذة برب الناس من شر الوسواس الخناس.' }
     ];
     items.forEach((item) => {
       const box = document.createElement('div'); box.className = 'content-box';
@@ -727,12 +776,6 @@
     } catch (error) { console.log(error); }
   }
 
-  async function saveEvent(dateKey, description) {
-    if (isAdmin) await database.ref(`events/${dateKey}`).set({ description });
-    events[dateKey] = { description };
-    renderCalendar();
-  }
-
   function renderCalendar() {
     const firstDay = new Date(currentYear, currentMonth, 1);
     const startDay = firstDay.getDay();
@@ -740,53 +783,4 @@
     const grid = document.getElementById('calendarDays');
     if (!grid) return;
     grid.innerHTML = '';
-    const weekdays = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
-    weekdays.forEach(day => { const d = document.createElement('div'); d.className = 'weekday'; d.innerText = day; grid.appendChild(d); });
-    for (let i = 0; i < startDay; i++) { const empty = document.createElement('div'); empty.className = 'day-cell'; grid.appendChild(empty); }
-    for (let d = 1; d <= daysInMonth; d++) {
-      const cell = document.createElement('div'); cell.className = 'day-cell'; cell.innerText = d;
-      const dateKey = `${currentYear}-${currentMonth+1}-${d}`;
-      if (events[dateKey]) cell.classList.add('has-event');
-      cell.addEventListener('click', () => {
-        const desc = prompt('📝 أضف وصفاً لهذا اليوم:', events[dateKey] || '');
-        if (desc !== null) {
-          if (desc.trim() === '') delete events[dateKey];
-          else events[dateKey] = desc;
-          if (isAdmin) database.ref(`events/${dateKey}`).set({ description: desc });
-          renderCalendar();
-        }
-      });
-      grid.appendChild(cell);
-    }
-    document.getElementById('monthYear').innerHTML = `${currentYear}/${currentMonth+1}`;
-  }
-
-  document.getElementById('prevMonth')?.addEventListener('click', () => {
-    currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-    renderCalendar();
-  });
-  document.getElementById('nextMonth')?.addEventListener('click', () => {
-    currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; }
-    renderCalendar();
-  });
-
-  // Navigation
-  document.querySelectorAll('.nav-link').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(btn.getAttribute('data-page')).classList.add('active');
-      if (btn.getAttribute('data-page') === 'days') loadEvents();
-    });
-  });
-
-  // Initialize everything
-  initAthkar();
-  initTafsir();
-  setupAutoSave();
-  loadEvents();
-  renderCalendar();
-  
-  console.log('✅ Platform ready! Click "المزيد" on any card to see full content');
-</script>
-</body>
-</html>
+    const weekdays = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة
