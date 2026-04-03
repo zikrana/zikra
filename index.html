@@ -3,13 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- IMPORTANT: This meta tag allows Firebase to work on Neocities -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https: wss: data: blob: https://zikra-e5c2a-default-rtdb.firebaseio.com wss://*.firebaseio.com https://identitytoolkit.googleapis.com https://www.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; img-src 'self' https: data: blob:; frame-src 'self' https:;">
   <title>ذكرى - المنصة الإسلامية</title>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -51,7 +48,10 @@
       border: none;
       margin: 0 4px;
       font-family: 'Tajawal';
+      transition: 0.2s;
     }
+    .nav-link:hover { background: #ffe2a4; transform: translateY(-2px); }
+    
     .admin-toggle {
       margin: 15px 0 25px;
       display: flex;
@@ -107,6 +107,7 @@
       border: 2px solid #e0d5b9;
       border-radius: 60px;
       font-family: 'Tajawal';
+      font-size: 1rem;
     }
     .login-box button {
       background: #2c5e2e;
@@ -116,27 +117,141 @@
       border-radius: 60px;
       cursor: pointer;
       width: 100%;
-      margin-top: 15px;
+      font-size: 1rem;
     }
-    .error-msg { color: #f44336; margin-top: 10px; font-size: 0.85rem; }
+    .error-msg { color: #f44336; margin-top: 10px; }
     .close-modal {
       float: left;
       font-size: 28px;
       cursor: pointer;
       color: #aaa;
     }
+    .close-modal:hover { color: #333; }
     
-    .editable-title, .editable-content {
-      transition: 0.2s;
-      border-radius: 12px;
+    /* Athkar Cards */
+    .athkar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
     }
-    .editable-title[contenteditable="true"], 
-    .editable-content[contenteditable="true"] {
+    .athkar-card {
+      background: white;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      border: 1px solid #e8dcc8;
+      transition: transform 0.3s;
+    }
+    .athkar-card:hover { transform: translateY(-5px); }
+    .athkar-header {
+      background: linear-gradient(135deg, #2c5e2e, #1e4a2a);
+      color: #fef3d6;
+      padding: 18px 20px;
+      text-align: center;
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+    .athkar-preview {
+      padding: 20px;
+      min-height: 130px;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #2c3e2f;
+      background: #fffef8;
+    }
+    .athkar-preview p {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      margin: 0;
+    }
+    .more-btn {
+      background: #2c5e2e;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      margin: 15px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-family: 'Tajawal';
+      font-size: 0.95rem;
+      width: calc(100% - 30px);
+    }
+    .more-btn:hover { background: #1e4a2a; }
+    
+    /* Modal for Full Athkar - THIS IS WHAT WAS MISSING */
+    .athkar-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.95);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .athkar-modal-content {
+      background: white;
+      border-radius: 48px;
+      width: 90%;
+      max-width: 750px;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 35px;
+      position: relative;
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .close-modal-btn {
+      position: absolute;
+      top: 20px;
+      left: 25px;
+      font-size: 32px;
+      cursor: pointer;
+      color: #999;
+      transition: 0.2s;
+    }
+    .close-modal-btn:hover { color: #333; }
+    .modal-header {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #1e5629;
+      text-align: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid #2c5e2e;
+    }
+    .modal-body {
+      font-size: 1.2rem;
+      line-height: 1.9;
+      margin: 25px 0;
+      padding: 25px;
+      background: #fef9e6;
+      border-radius: 28px;
+    }
+    .modal-footer {
+      font-size: 1rem;
+      color: #8b6b3d;
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 2px solid #e0d5b9;
+    }
+    [contenteditable="true"] {
       background: #fff5e6;
       border: 1px dashed #2c5e2e;
-      padding: 6px 10px;
+      padding: 8px;
       outline: none;
+      border-radius: 12px;
     }
+    
     .box-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
@@ -148,11 +263,15 @@
       padding: 18px 20px;
       background: white;
       border: 1px solid #e8dcc8;
+      cursor: pointer;
+      transition: 0.2s;
     }
+    .content-box:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
     .content-box h3 {
       color: #1e5629;
       border-right: 5px solid #2c9e3a;
       padding-right: 14px;
+      margin-bottom: 10px;
     }
     .page { display: none; }
     .page.active { display: block; }
@@ -196,19 +315,12 @@
       border: 1px solid #e9dfcc;
     }
     .day-cell.has-event { background: #2c5e2ecc; color: white; }
-    #map { height: 520px; border-radius: 32px; margin: 20px 0; }
-    .control-panel button {
-      background: #2c5e2e;
-      color: white;
-      border: none;
-      padding: 8px 24px;
-      border-radius: 40px;
-      cursor: pointer;
-    }
     button { background: #2c5e2e; color: white; border: none; border-radius: 40px; padding: 8px 18px; cursor: pointer; }
     @media (max-width: 700px) {
       header { flex-direction: column; gap: 14px; }
-      .day-cell { padding: 6px; font-size: 0.8rem; }
+      .athkar-grid { grid-template-columns: 1fr; }
+      .modal-header { font-size: 1.3rem; }
+      .modal-body { font-size: 1rem; padding: 15px; }
     }
   </style>
 </head>
@@ -221,7 +333,6 @@
       <button class="nav-link" data-page="athkar">📿 الأذكار</button>
       <button class="nav-link" data-page="tafsir">📖 التفسير</button>
       <button class="nav-link" data-page="days">🌟 الأيام المباركة</button>
-      <button class="nav-link" data-page="stories">🌍 قصص الأنبياء</button>
     </div>
   </header>
 
@@ -232,6 +343,7 @@
     <div class="sync-status" id="syncStatus">✅ متصل</div>
   </div>
 
+  <!-- Login Modal -->
   <div class="login-modal" id="loginModal">
     <div class="login-box">
       <span class="close-modal" id="closeModal">&times;</span>
@@ -244,21 +356,40 @@
     </div>
   </div>
 
-  <div id="home" class="page active">
-    <div class="hero">
-      <h2>﴿ وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ ﴾</h2>
-      <p style="font-size:1.2rem;">منصة روحانية متزامنة - التعديلات تظهر لجميع المستخدمين ✨</p>
-    </div>
-    <div class="box-grid">
-      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'athkar\']').click();"><h3>📿 أذكار اليوم والليل</h3><p>أذكار الصباح، المساء، النوم</p></div>
-      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'tafsir\']').click();"><h3>📖 كنوز التفسير</h3><p>تفسير ميسر لآيات وسور عظيمة</p></div>
-      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'days\']').click();"><h3>📅 الأيام المباركة</h3><p>تقويم هجري مع إضافة المناسبات</p></div>
-      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'stories\']').click();"><h3>🗺️ سير الأنبياء</h3><p>خريطة تفاعلية لقصص الأنبياء</p></div>
+  <!-- Full Athkar Modal - This appears when clicking "المزيد" -->
+  <div class="athkar-modal" id="athkarModal">
+    <div class="athkar-modal-content">
+      <span class="close-modal-btn" id="closeAthkarModal">&times;</span>
+      <div class="modal-header" id="modalHeader"></div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer" id="modalFooter"></div>
+      <div style="text-align: center; font-size: 0.8rem; color: #2c5e2e; margin-top: 10px;" id="saveIndicator"></div>
     </div>
   </div>
 
-  <div id="athkar" class="page"><div class="box-grid" id="athkarBoxes"></div></div>
-  <div id="tafsir" class="page"><div class="box-grid" id="tafsirBoxes"></div></div>
+  <div id="home" class="page active">
+    <div class="hero">
+      <h2>﴿ وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ ﴾</h2>
+      <p style="font-size:1.2rem;">منصة روحانية متزامنة - اضغط "المزيد" لقراءة الذكر كاملاً</p>
+    </div>
+    <div class="box-grid">
+      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'athkar\']').click();"><h3>📿 الأذكار اليومية</h3><p>أذكار الصباح والمساء والنوم - اضغط "المزيد" لقراءة الذكر كاملاً</p></div>
+      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'tafsir\']').click();"><h3>📖 كنوز التفسير</h3><p>تفسير ميسر لآيات وسور عظيمة</p></div>
+      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'days\']').click();"><h3>📅 الأيام المباركة</h3><p>تقويم هجري مع إضافة المناسبات</p></div>
+    </div>
+  </div>
+
+  <div id="athkar" class="page">
+    <div class="hero" style="padding: 25px 20px;">
+      <h2 style="font-size: 1.5rem;">📿 حصن المسلم اليومي</h2>
+      <p>أذكار الصباح والمساء والنوم - اضغط "المزيد" لقراءة الذكر كاملاً</p>
+    </div>
+    <div class="athkar-grid" id="athkarBoxes"></div>
+  </div>
+  
+  <div id="tafsir" class="page">
+    <div class="box-grid" id="tafsirBoxes"></div>
+  </div>
   
   <div id="days" class="page">
     <div class="calendar-container">
@@ -269,29 +400,11 @@
       </div>
       <div class="calendar-grid" id="calendarDays"></div>
     </div>
-    <div class="event-panel" id="eventPanel" style="display: none;">
-      <h3>📌 تفاصيل اليوم</h3>
-      <div id="selectedDate"></div>
-      <textarea id="eventDesc" rows="3"></textarea>
-      <button id="saveEvent">💾 حفظ</button>
-    </div>
-  </div>
-
-  <div id="stories" class="page">
-    <div class="control-panel">
-      <button id="addPinMode">📍 إضافة نقطة</button>
-      <button id="addRouteMode">✏️ رسم مسار</button>
-      <button id="cancelDraw">❌ إلغاء</button>
-    </div>
-    <div id="map"></div>
-    <div class="stories-detail">
-      <h3>📖 تفاصيل القصة</h3>
-      <div id="storyContent">🌟 اختر نقطة على الخريطة</div>
-    </div>
   </div>
 </div>
 
 <script>
+  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyAZbj5qwH-SxYoq2nP4jwoGgzj1GhoAQmw",
     authDomain: "zikra-e5c2a.firebaseapp.com",
@@ -308,7 +421,10 @@
 
   let isAdmin = false;
   let adminMode = false;
+  let currentCardId = null;
+  let saveTimeout = null;
 
+  // DOM Elements
   const adminToggle = document.getElementById('adminToggle');
   const loginModal = document.getElementById('loginModal');
   const closeModal = document.getElementById('closeModal');
@@ -317,8 +433,14 @@
   const loginPassword = document.getElementById('loginPassword');
   const loginError = document.getElementById('loginError');
   const syncStatus = document.getElementById('syncStatus');
+  const athkarModal = document.getElementById('athkarModal');
+  const closeAthkarModal = document.getElementById('closeAthkarModal');
+  const modalHeader = document.getElementById('modalHeader');
+  const modalBody = document.getElementById('modalBody');
+  const modalFooter = document.getElementById('modalFooter');
+  const saveIndicator = document.getElementById('saveIndicator');
 
-  // Show login ONLY when admin toggle clicked
+  // Admin toggle - show login modal
   adminToggle.addEventListener('change', (e) => {
     if (!isAdmin) {
       if (e.target.checked) {
@@ -337,6 +459,14 @@
     loginError.innerText = '';
   });
 
+  // Close modal when clicking outside
+  loginModal.addEventListener('click', (e) => {
+    if (e.target === loginModal) {
+      loginModal.style.display = 'none';
+    }
+  });
+
+  // Login function
   loginBtn.addEventListener('click', async () => {
     const email = loginEmail.value.trim();
     const password = loginPassword.value;
@@ -364,13 +494,10 @@
       console.error("Login error:", error);
       syncStatus.innerHTML = '❌ فشل الاتصال';
       syncStatus.className = 'sync-status error';
-      
       if (error.code === 'auth/user-not-found') {
-        loginError.innerText = 'المستخدم غير موجود. تأكد من إنشاء حساب المشرف في Firebase Authentication';
+        loginError.innerText = 'المستخدم غير موجود. أنشئ حساب مشرف في Firebase Authentication';
       } else if (error.code === 'auth/wrong-password') {
         loginError.innerText = 'كلمة المرور غير صحيحة';
-      } else if (error.code === 'auth/network-request-failed') {
-        loginError.innerText = 'خطأ في الشبكة. تأكد من إضافة zikra.neocities.org إلى Authorized Domains';
       } else {
         loginError.innerText = 'خطأ: ' + error.message;
       }
@@ -394,105 +521,210 @@
 
   function enableAdminMode(enabled) {
     adminMode = enabled && isAdmin;
-    document.querySelectorAll('.editable-title, .editable-content').forEach(el => {
-      if (adminMode) {
-        el.setAttribute('contenteditable', 'true');
-        el.style.cursor = 'text';
-      } else {
-        el.setAttribute('contenteditable', 'false');
-        el.style.cursor = 'default';
-      }
-    });
+    if (athkarModal.style.display === 'flex') {
+      modalHeader.setAttribute('contenteditable', adminMode ? 'true' : 'false');
+      modalBody.setAttribute('contenteditable', adminMode ? 'true' : 'false');
+      modalFooter.setAttribute('contenteditable', adminMode ? 'true' : 'false');
+    }
   }
 
   async function saveToFirebase(path, data) {
-    if (!isAdmin) return;
+    if (!isAdmin) return false;
     try {
       await database.ref(path).set(data);
-      syncStatus.innerHTML = '💾 تم الحفظ';
-      syncStatus.className = 'sync-status saving';
-      setTimeout(() => {
-        syncStatus.innerHTML = '✅ مشرف متصل';
-        syncStatus.className = 'sync-status';
-      }, 1500);
+      return true;
     } catch (error) {
-      console.error(error);
+      console.error("Save error:", error);
+      return false;
+    }
+  }
+
+  async function saveCurrentCard() {
+    if (!adminMode || !currentCardId) return;
+    
+    const cardData = {
+      header: modalHeader.innerHTML,
+      body: modalBody.innerHTML,
+      footer: modalFooter.innerHTML,
+      updatedAt: Date.now()
+    };
+    
+    const saved = await saveToFirebase(`athkar_full/${currentCardId}`, cardData);
+    
+    if (saved) {
+      saveIndicator.innerHTML = '💾 تم الحفظ';
+      setTimeout(() => { saveIndicator.innerHTML = ''; }, 1500);
+      
+      // Update the card preview
+      const card = document.querySelector(`.athkar-card[data-id="${currentCardId}"]`);
+      if (card) {
+        const headerDiv = card.querySelector('.athkar-header');
+        const previewDiv = card.querySelector('.athkar-preview p');
+        if (headerDiv) headerDiv.innerHTML = modalHeader.innerHTML;
+        if (previewDiv) {
+          let shortText = modalBody.innerText.substring(0, 120);
+          if (modalBody.innerText.length > 120) shortText += '...';
+          previewDiv.innerHTML = shortText;
+        }
+      }
     }
   }
 
   function setupAutoSave() {
-    document.addEventListener('blur', async (e) => {
-      if (!adminMode) return;
-      const target = e.target;
-      if (target.classList && (target.classList.contains('editable-title') || target.classList.contains('editable-content'))) {
-        const pageId = target.closest('.page')?.id;
-        const dataId = target.getAttribute('data-id');
-        const type = target.classList.contains('editable-title') ? 'title' : 'content';
-        if (pageId && dataId) {
-          await saveToFirebase(`content/${pageId}/${type}/${dataId}`, { content: target.innerHTML });
-        }
-      }
-    }, true);
+    const debouncedSave = () => {
+      if (saveTimeout) clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(saveCurrentCard, 1000);
+    };
+    
+    modalHeader.addEventListener('blur', debouncedSave);
+    modalBody.addEventListener('blur', debouncedSave);
+    modalFooter.addEventListener('blur', debouncedSave);
   }
 
   async function loadAllContent() {
     try {
-      const snapshot = await database.ref('content').once('value');
+      const snapshot = await database.ref('athkar_full').once('value');
       const data = snapshot.val();
       if (data) {
-        for (let pageId in data) {
-          for (let type in data[pageId]) {
-            for (let dataId in data[pageId][type]) {
-              const element = document.querySelector(`#${pageId} .editable-${type}[data-id="${dataId}"]`);
-              if (element && data[pageId][type][dataId]?.content) {
-                element.innerHTML = data[pageId][type][dataId].content;
-              }
+        for (let id in data) {
+          const card = document.querySelector(`.athkar-card[data-id="${id}"]`);
+          if (card && data[id]) {
+            const headerDiv = card.querySelector('.athkar-header');
+            const previewDiv = card.querySelector('.athkar-preview p');
+            if (headerDiv && data[id].header) headerDiv.innerHTML = data[id].header;
+            if (previewDiv && data[id].body) {
+              let shortText = data[id].body.substring(0, 120);
+              if (data[id].body.length > 120) shortText += '...';
+              previewDiv.innerHTML = shortText;
             }
           }
         }
       }
-    } catch (error) { console.log(error); }
+    } catch (error) { 
+      console.log("Load error:", error); 
+    }
   }
 
-  function initContent() {
-    const athkarContainer = document.getElementById('athkarBoxes');
-    const athkarData = [
-      { title: '🌅 أذكار الصباح', content: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ.<br><br>أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له.' },
-      { title: '🌙 أذكار المساء', content: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لله، وَالْحَمْدُ لله، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.' },
-      { title: '😴 أذكار النوم', content: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا.<br><br>اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ.' },
-      { title: '🕌 أذكار ما بعد الصلاة', content: 'أَسْتَغْفِرُ اللَّهَ (ثلاثاً)، اللَّهُمَّ أَنْتَ السَّلاَمُ وَمِنْكَ السَّلاَمُ تَبَارَكْتَ يَا ذَا الْجَلاَلِ وَالإِكْرَامِ.' },
-      { title: '💚 أذكار متنوعة', content: 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ.' }
-    ];
-    athkarData.forEach((item, i) => {
-      const box = document.createElement('div'); box.className = 'content-box';
-      box.innerHTML = `<h3 class="editable-title" data-id="athkar_title_${i}">${item.title}</h3><div class="box-content editable-content" data-id="athkar_content_${i}">${item.content}</div>`;
-      athkarContainer.appendChild(box);
-    });
+  // THIS IS THE KEY FUNCTION - Opens the modal when clicking "المزيد"
+  async function openFullAthkar(cardId, defaultHeader, defaultBody, defaultFooter) {
+    currentCardId = cardId;
     
-    const tafsirContainer = document.getElementById('tafsirBoxes');
-    const tafsirItems = [
-      { title: '📖 تفسير الفاتحة', content: 'الفاتحة أم الكتاب، سبع مثاني.' },
-      { title: '✨ آية الكرسي', content: 'أعظم آية في القرآن.' },
-      { title: '🤍 سورة الإخلاص', content: 'تعدل ثلث القرآن.' },
-      { title: '🌟 سورة الفلق', content: 'الاستعاذة من شر ما خلق.' },
-      { title: '🌙 سورة الناس', content: 'الاستعاذة من الوسواس.' }
+    // Try to load saved content from Firebase
+    try {
+      const snapshot = await database.ref(`athkar_full/${cardId}`).once('value');
+      const savedData = snapshot.val();
+      if (savedData) {
+        modalHeader.innerHTML = savedData.header || defaultHeader;
+        modalBody.innerHTML = savedData.body || defaultBody;
+        modalFooter.innerHTML = savedData.footer || defaultFooter;
+      } else {
+        modalHeader.innerHTML = defaultHeader;
+        modalBody.innerHTML = defaultBody;
+        modalFooter.innerHTML = defaultFooter;
+      }
+    } catch (error) {
+      modalHeader.innerHTML = defaultHeader;
+      modalBody.innerHTML = defaultBody;
+      modalFooter.innerHTML = defaultFooter;
+    }
+    
+    modalHeader.setAttribute('contenteditable', adminMode ? 'true' : 'false');
+    modalBody.setAttribute('contenteditable', adminMode ? 'true' : 'false');
+    modalFooter.setAttribute('contenteditable', adminMode ? 'true' : 'false');
+    
+    // Show the modal
+    athkarModal.style.display = 'flex';
+  }
+
+  // Close modal
+  closeAthkarModal.addEventListener('click', () => {
+    athkarModal.style.display = 'none';
+    if (adminMode && currentCardId) {
+      saveCurrentCard();
+    }
+    currentCardId = null;
+  });
+
+  // Close modal when clicking outside
+  athkarModal.addEventListener('click', (e) => {
+    if (e.target === athkarModal) {
+      athkarModal.style.display = 'none';
+      if (adminMode && currentCardId) {
+        saveCurrentCard();
+      }
+      currentCardId = null;
+    }
+  });
+
+  // Initialize Athkar Cards
+  function initAthkar() {
+    const container = document.getElementById('athkarBoxes');
+    const cards = [
+      { id: 'morning', 
+        header: '🌅 أذكار الصباح', 
+        body: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ.<br><br>أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.<br><br>اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذَا الْيَوْمِ وَخَيْرَ مَا فِيهِ، وَأَعُوذُ بِكَ مِنْ شَرِّ هَذَا الْيَوْمِ وَشَرِّ مَا فِيهِ.<br><br>رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ النَّارِ وَعَذَابِ الْقَبْرِ.',
+        footer: '🤲 رَطِّبْ لِسَانَكَ بِذِكْرِ اللَّهِ فِي صَبَاحِكَ',
+        preview: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ...' },
+      { id: 'evening', 
+        header: '🌙 أذكار المساء',
+        body: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.<br><br>اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ.<br><br>اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ هَذِهِ اللَّيْلَةِ وَأَعُوذُ بِكَ مِنْ شَرِّهَا.<br><br>أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ.',
+        footer: '🌙 احْفَظْ بِهَا نَفْسَكَ حِينَ تُمْسِي',
+        preview: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ...' },
+      { id: 'sleep', 
+        header: '😴 أذكار النوم',
+        body: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا.<br><br>اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ.<br><br>اللَّهُمَّ بِاسْمِكَ وَضَعْتُ جَنْبِي وَبِكَ أَرْفَعُهُ، إِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا، وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تَحْفَظُ بِهِ عِبَادَكَ الصَّالِحِينَ.<br><br>الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَكَفَانَا وَآوَانَا، فَكَمْ مِمَّنْ لا كَافِيَ لَهُ وَلا مُؤْوِيَ.',
+        footer: '💤 تَوَكَّلْ عَلَى اللَّهِ وَأَغْمِضْ جَفْنَيْكَ',
+        preview: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا. اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ...' },
+      { id: 'afterprayer', 
+        header: '🕌 أذكار ما بعد الصلاة',
+        body: 'أَسْتَغْفِرُ اللَّهَ (ثَلاثاً)<br><br>اللَّهُمَّ أَنْتَ السَّلاَمُ وَمِنْكَ السَّلاَمُ تَبَارَكْتَ يَا ذَا الْجَلاَلِ وَالإِكْرَامِ.<br><br>لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.<br><br>اللَّهُمَّ لا مَانِعَ لِمَا أَعْطَيْتَ، وَلا مُعْطِيَ لِمَا مَنَعْتَ، وَلا يَنْفَعُ ذَا الْجَدِّ مِنْكَ الْجَدُّ.',
+        footer: '🕋 أَتْبِعْ الصَّلَاةَ بِالذِّكْرِ',
+        preview: 'أَسْتَغْفِرُ اللَّهَ (ثَلاثاً). اللَّهُمَّ أَنْتَ السَّلاَمُ وَمِنْكَ السَّلاَمُ...' }
     ];
-    tafsirItems.forEach((item, i) => {
-      const box = document.createElement('div'); box.className = 'content-box';
-      box.innerHTML = `<h3 class="editable-title" data-id="tafsir_title_${i}">${item.title}</h3><div class="box-content editable-content" data-id="tafsir_content_${i}">${item.content}</div>`;
-      tafsirContainer.appendChild(box);
+    
+    cards.forEach(card => {
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'athkar-card';
+      cardDiv.setAttribute('data-id', card.id);
+      cardDiv.innerHTML = `
+        <div class="athkar-header">${card.header}</div>
+        <div class="athkar-preview"><p>${card.preview}</p></div>
+        <button class="more-btn" data-id="${card.id}">📖 المزيد</button>
+      `;
+      const btn = cardDiv.querySelector('.more-btn');
+      btn.addEventListener('click', () => openFullAthkar(card.id, card.header, card.body, card.footer));
+      container.appendChild(cardDiv);
     });
   }
 
+  function initTafsir() {
+    const container = document.getElementById('tafsirBoxes');
+    const items = [
+      { title: '📖 تفسير سورة الفاتحة', content: 'الفاتحة هي أم الكتاب، سبع مثاني، وهي أعظم سورة في القرآن، تشتمل على الثناء على الله وطلب الهداية إلى الصراط المستقيم.' },
+      { title: '✨ تفسير آية الكرسي', content: 'آية الكرسي هي أعظم آية في القرآن، تتضمن توحيد الله، حياته، قيوميته، وسع كرسيه السماوات والأرض.' },
+      { title: '🤍 تفسير سورة الإخلاص', content: 'سورة الإخلاص تعدل ثلث القرآن، وهي خلاصة التوحيد: قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ، لَمْ يَلِدْ وَلَمْ يُولَدْ، وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ.' },
+      { title: '🌟 تفسير سورة الفلق', content: 'سورة الفلق: الاستعاذة بالله من شر المخلوقات، ومن شر الليل المظلم، ومن شر السحرة والحاسدين.' },
+      { title: '🌙 تفسير سورة الناس', content: 'سورة الناس: الاستعاذة برب الناس وملك الناس وإله الناس، من شر الوسواس الخناس.' }
+    ];
+    items.forEach((item) => {
+      const box = document.createElement('div'); box.className = 'content-box';
+      box.innerHTML = `<h3>${item.title}</h3><p>${item.content}</p>`;
+      container.appendChild(box);
+    });
+  }
+
+  // Calendar functions
   let currentDate = new Date();
   let currentYear = currentDate.getFullYear();
   let currentMonth = currentDate.getMonth();
   let events = {};
 
   async function loadEvents() {
-    const snapshot = await database.ref('events').once('value');
-    events = snapshot.val() || {};
-    renderCalendar();
+    try {
+      const snapshot = await database.ref('events').once('value');
+      events = snapshot.val() || {};
+      renderCalendar();
+    } catch (error) { console.log(error); }
   }
 
   async function saveEvent(dateKey, description) {
@@ -516,15 +748,13 @@
       const dateKey = `${currentYear}-${currentMonth+1}-${d}`;
       if (events[dateKey]) cell.classList.add('has-event');
       cell.addEventListener('click', () => {
-        const panel = document.getElementById('eventPanel');
-        panel.style.display = 'block';
-        document.getElementById('selectedDate').innerHTML = `${d}/${currentMonth+1}/${currentYear}`;
-        document.getElementById('eventDesc').value = events[dateKey]?.description || '';
-        document.getElementById('saveEvent').onclick = async () => {
-          await saveEvent(dateKey, document.getElementById('eventDesc').value);
-          alert('تم الحفظ');
-          panel.style.display = 'none';
-        };
+        const desc = prompt('📝 أضف وصفاً لهذا اليوم:', events[dateKey] || '');
+        if (desc !== null) {
+          if (desc.trim() === '') delete events[dateKey];
+          else events[dateKey] = desc;
+          if (isAdmin) database.ref(`events/${dateKey}`).set({ description: desc });
+          renderCalendar();
+        }
       });
       grid.appendChild(cell);
     }
@@ -540,34 +770,23 @@
     renderCalendar();
   });
 
-  let mapInitialized = false;
-  function initMap() {
-    if (mapInitialized) return;
-    const map = L.map('map').setView([27.0, 30.0], 4);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-      attribution: '© OpenStreetMap',
-      subdomains: 'abcd',
-      maxZoom: 19
-    }).addTo(map);
-    mapInitialized = true;
-  }
-
+  // Navigation
   document.querySelectorAll('.nav-link').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(btn.getAttribute('data-page')).classList.add('active');
-      if (btn.getAttribute('data-page') === 'stories') initMap();
       if (btn.getAttribute('data-page') === 'days') loadEvents();
     });
   });
 
-  initContent();
+  // Initialize everything
+  initAthkar();
+  initTafsir();
   setupAutoSave();
-  loadAllContent();
   loadEvents();
   renderCalendar();
   
-  console.log('✅ Platform ready! Visit https://zikra.neocities.org');
+  console.log('✅ Platform ready! Click "المزيد" on any card to see full content');
 </script>
 </body>
 </html>
