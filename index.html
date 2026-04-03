@@ -128,6 +128,7 @@
     }
     .close-modal:hover { color: #333; }
     
+    /* Cards Grid */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -323,10 +324,50 @@
       margin-top: 10px;
     }
     
-    #map { height: 500px; border-radius: 28px; margin: 20px 0; border: 2px solid #e0d5b9; }
+    /* Map Styles */
+    #map { height: 550px; border-radius: 28px; margin: 20px 0; border: 2px solid #e0d5b9; }
     .control-panel { display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0; justify-content: center; }
-    .control-panel button { background: #2c5e2e; color: white; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; }
-    .stories-detail { background: white; border-radius: 28px; padding: 20px; margin-top: 20px; border: 1px solid #e8dcc8; }
+    .control-panel button {
+      background: #2c5e2e;
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-family: 'Tajawal';
+      transition: 0.2s;
+    }
+    .control-panel button:hover { background: #1e4a2a; transform: scale(0.98); }
+    .control-panel button.active { background: #ff9800; box-shadow: 0 0 10px rgba(255,152,0,0.5); }
+    .drawing-instruction {
+      background: #fef3d6;
+      padding: 10px;
+      border-radius: 28px;
+      text-align: center;
+      margin: 10px 0;
+      display: none;
+      color: #1e5629;
+      font-weight: bold;
+    }
+    .stories-detail {
+      background: white;
+      border-radius: 28px;
+      padding: 20px;
+      margin-top: 20px;
+      border: 1px solid #e8dcc8;
+    }
+    .stories-detail h3 { color: #1e5629; margin-bottom: 10px; }
+    .edit-point-btn, .delete-point-btn {
+      background: #2c5e2e;
+      color: white;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      margin: 5px;
+      font-size: 0.8rem;
+    }
+    .delete-point-btn { background: #f44336; }
     
     .box-grid {
       display: grid;
@@ -389,13 +430,39 @@
       border-radius: 28px;
       cursor: pointer;
       border: 1px solid #e9dfcc;
+      transition: 0.2s;
+      position: relative;
     }
+    .day-cell:hover { background: #e8dcc8; }
     .day-cell.has-event { background: #2c5e2ecc; color: white; }
+    .day-event-preview {
+      font-size: 0.7rem;
+      margin-top: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .delete-event-btn {
+      position: absolute;
+      top: 2px;
+      left: 5px;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 12px;
+      cursor: pointer;
+      display: none;
+    }
+    .day-cell:hover .delete-event-btn { display: block; }
+    .day-cell.has-event .delete-event-btn { display: block; }
     button { background: #2c5e2e; color: white; border: none; border-radius: 40px; padding: 8px 18px; cursor: pointer; }
     @media (max-width: 700px) {
       header { flex-direction: column; gap: 14px; }
       .cards-grid { grid-template-columns: 1fr; }
-      #map { height: 350px; }
+      #map { height: 400px; }
     }
   </style>
 </head>
@@ -477,7 +544,7 @@
     <div class="calendar-container">
       <div class="calendar-header">
         <button id="prevMonth">‹ السابق</button>
-        <span id="monthYear"></span>
+        <span id="monthYear" style="font-size:1.5rem; font-weight:bold;"></span>
         <button id="nextMonth">التالي ›</button>
       </div>
       <div class="calendar-grid" id="calendarDays"></div>
@@ -486,14 +553,16 @@
 
   <div id="stories" class="page">
     <div class="control-panel">
-      <button id="addPinMode">📍 إضافة نقطة</button>
-      <button id="addRouteMode">✏️ رسم مسار</button>
-      <button id="cancelDraw">❌ إلغاء</button>
+      <button id="addPinBtn" class="add-mode-btn">📍 إضافة نقطة (للمشرف)</button>
+      <button id="addPathBtn" class="add-mode-btn">✏️ رسم مسار (للمشرف)</button>
+      <button id="cancelDrawBtn">❌ إلغاء الرسم</button>
+      <button id="deleteModeBtn" style="background:#f44336;">🗑️ وضع الحذف</button>
     </div>
+    <div id="drawingInstruction" class="drawing-instruction"></div>
     <div id="map"></div>
-    <div class="stories-detail">
+    <div class="stories-detail" id="storyDetailPanel">
       <h3>📖 تفاصيل القصة</h3>
-      <div id="storyContent">🌟 اختر نقطة على الخريطة</div>
+      <div id="storyContent">🌟 اختر نقطة أو مسار على الخريطة لعرض التفاصيل</div>
     </div>
   </div>
 </div>
@@ -518,6 +587,15 @@
   let currentItemId = null;
   let currentType = null;
   let pendingAddType = null;
+
+  // Map variables
+  let map, mapInitialized = false;
+  let markers = {};
+  let polylines = {};
+  let currentDrawMode = null;
+  let currentPathPoints = [];
+  let currentPolyline = null;
+  let deleteModeActive = false;
 
   const adminToggle = document.getElementById('adminToggle');
   const loginModal = document.getElementById('loginModal');
@@ -562,6 +640,7 @@
       enableAdminMode(true);
       syncStatus.innerHTML = '✅ مشرف متصل';
       loadAllCards();
+      loadMapData();
     } catch (error) {
       loginError.innerText = 'خطأ: ' + error.message;
     }
@@ -573,12 +652,14 @@
       syncStatus.innerHTML = '✅ مشرف متصل';
       enableAdminMode(true);
       loadAllCards();
+      if (mapInitialized) loadMapData();
     } else {
       isAdmin = false;
       adminToggle.checked = false;
       enableAdminMode(false);
       syncStatus.innerHTML = '✅ متصل';
       loadAllCards();
+      if (mapInitialized) loadMapData();
     }
   });
 
@@ -589,6 +670,13 @@
     if (athkarBtn) athkarBtn.style.display = adminMode ? 'flex' : 'none';
     if (tafsirBtn) tafsirBtn.style.display = adminMode ? 'flex' : 'none';
     
+    // Show/hide map admin buttons
+    const mapButtons = document.querySelectorAll('.add-mode-btn');
+    mapButtons.forEach(btn => {
+      btn.style.display = adminMode ? 'inline-block' : 'none';
+    });
+    document.getElementById('deleteModeBtn').style.display = adminMode ? 'inline-block' : 'none';
+    
     if (contentModal.style.display === 'flex') {
       modalHeader.setAttribute('contenteditable', adminMode ? 'true' : 'false');
       modalBody.setAttribute('contenteditable', adminMode ? 'true' : 'false');
@@ -596,6 +684,7 @@
     }
   }
 
+  // ============ ATHKAR & TAFSIR FUNCTIONS ============
   window.deleteCard = async function(type, id) {
     if (!adminMode) return;
     if (confirm('هل أنت متأكد من حذف هذه البطاقة؟')) {
@@ -630,8 +719,7 @@
       return;
     }
     const newId = `${type}_${Date.now()}`;
-    const cardData = { header: title, body: body, footer: footer };
-    await database.ref(`${type}_full/${newId}`).set(cardData);
+    await database.ref(`${type}_full/${newId}`).set({ header: title, body: body, footer: footer });
     await database.ref(`${type}_list/${newId}`).set({ id: newId, order: Date.now() });
     newCardTitle.value = '';
     newCardBody.value = '';
@@ -740,12 +828,43 @@
   modalBody.addEventListener('blur', () => saveContent());
   modalFooter.addEventListener('blur', () => saveContent());
 
+  // ============ CALENDAR FUNCTIONS ============
   let currentDate = new Date(), currentYear = currentDate.getFullYear(), currentMonth = currentDate.getMonth(), events = {};
+  
   async function loadEvents() {
     const snapshot = await database.ref('events').once('value');
     events = snapshot.val() || {};
     renderCalendar();
   }
+  
+  async function addEventToDay(dateKey) {
+    if (!adminMode) {
+      alert('❌ فقط المشرف يمكنه إضافة مناسبات. الرجاء تسجيل الدخول كمدير.');
+      return;
+    }
+    const desc = prompt('📝 أضف وصفاً لهذا اليوم:', events[dateKey]?.description || '');
+    if (desc !== null) {
+      if (desc.trim()) {
+        events[dateKey] = { description: desc };
+        await database.ref(`events/${dateKey}`).set({ description: desc });
+      } else {
+        delete events[dateKey];
+        await database.ref(`events/${dateKey}`).remove();
+      }
+      renderCalendar();
+    }
+  }
+  
+  async function deleteEventFromDay(dateKey, event) {
+    if (!adminMode) return;
+    event.stopPropagation();
+    if (confirm('هل تريد حذف حدث هذا اليوم؟')) {
+      delete events[dateKey];
+      await database.ref(`events/${dateKey}`).remove();
+      renderCalendar();
+    }
+  }
+  
   function renderCalendar() {
     const firstDay = new Date(currentYear, currentMonth, 1), startDay = firstDay.getDay(), daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
     const grid = document.getElementById('calendarDays');
@@ -757,34 +876,231 @@
     for (let d = 1; d <= daysInMonth; d++) {
       const cell = document.createElement('div'); cell.className = 'day-cell'; cell.innerText = d;
       const dateKey = `${currentYear}-${currentMonth+1}-${d}`;
-      if (events[dateKey]) cell.classList.add('has-event');
-      cell.onclick = () => {
-        const desc = prompt('وصف اليوم:', events[dateKey] || '');
-        if (desc !== null) {
-          if (desc.trim()) events[dateKey] = desc;
-          else delete events[dateKey];
-          database.ref(`events/${dateKey}`).set({ description: desc });
-          renderCalendar();
+      if (events[dateKey]) {
+        cell.classList.add('has-event');
+        const preview = document.createElement('div');
+        preview.className = 'day-event-preview';
+        let shortDesc = events[dateKey].description.substring(0, 15);
+        if (events[dateKey].description.length > 15) shortDesc += '...';
+        preview.innerText = shortDesc;
+        cell.appendChild(preview);
+        if (adminMode) {
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'delete-event-btn';
+          deleteBtn.innerHTML = '×';
+          deleteBtn.onclick = (e) => deleteEventFromDay(dateKey, e);
+          cell.appendChild(deleteBtn);
         }
-      };
+      }
+      cell.onclick = () => addEventToDay(dateKey);
       grid.appendChild(cell);
     }
     document.getElementById('monthYear').innerHTML = `${currentYear}/${currentMonth+1}`;
   }
+  
   document.getElementById('prevMonth')?.addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
   document.getElementById('nextMonth')?.addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
 
-  let mapInitialized = false;
+  // ============ MAP FUNCTIONS ============
+  async function loadMapData() {
+    if (!mapInitialized) return;
+    
+    // Clear existing markers and polylines
+    Object.values(markers).forEach(m => map.removeLayer(m));
+    Object.values(polylines).forEach(p => map.removeLayer(p));
+    markers = {};
+    polylines = {};
+    
+    // Load pins
+    const pinsSnapshot = await database.ref('map_pins').once('value');
+    const pins = pinsSnapshot.val() || {};
+    for (let id in pins) {
+      const pin = pins[id];
+      const marker = L.marker([pin.lat, pin.lng]).addTo(map);
+      marker.bindPopup(`
+        <b>${pin.title}</b><br>
+        <p>${pin.description || 'لا يوجد وصف'}</p>
+        ${adminMode ? '<br><button onclick="editPin(\'' + id + '\', \'' + pin.title.replace(/'/g, "\\'") + '\', \'' + (pin.description || '').replace(/'/g, "\\'") + '\')" style="background:#2c5e2e; color:white; border:none; padding:5px 10px; border-radius:20px; margin:5px;">✏️ تعديل</button><button onclick="deletePin(\'' + id + '\')" style="background:#f44336; color:white; border:none; padding:5px 10px; border-radius:20px;">🗑️ حذف</button>' : ''}
+      `);
+      marker.on('click', () => {
+        document.getElementById('storyContent').innerHTML = `<strong>${pin.title}</strong><br><p>${pin.description || 'لا يوجد وصف'}</p>`;
+      });
+      markers[id] = marker;
+    }
+    
+    // Load paths
+    const pathsSnapshot = await database.ref('map_paths').once('value');
+    const paths = pathsSnapshot.val() || {};
+    for (let id in paths) {
+      const path = paths[id];
+      const latlngs = path.points.map(p => [p.lat, p.lng]);
+      const polyline = L.polyline(latlngs, { color: '#2c5e2e', weight: 4, opacity: 0.8 }).addTo(map);
+      polyline.bindPopup(`
+        <b>${path.title || 'مسار'}</b><br>
+        <p>${path.description || 'لا يوجد وصف'}</p>
+        ${adminMode ? '<br><button onclick="editPath(\'' + id + '\', \'' + (path.title || '').replace(/'/g, "\\'") + '\', \'' + (path.description || '').replace(/'/g, "\\'") + '\')" style="background:#2c5e2e; color:white; border:none; padding:5px 10px; border-radius:20px; margin:5px;">✏️ تعديل</button><button onclick="deletePath(\'' + id + '\')" style="background:#f44336; color:white; border:none; padding:5px 10px; border-radius:20px;">🗑️ حذف</button>' : ''}
+      `);
+      polyline.on('click', () => {
+        document.getElementById('storyContent').innerHTML = `<strong>${path.title || 'مسار'}</strong><br><p>${path.description || 'لا يوجد وصف'}</p>`;
+      });
+      polylines[id] = polyline;
+    }
+  }
+  
+  window.editPin = async function(id, currentTitle, currentDesc) {
+    if (!adminMode) return;
+    const newTitle = prompt('أدخل الاسم الجديد:', currentTitle);
+    if (newTitle === null) return;
+    const newDesc = prompt('أدخل الوصف الجديد:', currentDesc);
+    if (newDesc === null) return;
+    const pinData = (await database.ref(`map_pins/${id}`).once('value')).val();
+    if (pinData) {
+      await database.ref(`map_pins/${id}`).set({ ...pinData, title: newTitle, description: newDesc });
+      loadMapData();
+    }
+  };
+  
+  window.deletePin = async function(id) {
+    if (!adminMode) return;
+    if (confirm('هل تريد حذف هذه النقطة؟')) {
+      await database.ref(`map_pins/${id}`).remove();
+      loadMapData();
+    }
+  };
+  
+  window.editPath = async function(id, currentTitle, currentDesc) {
+    if (!adminMode) return;
+    const newTitle = prompt('أدخل اسم المسار الجديد:', currentTitle);
+    if (newTitle === null) return;
+    const newDesc = prompt('أدخل الوصف الجديد:', currentDesc);
+    if (newDesc === null) return;
+    const pathData = (await database.ref(`map_paths/${id}`).once('value')).val();
+    if (pathData) {
+      await database.ref(`map_paths/${id}`).set({ ...pathData, title: newTitle, description: newDesc });
+      loadMapData();
+    }
+  };
+  
+  window.deletePath = async function(id) {
+    if (!adminMode) return;
+    if (confirm('هل تريد حذف هذا المسار؟')) {
+      await database.ref(`map_paths/${id}`).remove();
+      loadMapData();
+    }
+  };
+  
   function initMap() {
     if (mapInitialized) return;
-    const map = L.map('map').setView([27.0, 30.0], 4);
+    map = L.map('map').setView([27.0, 30.0], 4);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '© OSM' }).addTo(map);
     mapInitialized = true;
-    L.marker([21.4225, 39.8262]).addTo(map).bindPopup('مكة المكرمة - مولد النبي ﷺ');
-    L.marker([31.7761, 35.2342]).addTo(map).bindPopup('القدس - المسجد الأقصى');
-    L.marker([30.0444, 31.2357]).addTo(map).bindPopup('مصر - نبي الله موسى');
+    loadMapData();
+    
+    map.on('click', async (e) => {
+      if (!adminMode) return;
+      if (deleteModeActive) {
+        alert('الرجاء الخروج من وضع الحذف أولاً');
+        return;
+      }
+      if (currentDrawMode === 'pin') {
+        const title = prompt('📍 اسم النقطة (اسم النبي أو المكان):');
+        if (title) {
+          const desc = prompt('📝 وصف القصة:');
+          const newId = `pin_${Date.now()}`;
+          await database.ref(`map_pins/${newId}`).set({
+            lat: e.latlng.lat,
+            lng: e.latlng.lng,
+            title: title,
+            description: desc || ''
+          });
+          loadMapData();
+        }
+        currentDrawMode = null;
+        document.getElementById('drawingInstruction').style.display = 'none';
+        document.getElementById('addPinBtn').classList.remove('active');
+      } else if (currentDrawMode === 'path') {
+        currentPathPoints.push(e.latlng);
+        if (currentPolyline) map.removeLayer(currentPolyline);
+        currentPolyline = L.polyline(currentPathPoints, { color: '#ff9800', weight: 5, opacity: 0.8 }).addTo(map);
+      }
+    });
   }
+  
+  // Map admin controls
+  document.getElementById('addPinBtn').onclick = () => {
+    if (!adminMode) { alert('❌ فقط المشرف يمكنه إضافة نقاط'); return; }
+    currentDrawMode = 'pin';
+    currentPathPoints = [];
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    document.getElementById('drawingInstruction').innerHTML = '📍 وضع إضافة النقاط - انقر على الخريطة لإضافة نقطة جديدة';
+    document.getElementById('drawingInstruction').style.display = 'block';
+    document.getElementById('addPinBtn').classList.add('active');
+    document.getElementById('addPathBtn').classList.remove('active');
+  };
+  
+  document.getElementById('addPathBtn').onclick = () => {
+    if (!adminMode) { alert('❌ فقط المشرف يمكنه رسم المسارات'); return; }
+    currentDrawMode = 'path';
+    currentPathPoints = [];
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    document.getElementById('drawingInstruction').innerHTML = '✏️ وضع رسم المسار - انقر على الخريطة لتحديد النقاط، ثم اضغط "إنهاء المسار"';
+    document.getElementById('drawingInstruction').style.display = 'block';
+    document.getElementById('addPathBtn').classList.add('active');
+    document.getElementById('addPinBtn').classList.remove('active');
+    
+    if (!document.getElementById('finishPathBtn')) {
+      const finishBtn = document.createElement('button');
+      finishBtn.id = 'finishPathBtn';
+      finishBtn.innerHTML = '✅ إنهاء المسار وحفظه';
+      finishBtn.style.background = '#ff9800';
+      finishBtn.onclick = async () => {
+        if (currentPathPoints.length < 2) {
+          alert('يلزم نقطتان على الأقل لرسم مسار');
+          return;
+        }
+        const title = prompt('🏷️ اسم المسار (مثل: هجرة النبي ﷺ):');
+        if (title) {
+          const desc = prompt('📝 وصف المسار:');
+          const newId = `path_${Date.now()}`;
+          await database.ref(`map_paths/${newId}`).set({
+            points: currentPathPoints.map(p => ({ lat: p.lat, lng: p.lng })),
+            title: title,
+            description: desc || ''
+          });
+          loadMapData();
+        }
+        currentDrawMode = null;
+        if (currentPolyline) map.removeLayer(currentPolyline);
+        document.getElementById('drawingInstruction').style.display = 'none';
+        document.getElementById('addPathBtn').classList.remove('active');
+        finishBtn.remove();
+      };
+      document.querySelector('.control-panel').appendChild(finishBtn);
+    }
+  };
+  
+  document.getElementById('cancelDrawBtn').onclick = () => {
+    currentDrawMode = null;
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    currentPathPoints = [];
+    document.getElementById('drawingInstruction').style.display = 'none';
+    document.getElementById('addPinBtn').classList.remove('active');
+    document.getElementById('addPathBtn').classList.remove('active');
+    const finishBtn = document.getElementById('finishPathBtn');
+    if (finishBtn) finishBtn.remove();
+  };
+  
+  document.getElementById('deleteModeBtn').onclick = () => {
+    if (!adminMode) return;
+    deleteModeActive = !deleteModeActive;
+    document.getElementById('deleteModeBtn').style.background = deleteModeActive ? '#d32f2f' : '#f44336';
+    document.getElementById('deleteModeBtn').innerHTML = deleteModeActive ? '🚫 الخروج من وضع الحذف' : '🗑️ وضع الحذف';
+    if (deleteModeActive) {
+      alert('وضع الحذف مفعل. انقر على أي علامة أو مسار ثم اضغط زر الحذف في النافذة المنبثقة');
+    }
+  };
 
+  // Navigation
   document.querySelectorAll('.nav-link').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -796,7 +1112,7 @@
 
   loadEvents();
   renderCalendar();
-  console.log('✅ Platform ready!');
+  console.log('✅ Platform ready! Admin has full control over calendar and map.');
 </script>
 </body>
 </html>
