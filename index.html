@@ -73,11 +73,6 @@
       width: 100%;
       max-width: 500px;
       border: 2px solid #e0d5b9;
-      transition: 0.3s;
-    }
-    .search-box:focus-within {
-      border-color: #2c5e2e;
-      box-shadow: 0 4px 20px rgba(44,94,46,0.2);
     }
     .search-box input {
       flex: 1;
@@ -95,10 +90,7 @@
       padding: 8px 20px;
       border-radius: 40px;
       cursor: pointer;
-      font-family: 'Tajawal';
-      transition: 0.2s;
     }
-    .search-box button:hover { background: #1e4a2a; }
     .search-results {
       margin: 20px 0;
       padding: 20px;
@@ -106,51 +98,15 @@
       border-radius: 28px;
       display: none;
     }
-    .search-results h3 {
-      color: #1e5629;
-      margin-bottom: 15px;
-      border-right: 4px solid #2c5e2e;
-      padding-right: 15px;
-    }
     .result-item {
       padding: 12px;
       border-bottom: 1px solid #e8dcc8;
       cursor: pointer;
-      transition: 0.2s;
     }
-    .result-item:hover {
-      background: #fef3d6;
-      border-radius: 20px;
-      padding-right: 20px;
-    }
-    .result-title {
-      font-weight: bold;
-      color: #2c5e2e;
-      font-size: 1.1rem;
-    }
-    .result-type {
-      font-size: 0.8rem;
-      color: #8b6b3d;
-      margin-right: 10px;
-    }
-    .result-preview {
-      color: #666;
-      font-size: 0.9rem;
-      margin-top: 5px;
-    }
-    .no-results {
-      text-align: center;
-      padding: 30px;
-      color: #999;
-    }
-    .close-results {
-      float: left;
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: #999;
-    }
+    .result-item:hover { background: #fef3d6; border-radius: 20px; }
+    .result-title { font-weight: bold; color: #2c5e2e; }
+    .result-type { font-size: 0.8rem; color: #8b6b3d; margin-right: 10px; }
+    .close-results { float: left; background: none; border: none; font-size: 24px; cursor: pointer; }
     
     .admin-toggle {
       margin: 15px 0 25px;
@@ -205,7 +161,6 @@
       min-height: 130px;
       font-size: 0.95rem;
       line-height: 1.7;
-      color: #2c3e2f;
       background: #fffef8;
     }
     .card-preview p {
@@ -213,7 +168,6 @@
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      margin: 0;
     }
     .more-btn {
       background: #2c5e2e;
@@ -239,7 +193,6 @@
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 10;
     }
     .info-card:hover .delete-card-btn { display: flex; }
     
@@ -355,10 +308,37 @@
       margin-top: 10px;
     }
     
-    #map { height: 500px; border-radius: 28px; margin: 20px 0; border: 2px solid #e0d5b9; }
+    /* Map Styles */
+    #map { height: 550px; border-radius: 28px; margin: 20px 0; border: 2px solid #e0d5b9; }
     .control-panel { display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0; justify-content: center; }
-    .control-panel button { background: #2c5e2e; color: white; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; }
-    .stories-detail { background: white; border-radius: 28px; padding: 20px; margin-top: 20px; }
+    .control-panel button {
+      background: #2c5e2e;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-family: 'Tajawal';
+      transition: 0.2s;
+    }
+    .control-panel button:hover { background: #1e4a2a; }
+    .control-panel button.active { background: #ff9800; }
+    .drawing-instruction {
+      background: #fef3d6;
+      padding: 10px;
+      border-radius: 28px;
+      text-align: center;
+      margin: 10px 0;
+      display: none;
+      color: #1e5629;
+      font-weight: bold;
+    }
+    .stories-detail {
+      background: white;
+      border-radius: 28px;
+      padding: 20px;
+      margin-top: 20px;
+    }
     
     .box-grid {
       display: grid;
@@ -423,13 +403,6 @@
       position: relative;
     }
     .day-cell.has-event { background: #2c5e2ecc; color: white; }
-    .day-event-preview {
-      font-size: 0.7rem;
-      margin-top: 5px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
     button { background: #2c5e2e; color: white; border: none; border-radius: 40px; padding: 8px 18px; cursor: pointer; }
     @media (max-width: 700px) {
       header { flex-direction: column; }
@@ -541,13 +514,16 @@
   <div id="stories" class="page">
     <div class="control-panel">
       <button id="addPinBtn">📍 إضافة نقطة (للمشرف)</button>
+      <button id="addLabelBtn">🏷️ إضافة نص/تسمية (للمشرف)</button>
       <button id="addPathBtn">✏️ رسم مسار (للمشرف)</button>
-      <button id="cancelDrawBtn">❌ إلغاء</button>
+      <button id="cancelDrawBtn">❌ إلغاء الرسم</button>
+      <button id="deleteModeBtn" style="background:#f44336;">🗑️ وضع الحذف</button>
     </div>
+    <div id="drawingInstruction" class="drawing-instruction"></div>
     <div id="map"></div>
     <div class="stories-detail">
-      <h3>📖 تفاصيل القصة</h3>
-      <div id="storyContent">🌟 اختر نقطة على الخريطة</div>
+      <h3>📖 التفاصيل</h3>
+      <div id="storyContent">🌟 اختر نقطة، تسمية، أو مسار على الخريطة لعرض التفاصيل</div>
     </div>
   </div>
 </div>
@@ -572,6 +548,16 @@
   let currentItemId = null;
   let currentType = null;
   let pendingAddType = null;
+  
+  // Map variables
+  let map, mapInitialized = false;
+  let markers = {};
+  let labels = {};
+  let polylines = {};
+  let currentDrawMode = null;
+  let currentPathPoints = [];
+  let currentPolyline = null;
+  let deleteModeActive = false;
   
   // Store all content for searching
   let allAthkar = [];
@@ -629,6 +615,7 @@
       enableAdminMode(true);
       syncStatus.innerHTML = '✅ مشرف متصل';
       loadAllCards();
+      if (mapInitialized) loadMapData();
     } catch (error) {
       loginError.innerText = 'خطأ: ' + error.message;
     }
@@ -640,12 +627,14 @@
       syncStatus.innerHTML = '✅ مشرف متصل';
       enableAdminMode(true);
       loadAllCards();
+      if (mapInitialized) loadMapData();
     } else {
       isAdmin = false;
       adminToggle.checked = false;
       enableAdminMode(false);
       syncStatus.innerHTML = '✅ متصل';
       loadAllCards();
+      if (mapInitialized) loadMapData();
     }
   });
 
@@ -655,6 +644,12 @@
     const tafsirBtn = document.getElementById('tafsirAddBtn');
     if (athkarBtn) athkarBtn.style.display = adminMode ? 'flex' : 'none';
     if (tafsirBtn) tafsirBtn.style.display = adminMode ? 'flex' : 'none';
+    
+    // Show/hide map admin buttons
+    const mapButtons = document.querySelectorAll('#addPinBtn, #addLabelBtn, #addPathBtn, #deleteModeBtn');
+    mapButtons.forEach(btn => {
+      btn.style.display = adminMode ? 'inline-block' : 'none';
+    });
     
     if (contentModal.style.display === 'flex') {
       modalHeader.setAttribute('contenteditable', adminMode ? 'true' : 'false');
@@ -667,13 +662,12 @@
   function performSearch() {
     const query = searchInput.value.trim().toLowerCase();
     if (query.length < 2) {
-      alert('الرجاء إدخال كلمتين على الأقل للبحث');
+      alert('الرجاء إدخال حرفين على الأقل للبحث');
       return;
     }
     
     const results = [];
     
-    // Search in Athkar
     allAthkar.forEach(item => {
       if (item.header.toLowerCase().includes(query) || 
           item.body.toLowerCase().includes(query) || 
@@ -684,12 +678,12 @@
           id: item.id,
           title: item.header,
           preview: item.body.substring(0, 100) + '...',
-          fullBody: item.body
+          fullBody: item.body,
+          footer: item.footer
         });
       }
     });
     
-    // Search in Tafsir
     allTafsir.forEach(item => {
       if (item.header.toLowerCase().includes(query) || 
           item.body.toLowerCase().includes(query) || 
@@ -700,7 +694,8 @@
           id: item.id,
           title: item.header,
           preview: item.body.substring(0, 100) + '...',
-          fullBody: item.body
+          fullBody: item.body,
+          footer: item.footer
         });
       }
     });
@@ -725,8 +720,7 @@
           <div class="result-preview">${result.preview}</div>
         `;
         resultDiv.onclick = () => {
-          // Open the corresponding card
-          openModal(result.type, result.id, result.title, result.fullBody, '');
+          openModal(result.type, result.id, result.title, result.fullBody, result.footer || '');
           searchResults.style.display = 'none';
         };
         resultsList.appendChild(resultDiv);
@@ -765,7 +759,6 @@
       if (modalBody.innerText.length > 120) short += '...';
       card.querySelector('.card-preview p').innerHTML = short;
     }
-    // Refresh search data
     loadAllCards();
   }
 
@@ -859,12 +852,8 @@
       }
     }
     
-    // Store for search
-    if (type === 'athkar') {
-      allAthkar = itemsArray;
-    } else if (type === 'tafsir') {
-      allTafsir = itemsArray;
-    }
+    if (type === 'athkar') allAthkar = itemsArray;
+    else if (type === 'tafsir') allTafsir = itemsArray;
   }
 
   async function loadAllCards() {
@@ -897,7 +886,7 @@
   modalBody.addEventListener('blur', () => saveContent());
   modalFooter.addEventListener('blur', () => saveContent());
 
-  // Calendar functions
+  // ============ CALENDAR FUNCTIONS ============
   let currentDate = new Date(), currentYear = currentDate.getFullYear(), currentMonth = currentDate.getMonth(), events = {};
   
   async function loadEvents() {
@@ -953,20 +942,288 @@
   document.getElementById('prevMonth')?.addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
   document.getElementById('nextMonth')?.addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
 
-  // Map functions (simplified)
-  let mapInitialized = false;
-  function initMap() {
-    if (mapInitialized) return;
-    const map = L.map('map').setView([27.0, 30.0], 4);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '© OSM' }).addTo(map);
-    mapInitialized = true;
-    L.marker([21.4225, 39.8262]).addTo(map).bindPopup('مكة المكرمة - مولد النبي ﷺ');
-    L.marker([31.7761, 35.2342]).addTo(map).bindPopup('القدس - المسجد الأقصى');
+  // ============ MAP FUNCTIONS (FULLY WORKING) ============
+  
+  function createCustomLabel(lat, lng, text, color = '#1e5629') {
+    const icon = L.divIcon({
+      className: 'custom-label',
+      html: `<div style="background: ${color}; color: white; padding: 4px 12px; border-radius: 25px; font-size: 14px; font-weight: bold; white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">${text}</div>`,
+      iconSize: [null, null],
+      popupAnchor: [0, -10]
+    });
+    return L.marker([lat, lng], { icon: icon });
   }
 
-  document.getElementById('addPinBtn')?.addEventListener('click', () => alert('انقر على الخريطة لإضافة نقطة'));
-  document.getElementById('addPathBtn')?.addEventListener('click', () => alert('ارسم المسار بالضغط على الخريطة'));
-  document.getElementById('cancelDrawBtn')?.addEventListener('click', () => alert('تم الإلغاء'));
+  async function loadMapData() {
+    if (!mapInitialized) return;
+    
+    Object.values(markers).forEach(m => map.removeLayer(m));
+    Object.values(labels).forEach(l => map.removeLayer(l));
+    Object.values(polylines).forEach(p => map.removeLayer(p));
+    markers = {};
+    labels = {};
+    polylines = {};
+    
+    // Load pins
+    const pinsSnapshot = await database.ref('map_pins').once('value');
+    const pins = pinsSnapshot.val() || {};
+    for (let id in pins) {
+      const pin = pins[id];
+      const marker = L.marker([pin.lat, pin.lng]).addTo(map);
+      marker.bindPopup(`
+        <b>📍 ${pin.title}</b><br>
+        <p>${pin.description || 'لا يوجد وصف'}</p>
+        ${adminMode ? '<br><button onclick="editPin(\'' + id + '\', \'' + pin.title.replace(/'/g, "\\'") + '\', \'' + (pin.description || '').replace(/'/g, "\\'") + '\')" style="background:#2c5e2e; color:white; border:none; padding:5px 10px; border-radius:20px; margin:5px;">✏️ تعديل</button><button onclick="deletePin(\'' + id + '\')" style="background:#f44336; color:white; border:none; padding:5px 10px; border-radius:20px;">🗑️ حذف</button>' : ''}
+      `);
+      marker.on('click', () => {
+        document.getElementById('storyContent').innerHTML = `<strong>📍 ${pin.title}</strong><br><p>${pin.description || 'لا يوجد وصف'}</p>`;
+      });
+      markers[id] = marker;
+    }
+    
+    // Load text labels (country names)
+    const labelsSnapshot = await database.ref('map_labels').once('value');
+    const mapLabels = labelsSnapshot.val() || {};
+    for (let id in mapLabels) {
+      const label = mapLabels[id];
+      const labelMarker = createCustomLabel(label.lat, label.lng, label.text, label.color || '#1e5629');
+      labelMarker.addTo(map);
+      labelMarker.bindPopup(`
+        <b>🏷️ ${label.text}</b><br>
+        <p>${label.description || ''}</p>
+        ${adminMode ? '<br><button onclick="editLabel(\'' + id + '\', \'' + label.text.replace(/'/g, "\\'") + '\', \'' + (label.description || '').replace(/'/g, "\\'") + '\')" style="background:#2c5e2e; color:white; border:none; padding:5px 10px; border-radius:20px; margin:5px;">✏️ تعديل</button><button onclick="deleteLabel(\'' + id + '\')" style="background:#f44336; color:white; border:none; padding:5px 10px; border-radius:20px;">🗑️ حذف</button>' : ''}
+      `);
+      labelMarker.on('click', () => {
+        document.getElementById('storyContent').innerHTML = `<strong>🏷️ ${label.text}</strong><br><p>${label.description || ''}</p>`;
+      });
+      labels[id] = labelMarker;
+    }
+    
+    // Load paths
+    const pathsSnapshot = await database.ref('map_paths').once('value');
+    const paths = pathsSnapshot.val() || {};
+    for (let id in paths) {
+      const path = paths[id];
+      const latlngs = path.points.map(p => [p.lat, p.lng]);
+      const polyline = L.polyline(latlngs, { color: '#2c5e2e', weight: 4, opacity: 0.8 }).addTo(map);
+      polyline.bindPopup(`
+        <b>🗺️ ${path.title || 'مسار'}</b><br>
+        <p>${path.description || 'لا يوجد وصف'}</p>
+        ${adminMode ? '<br><button onclick="editPath(\'' + id + '\', \'' + (path.title || '').replace(/'/g, "\\'") + '\', \'' + (path.description || '').replace(/'/g, "\\'") + '\')" style="background:#2c5e2e; color:white; border:none; padding:5px 10px; border-radius:20px; margin:5px;">✏️ تعديل</button><button onclick="deletePath(\'' + id + '\')" style="background:#f44336; color:white; border:none; padding:5px 10px; border-radius:20px;">🗑️ حذف</button>' : ''}
+      `);
+      polyline.on('click', () => {
+        document.getElementById('storyContent').innerHTML = `<strong>🗺️ ${path.title || 'مسار'}</strong><br><p>${path.description || 'لا يوجد وصف'}</p>`;
+      });
+      polylines[id] = polyline;
+    }
+  }
+  
+  // Admin map functions
+  window.editPin = async function(id, currentTitle, currentDesc) {
+    if (!adminMode) return;
+    const newTitle = prompt('أدخل الاسم الجديد:', currentTitle);
+    if (newTitle === null) return;
+    const newDesc = prompt('أدخل الوصف الجديد:', currentDesc);
+    if (newDesc === null) return;
+    const pinData = (await database.ref(`map_pins/${id}`).once('value')).val();
+    if (pinData) {
+      await database.ref(`map_pins/${id}`).set({ ...pinData, title: newTitle, description: newDesc });
+      loadMapData();
+    }
+  };
+  
+  window.deletePin = async function(id) {
+    if (!adminMode) return;
+    if (confirm('هل تريد حذف هذه النقطة؟')) {
+      await database.ref(`map_pins/${id}`).remove();
+      loadMapData();
+    }
+  };
+  
+  window.editLabel = async function(id, currentText, currentDesc) {
+    if (!adminMode) return;
+    const newText = prompt('أدخل النص الجديد (اسم الدولة/المدينة):', currentText);
+    if (newText === null) return;
+    const newDesc = prompt('أدخل الوصف الجديد:', currentDesc);
+    if (newDesc === null) return;
+    const labelData = (await database.ref(`map_labels/${id}`).once('value')).val();
+    if (labelData) {
+      await database.ref(`map_labels/${id}`).set({ ...labelData, text: newText, description: newDesc });
+      loadMapData();
+    }
+  };
+  
+  window.deleteLabel = async function(id) {
+    if (!adminMode) return;
+    if (confirm('هل تريد حذف هذه التسمية؟')) {
+      await database.ref(`map_labels/${id}`).remove();
+      loadMapData();
+    }
+  };
+  
+  window.editPath = async function(id, currentTitle, currentDesc) {
+    if (!adminMode) return;
+    const newTitle = prompt('أدخل اسم المسار الجديد:', currentTitle);
+    if (newTitle === null) return;
+    const newDesc = prompt('أدخل الوصف الجديد:', currentDesc);
+    if (newDesc === null) return;
+    const pathData = (await database.ref(`map_paths/${id}`).once('value')).val();
+    if (pathData) {
+      await database.ref(`map_paths/${id}`).set({ ...pathData, title: newTitle, description: newDesc });
+      loadMapData();
+    }
+  };
+  
+  window.deletePath = async function(id) {
+    if (!adminMode) return;
+    if (confirm('هل تريد حذف هذا المسار؟')) {
+      await database.ref(`map_paths/${id}`).remove();
+      loadMapData();
+    }
+  };
+  
+  function initMap() {
+    if (mapInitialized) return;
+    map = L.map('map').setView([27.0, 30.0], 4);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '© OSM' }).addTo(map);
+    mapInitialized = true;
+    loadMapData();
+    
+    map.on('click', async (e) => {
+      if (!adminMode) return;
+      if (deleteModeActive) {
+        alert('⚠️ الرجاء الخروج من وضع الحذف أولاً');
+        return;
+      }
+      if (currentDrawMode === 'pin') {
+        const title = prompt('📍 اسم النقطة (اسم النبي أو المكان):');
+        if (title) {
+          const desc = prompt('📝 وصف القصة:');
+          const newId = `pin_${Date.now()}`;
+          await database.ref(`map_pins/${newId}`).set({
+            lat: e.latlng.lat,
+            lng: e.latlng.lng,
+            title: title,
+            description: desc || ''
+          });
+          loadMapData();
+        }
+        currentDrawMode = null;
+        document.getElementById('drawingInstruction').style.display = 'none';
+        document.getElementById('addPinBtn').classList.remove('active');
+      } else if (currentDrawMode === 'label') {
+        const text = prompt('🏷️ أضف نصاً (مثل: مصر, مكة, القدس, المدينة):');
+        if (text) {
+          const desc = prompt('📝 وصف إضافي (اختياري):');
+          const newId = `label_${Date.now()}`;
+          await database.ref(`map_labels/${newId}`).set({
+            lat: e.latlng.lat,
+            lng: e.latlng.lng,
+            text: text,
+            description: desc || '',
+            color: '#1e5629'
+          });
+          loadMapData();
+        }
+        currentDrawMode = null;
+        document.getElementById('drawingInstruction').style.display = 'none';
+        document.getElementById('addLabelBtn').classList.remove('active');
+      } else if (currentDrawMode === 'path') {
+        currentPathPoints.push(e.latlng);
+        if (currentPolyline) map.removeLayer(currentPolyline);
+        currentPolyline = L.polyline(currentPathPoints, { color: '#ff9800', weight: 5, opacity: 0.8 }).addTo(map);
+      }
+    });
+  }
+  
+  // Map admin controls
+  document.getElementById('addPinBtn').onclick = () => {
+    if (!adminMode) { alert('❌ فقط المشرف يمكنه إضافة نقاط'); return; }
+    currentDrawMode = 'pin';
+    currentPathPoints = [];
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    document.getElementById('drawingInstruction').innerHTML = '📍 وضع إضافة النقاط - انقر على الخريطة لإضافة نقطة جديدة';
+    document.getElementById('drawingInstruction').style.display = 'block';
+    document.getElementById('addPinBtn').classList.add('active');
+    document.getElementById('addLabelBtn').classList.remove('active');
+    document.getElementById('addPathBtn').classList.remove('active');
+  };
+  
+  document.getElementById('addLabelBtn').onclick = () => {
+    if (!adminMode) { alert('❌ فقط المشرف يمكنه إضافة نصوص'); return; }
+    currentDrawMode = 'label';
+    currentPathPoints = [];
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    document.getElementById('drawingInstruction').innerHTML = '🏷️ وضع إضافة النصوص - انقر على الخريطة لإضافة تسمية (اسم دولة/مدينة)';
+    document.getElementById('drawingInstruction').style.display = 'block';
+    document.getElementById('addLabelBtn').classList.add('active');
+    document.getElementById('addPinBtn').classList.remove('active');
+    document.getElementById('addPathBtn').classList.remove('active');
+  };
+  
+  document.getElementById('addPathBtn').onclick = () => {
+    if (!adminMode) { alert('❌ فقط المشرف يمكنه رسم المسارات'); return; }
+    currentDrawMode = 'path';
+    currentPathPoints = [];
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    document.getElementById('drawingInstruction').innerHTML = '✏️ وضع رسم المسار - انقر على الخريطة لتحديد النقاط، ثم اضغط "إنهاء المسار"';
+    document.getElementById('drawingInstruction').style.display = 'block';
+    document.getElementById('addPathBtn').classList.add('active');
+    document.getElementById('addPinBtn').classList.remove('active');
+    document.getElementById('addLabelBtn').classList.remove('active');
+    
+    if (!document.getElementById('finishPathBtn')) {
+      const finishBtn = document.createElement('button');
+      finishBtn.id = 'finishPathBtn';
+      finishBtn.innerHTML = '✅ إنهاء المسار وحفظه';
+      finishBtn.style.background = '#ff9800';
+      finishBtn.onclick = async () => {
+        if (currentPathPoints.length < 2) {
+          alert('يلزم نقطتان على الأقل لرسم مسار');
+          return;
+        }
+        const title = prompt('🏷️ اسم المسار (مثل: هجرة النبي ﷺ):');
+        if (title) {
+          const desc = prompt('📝 وصف المسار:');
+          const newId = `path_${Date.now()}`;
+          await database.ref(`map_paths/${newId}`).set({
+            points: currentPathPoints.map(p => ({ lat: p.lat, lng: p.lng })),
+            title: title,
+            description: desc || ''
+          });
+          loadMapData();
+        }
+        currentDrawMode = null;
+        if (currentPolyline) map.removeLayer(currentPolyline);
+        document.getElementById('drawingInstruction').style.display = 'none';
+        document.getElementById('addPathBtn').classList.remove('active');
+        finishBtn.remove();
+      };
+      document.querySelector('.control-panel').appendChild(finishBtn);
+    }
+  };
+  
+  document.getElementById('cancelDrawBtn').onclick = () => {
+    currentDrawMode = null;
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    currentPathPoints = [];
+    document.getElementById('drawingInstruction').style.display = 'none';
+    document.getElementById('addPinBtn').classList.remove('active');
+    document.getElementById('addLabelBtn').classList.remove('active');
+    document.getElementById('addPathBtn').classList.remove('active');
+    const finishBtn = document.getElementById('finishPathBtn');
+    if (finishBtn) finishBtn.remove();
+  };
+  
+  document.getElementById('deleteModeBtn').onclick = () => {
+    if (!adminMode) return;
+    deleteModeActive = !deleteModeActive;
+    document.getElementById('deleteModeBtn').style.background = deleteModeActive ? '#d32f2f' : '#f44336';
+    document.getElementById('deleteModeBtn').innerHTML = deleteModeActive ? '🚫 الخروج من وضع الحذف' : '🗑️ وضع الحذف';
+    if (deleteModeActive) {
+      alert('🗑️ وضع الحذف مفعل. انقر على أي عنصر (نقطة، تسمية، مسار) ثم اضغط زر الحذف في النافذة المنبثقة');
+    }
+  };
 
   // Navigation
   document.querySelectorAll('.nav-link').forEach(btn => {
@@ -975,7 +1232,6 @@
       document.getElementById(btn.getAttribute('data-page')).classList.add('active');
       if (btn.getAttribute('data-page') === 'stories') initMap();
       if (btn.getAttribute('data-page') === 'days') loadEvents();
-      // Close search results when changing page
       searchResults.style.display = 'none';
       searchInput.value = '';
     });
@@ -983,7 +1239,7 @@
 
   loadEvents();
   renderCalendar();
-  console.log('✅ Platform ready with search feature!');
+  console.log('✅ Platform ready with FULL map features + search!');
 </script>
 </body>
 </html>
