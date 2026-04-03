@@ -19,13 +19,52 @@
       color: #2c3e2f;
       direction: rtl;
       padding: 20px;
+      transition: background 0.3s, color 0.3s;
     }
+    body.dark-mode {
+      background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+      color: #eee;
+    }
+    body.dark-mode .container {
+      background: rgba(30, 30, 50, 0.95);
+    }
+    body.dark-mode .content-box,
+    body.dark-mode .info-card,
+    body.dark-mode .calendar-container,
+    body.dark-mode .stories-detail,
+    body.dark-mode .search-results {
+      background: #1e1e3a;
+      border-color: #2c5e2e;
+      color: #eee;
+    }
+    body.dark-mode .card-preview,
+    body.dark-mode .modal-body {
+      background: #25254a;
+      color: #ddd;
+    }
+    body.dark-mode .hero {
+      background: linear-gradient(115deg, #2c5e2e20, #1a1a3e);
+    }
+    body.dark-mode .day-cell {
+      background: #25254a;
+      color: #ddd;
+    }
+    body.dark-mode .search-box {
+      background: #1e1e3a;
+      border-color: #2c5e2e;
+    }
+    body.dark-mode .search-box input {
+      color: #eee;
+      background: transparent;
+    }
+    
     .container {
       max-width: 1300px;
       margin: 0 auto;
       background: rgba(255, 250, 240, 0.95);
       border-radius: 32px;
       padding: 20px 25px;
+      transition: background 0.3s;
     }
     header {
       background: linear-gradient(135deg, #1e4a2a, #2c5e2e);
@@ -39,7 +78,30 @@
       flex-wrap: wrap;
       gap: 15px;
     }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
     header h1 { font-size: 2rem; }
+    .hijri-date {
+      font-size: 0.85rem;
+      background: rgba(255,255,255,0.2);
+      padding: 5px 12px;
+      border-radius: 40px;
+      font-family: 'Tajawal';
+    }
+    .dark-mode-toggle {
+      background: #fef3d6;
+      color: #1e4a2a;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-family: 'Tajawal';
+      font-weight: bold;
+    }
     .nav-links {
       display: flex;
       gap: 8px;
@@ -57,7 +119,30 @@
     }
     .nav-link:hover { background: #ffe2a4; transform: translateY(-2px); }
     
-    /* Search Bar Styles */
+    /* Daily Verse Styles - Ottoman Font */
+    .daily-verse {
+      text-align: center;
+      margin: 20px 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #2c5e2e15, #fef2df);
+      border-radius: 40px;
+      font-family: 'Amiri', serif;
+    }
+    .verse-text {
+      font-size: 1.3rem;
+      line-height: 1.8;
+      color: #1e5629;
+      font-weight: 500;
+    }
+    .verse-reference {
+      font-size: 0.9rem;
+      color: #8b6b3d;
+      margin-top: 8px;
+    }
+    body.dark-mode .verse-text { color: #d4a843; }
+    body.dark-mode .verse-reference { color: #c9a96e; }
+    
+    /* Search Bar */
     .search-container {
       margin: 20px 0 30px;
       display: flex;
@@ -308,7 +393,81 @@
       margin-top: 10px;
     }
     
-    /* Map Styles */
+    /* Calculator Styles */
+    .calculator-box {
+      background: white;
+      border-radius: 32px;
+      padding: 30px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .calculator-input {
+      margin: 20px 0;
+    }
+    .calculator-input label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #1e5629;
+    }
+    .calculator-input input {
+      width: 100%;
+      max-width: 300px;
+      padding: 12px;
+      border: 2px solid #e0d5b9;
+      border-radius: 28px;
+      font-family: 'Tajawal';
+      font-size: 1.1rem;
+      text-align: center;
+    }
+    .calculator-result {
+      background: linear-gradient(135deg, #2c5e2e15, #fef2df);
+      padding: 20px;
+      border-radius: 28px;
+      margin-top: 20px;
+    }
+    .zakat-amount {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #2c5e2e;
+      margin: 15px 0;
+    }
+    .converter-box {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+    .converter-input {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .converter-input input, .converter-input select {
+      padding: 12px;
+      border: 2px solid #e0d5b9;
+      border-radius: 28px;
+      font-family: 'Tajawal';
+      font-size: 1rem;
+    }
+    .convert-btn {
+      background: #2c5e2e;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .converter-result {
+      background: linear-gradient(135deg, #2c5e2e15, #fef2df);
+      padding: 20px;
+      border-radius: 28px;
+      text-align: center;
+      min-width: 250px;
+    }
+    
     #map { height: 550px; border-radius: 28px; margin: 20px 0; border: 2px solid #e0d5b9; }
     .control-panel { display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0; justify-content: center; }
     .control-panel button {
@@ -414,11 +573,17 @@
 <body>
 <div class="container">
   <header>
-    <h1>📿 ذكرى</h1>
+    <div class="header-left">
+      <h1>📿 ذكرى</h1>
+      <div class="hijri-date" id="hijriDateDisplay"> loading...</div>
+      <button class="dark-mode-toggle" id="darkModeToggle">🌙 الوضع الليلي</button>
+    </div>
     <div class="nav-links">
       <button class="nav-link" data-page="home">🏠 الرئيسية</button>
       <button class="nav-link" data-page="athkar">📿 الأذكار</button>
       <button class="nav-link" data-page="tafsir">📖 التفسير</button>
+      <button class="nav-link" data-page="zakat">💎 الزكاة</button>
+      <button class="nav-link" data-page="hijri">📅 محول التاريخ الهجري</button>
       <button class="nav-link" data-page="days">🌟 الأيام المباركة</button>
       <button class="nav-link" data-page="stories">🌍 قصص الأنبياء</button>
     </div>
@@ -475,31 +640,106 @@
     </div>
   </div>
 
+  <!-- HOME PAGE -->
   <div id="home" class="page active">
     <div class="hero">
       <h2>﴿ وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ ﴾</h2>
-      <p>منصة روحانية متزامنة - استخدم شريط البحث للعثور على الأذكار والتفسير</p>
+      <div class="daily-verse" id="dailyVerse">
+        <div class="verse-text" id="verseText">جاري تحميل آية اليوم...</div>
+        <div class="verse-reference" id="verseReference"></div>
+      </div>
+      <p style="font-size:1.2rem; margin-top:12px;">منصة روحانية متزامنة - استخدم شريط البحث للعثور على الأذكار والتفسير</p>
     </div>
     <div class="box-grid">
       <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'athkar\']').click();"><h3>📿 الأذكار اليومية</h3><p>أذكار الصباح والمساء والنوم</p></div>
       <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'tafsir\']').click();"><h3>📖 كنوز التفسير</h3><p>تفسير ميسر لآيات وسور عظيمة</p></div>
-      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'days\']').click();"><h3>📅 الأيام المباركة</h3><p>تقويم هجري مع إضافة المناسبات</p></div>
+      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'zakat\']').click();"><h3>💎 حاسبة الزكاة</h3><p>احسب زكاتك بدقة وسهولة</p></div>
+      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'hijri\']').click();"><h3>📅 محول التاريخ الهجري</h3><p>حول التاريخ الميلادي إلى هجري والعكس</p></div>
+      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'days\']').click();"><h3>🌟 الأيام المباركة</h3><p>تقويم هجري مع إضافة المناسبات</p></div>
       <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'stories\']').click();"><h3>🗺️ سير الأنبياء</h3><p>خريطة تفاعلية لقصص الأنبياء</p></div>
     </div>
   </div>
 
+  <!-- ATHKAR PAGE -->
   <div id="athkar" class="page">
     <div class="hero"><h2>📿 حصن المسلم اليومي</h2><p>اضغط "المزيد" لقراءة الذكر كاملاً</p></div>
     <div class="cards-grid" id="athkarBoxes"></div>
     <div id="athkarAddBtn" class="add-card-btn" style="display: none;">➕ إضافة بطاقة أذكار جديدة</div>
   </div>
   
+  <!-- TAFSIR PAGE -->
   <div id="tafsir" class="page">
     <div class="hero"><h2>📖 كنوز التفسير</h2><p>اضغط "المزيد" لقراءة التفسير كاملاً</p></div>
     <div class="cards-grid" id="tafsirBoxes"></div>
     <div id="tafsirAddBtn" class="add-card-btn" style="display: none;">➕ إضافة بطاقة تفسير جديدة</div>
   </div>
+
+  <!-- ZAKAT CALCULATOR PAGE -->
+  <div id="zakat" class="page">
+    <div class="hero">
+      <h2>💎 حاسبة الزكاة</h2>
+      <div class="daily-verse" id="zakatVerse">
+        <div class="verse-text" id="zakatVerseText">جاري تحميل آية عن الزكاة...</div>
+        <div class="verse-reference" id="zakatVerseRef"></div>
+      </div>
+    </div>
+    <div class="calculator-box">
+      <h3>💰 احسب زكاتك</h3>
+      <div class="calculator-input">
+        <label>📊 قيمة المال الذي تملكه (بالريال / الدولار)</label>
+        <input type="number" id="wealthAmount" placeholder="أدخل المبلغ...">
+      </div>
+      <div class="calculator-input">
+        <label>💎 نسبة الزكاة</label>
+        <input type="text" value="2.5%" readonly style="background:#f0f0f0; text-align:center;">
+      </div>
+      <button id="calculateZakatBtn" class="convert-btn">احسب الزكاة</button>
+      <div class="calculator-result" id="zakatResult" style="display: none;">
+        <h4>🕌 مقدار الزكاة المستحقة:</h4>
+        <div class="zakat-amount" id="zakatAmount">0</div>
+        <p>وجزاكم الله خيراً</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- HIJRI DATE CONVERTER PAGE -->
+  <div id="hijri" class="page">
+    <div class="hero">
+      <h2>📅 محول التاريخ الهجري</h2>
+      <div class="daily-verse" id="hijriVerse">
+        <div class="verse-text" id="hijriVerseText">جاري تحميل آية عن الهجرة...</div>
+        <div class="verse-reference" id="hijriVerseRef"></div>
+      </div>
+    </div>
+    <div class="calculator-box">
+      <h3>🔄 تحويل التاريخ</h3>
+      <div class="converter-box">
+        <div class="converter-input">
+          <select id="convertType">
+            <option value="gregToHijri">ميلادي → هجري</option>
+            <option value="hijriToGreg">هجري → ميلادي</option>
+          </select>
+        </div>
+        <div class="converter-input" id="gregorianInput">
+          <input type="number" id="day" placeholder="اليوم" min="1" max="31">
+          <input type="number" id="month" placeholder="الشهر" min="1" max="12">
+          <input type="number" id="year" placeholder="السنة" min="1">
+        </div>
+        <div class="converter-input" id="hijriInput" style="display: none;">
+          <input type="number" id="hDay" placeholder="اليوم" min="1" max="30">
+          <input type="number" id="hMonth" placeholder="الشهر" min="1" max="12">
+          <input type="number" id="hYear" placeholder="السنة" min="1">
+        </div>
+        <button id="convertBtn" class="convert-btn">تحويل</button>
+        <div class="converter-result" id="convertResult">
+          <h4>النتيجة:</h4>
+          <p id="convertedDate">--/--/----</p>
+        </div>
+      </div>
+    </div>
+  </div>
   
+  <!-- DAYS PAGE -->
   <div id="days" class="page">
     <div class="calendar-container">
       <div class="calendar-header">
@@ -511,6 +751,7 @@
     </div>
   </div>
 
+  <!-- STORIES PAGE -->
   <div id="stories" class="page">
     <div class="control-panel">
       <button id="addPinBtn">📍 إضافة نقطة (للمشرف)</button>
@@ -562,6 +803,127 @@
   // Store all content for searching
   let allAthkar = [];
   let allTafsir = [];
+
+  // Daily Verses Database
+  const quranVerses = [
+    { text: "إِنَّ اللَّهَ يَأْمُرُ بِالْعَدْلِ وَالْإِحْسَانِ وَإِيتَاءِ ذِي الْقُرْبَىٰ", ref: "سورة النحل - 90" },
+    { text: "وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ", ref: "سورة الذاريات - 55" },
+    { text: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", ref: "سورة الشرح - 6" },
+    { text: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً", ref: "سورة البقرة - 201" },
+    { text: "وَلَا تَيْأَسُوا مِن رَّوْحِ اللَّهِ", ref: "سورة يوسف - 87" },
+    { text: "وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا", ref: "سورة الطلاق - 2" },
+    { text: "وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ", ref: "سورة النجم - 39" }
+  ];
+  
+  const zakatVerses = [
+    { text: "وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ", ref: "سورة البقرة - 43" },
+    { text: "خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا", ref: "سورة التوبة - 103" },
+    { text: "وَالَّذِينَ فِي أَمْوَالِهِمْ حَقٌّ مَّعْلُومٌ", ref: "سورة المعارج - 24" },
+    { text: "وَمَا آتَيْتُم مِّن زَكَاةٍ تُرِيدُونَ وَجْهَ اللَّهِ فَأُولَٰئِكَ هُمُ الْمُضْعِفُونَ", ref: "سورة الروم - 39" }
+  ];
+  
+  const hijriVerses = [
+    { text: "إِلَّا تَنصُرُوهُ فَقَدْ نَصَرَهُ اللَّهُ إِذْ أَخْرَجَهُ الَّذِينَ كَفَرُوا ثَانِيَ اثْنَيْنِ", ref: "سورة التوبة - 40" },
+    { text: "لَقَدْ كَانَ لَكُمْ فِي رَسُولِ اللَّهِ أُسْوَةٌ حَسَنَةٌ", ref: "سورة الأحزاب - 21" },
+    { text: "وَالَّذِينَ هَاجَرُوا فِي اللَّهِ مِن بَعْدِ مَا ظُلِمُوا", ref: "سورة النحل - 41" }
+  ];
+
+  // Get daily verse based on date
+  function getDailyVerse(versesArray) {
+    const today = new Date();
+    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+    const index = dayOfYear % versesArray.length;
+    return versesArray[index];
+  }
+
+  // Hijri Date calculation
+  function getHijriDate() {
+    const today = new Date();
+    const gregorianYear = today.getFullYear();
+    const gregorianMonth = today.getMonth() + 1;
+    const gregorianDay = today.getDate();
+    
+    // Simple approximation (Islamic Hijri date)
+    const hijriYear = Math.floor((gregorianYear - 622) * 0.97);
+    const hijriMonth = ((gregorianMonth + 1) % 12) + 1;
+    const hijriDay = gregorianDay % 30;
+    
+    const months = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني', 'جمادى الأولى', 'جمادى الثانية', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
+    
+    return `${hijriDay} ${months[hijriMonth-1]} ${hijriYear} هـ`;
+  }
+
+  // Zakat Calculation
+  function calculateZakat() {
+    const wealth = parseFloat(document.getElementById('wealthAmount').value);
+    if (isNaN(wealth) || wealth <= 0) {
+      alert('الرجاء إدخال مبلغ صحيح');
+      return;
+    }
+    const zakat = wealth * 0.025;
+    document.getElementById('zakatAmount').innerHTML = zakat.toFixed(2);
+    document.getElementById('zakatResult').style.display = 'block';
+  }
+
+  // Hijri Converter (simplified)
+  function convertDate() {
+    const convertType = document.getElementById('convertType').value;
+    if (convertType === 'gregToHijri') {
+      const day = parseInt(document.getElementById('day').value);
+      const month = parseInt(document.getElementById('month').value);
+      const year = parseInt(document.getElementById('year').value);
+      if (isNaN(day) || isNaN(month) || isNaN(year)) {
+        alert('الرجاء إدخال تاريخ ميلادي صحيح');
+        return;
+      }
+      const hijriYear = Math.floor((year - 622) * 0.97);
+      const hijriMonth = ((month + 1) % 12) + 1;
+      const hijriDay = day % 30;
+      const months = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني', 'جمادى الأولى', 'جمادى الثانية', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
+      document.getElementById('convertedDate').innerHTML = `${hijriDay} ${months[hijriMonth-1]} ${hijriYear} هـ`;
+    } else {
+      const day = parseInt(document.getElementById('hDay').value);
+      const month = parseInt(document.getElementById('hMonth').value);
+      const year = parseInt(document.getElementById('hYear').value);
+      if (isNaN(day) || isNaN(month) || isNaN(year)) {
+        alert('الرجاء إدخال تاريخ هجري صحيح');
+        return;
+      }
+      const gregorianYear = Math.floor(year / 0.97) + 622;
+      document.getElementById('convertedDate').innerHTML = `${day}/${month}/${gregorianYear} م`;
+    }
+  }
+
+  // Toggle converter input visibility
+  document.getElementById('convertType').addEventListener('change', function() {
+    if (this.value === 'gregToHijri') {
+      document.getElementById('gregorianInput').style.display = 'flex';
+      document.getElementById('hijriInput').style.display = 'none';
+    } else {
+      document.getElementById('gregorianInput').style.display = 'none';
+      document.getElementById('hijriInput').style.display = 'flex';
+    }
+  });
+
+  // Dark Mode Toggle
+  const darkModeToggle = document.getElementById('darkModeToggle');
+  darkModeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    darkModeToggle.innerHTML = isDark ? '☀️ الوضع النهاري' : '🌙 الوضع الليلي';
+    localStorage.setItem('darkMode', isDark);
+  });
+  
+  // Load dark mode preference
+  if (localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+    darkModeToggle.innerHTML = '☀️ الوضع النهاري';
+  }
+
+  // Update Hijri date display
+  function updateHijriDate() {
+    document.getElementById('hijriDateDisplay').innerHTML = getHijriDate();
+  }
 
   // DOM Elements
   const adminToggle = document.getElementById('adminToggle');
@@ -645,7 +1007,6 @@
     if (athkarBtn) athkarBtn.style.display = adminMode ? 'flex' : 'none';
     if (tafsirBtn) tafsirBtn.style.display = adminMode ? 'flex' : 'none';
     
-    // Show/hide map admin buttons
     const mapButtons = document.querySelectorAll('#addPinBtn, #addLabelBtn, #addPathBtn, #deleteModeBtn');
     mapButtons.forEach(btn => {
       btn.style.display = adminMode ? 'inline-block' : 'none';
@@ -942,8 +1303,7 @@
   document.getElementById('prevMonth')?.addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
   document.getElementById('nextMonth')?.addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
 
-  // ============ MAP FUNCTIONS (FULLY WORKING) ============
-  
+  // ============ MAP FUNCTIONS ============
   function createCustomLabel(lat, lng, text, color = '#1e5629') {
     const icon = L.divIcon({
       className: 'custom-label',
@@ -964,7 +1324,6 @@
     labels = {};
     polylines = {};
     
-    // Load pins
     const pinsSnapshot = await database.ref('map_pins').once('value');
     const pins = pinsSnapshot.val() || {};
     for (let id in pins) {
@@ -981,7 +1340,6 @@
       markers[id] = marker;
     }
     
-    // Load text labels (country names)
     const labelsSnapshot = await database.ref('map_labels').once('value');
     const mapLabels = labelsSnapshot.val() || {};
     for (let id in mapLabels) {
@@ -999,7 +1357,6 @@
       labels[id] = labelMarker;
     }
     
-    // Load paths
     const pathsSnapshot = await database.ref('map_paths').once('value');
     const paths = pathsSnapshot.val() || {};
     for (let id in paths) {
@@ -1018,7 +1375,6 @@
     }
   }
   
-  // Admin map functions
   window.editPin = async function(id, currentTitle, currentDesc) {
     if (!adminMode) return;
     const newTitle = prompt('أدخل الاسم الجديد:', currentTitle);
@@ -1136,7 +1492,6 @@
     });
   }
   
-  // Map admin controls
   document.getElementById('addPinBtn').onclick = () => {
     if (!adminMode) { alert('❌ فقط المشرف يمكنه إضافة نقاط'); return; }
     currentDrawMode = 'pin';
@@ -1237,9 +1592,31 @@
     });
   });
 
+  // Initialize all features
+  function initializeFeatures() {
+    updateHijriDate();
+    setInterval(updateHijriDate, 60000); // Update every minute
+    
+    const dailyVerse = getDailyVerse(quranVerses);
+    document.getElementById('verseText').innerHTML = `﴿ ${dailyVerse.text} ﴾`;
+    document.getElementById('verseReference').innerHTML = dailyVerse.ref;
+    
+    const zakatVerse = getDailyVerse(zakatVerses);
+    document.getElementById('zakatVerseText').innerHTML = `﴿ ${zakatVerse.text} ﴾`;
+    document.getElementById('zakatVerseRef').innerHTML = zakatVerse.ref;
+    
+    const hijriVerse = getDailyVerse(hijriVerses);
+    document.getElementById('hijriVerseText').innerHTML = `﴿ ${hijriVerse.text} ﴾`;
+    document.getElementById('hijriVerseRef').innerHTML = hijriVerse.ref;
+  }
+  
+  document.getElementById('calculateZakatBtn').addEventListener('click', calculateZakat);
+  document.getElementById('convertBtn').addEventListener('click', convertDate);
+  
+  initializeFeatures();
   loadEvents();
   renderCalendar();
-  console.log('✅ Platform ready with FULL map features + search!');
+  console.log('✅ Platform ready with all new features!');
 </script>
 </body>
 </html>
