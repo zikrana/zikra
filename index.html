@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- IMPORTANT: This meta tag allows Firebase to work on Neocities -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https: wss: data: blob: https://zikra-e5c2a-default-rtdb.firebaseio.com wss://*.firebaseio.com https://identitytoolkit.googleapis.com https://www.gstatic.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; font-src 'self' https: data:; img-src 'self' https: data: blob:; frame-src 'self' https:;">
+  <title>ذكرى - المنصة الإسلامية</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Amiri', 'Tajawal', serif;
+      background: linear-gradient(145deg, #f7f3e8 0%, #fef9e6 100%);
+      color: #2c3e2f;
+      direction: rtl;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: rgba(255, 250, 240, 0.95);
+      border-radius: 32px;
+      padding: 20px 25px;
+    }
+    header {
+      background: linear-gradient(135deg, #1e4a2a, #2c5e2e);
+      color: #fff9e8;
+      padding: 16px 28px;
+      border-radius: 60px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header h1 { font-size: 2rem; }
+    .nav-link {
+      background: #fef3d6;
+      color: #1e4a2a;
+      padding: 8px 20px;
+      border-radius: 40px;
+      cursor: pointer;
+      border: none;
+      margin: 0 4px;
+      font-family: 'Tajawal';
+    }
+    .admin-toggle {
+      margin: 15px 0 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .admin-toggle label {
+      background: #2c5e2e;
+      color: white;
+      padding: 8px 22px;
+      border-radius: 40px;
+      cursor: pointer;
+    }
+    .sync-status {
+      background: #4caf50;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      color: white;
+      font-weight: bold;
+    }
+    .sync-status.error { background: #f44336; }
+    .sync-status.saving { background: #ff9800; animation: pulse 1s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } }
+    
+    .login-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .login-box {
+      background: white;
+      padding: 40px;
+      border-radius: 48px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+    .login-box h2 { color: #1e5629; margin-bottom: 20px; }
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 2px solid #e0d5b9;
+      border-radius: 60px;
+      font-family: 'Tajawal';
+    }
+    .login-box button {
+      background: #2c5e2e;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 60px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 15px;
+    }
+    .error-msg { color: #f44336; margin-top: 10px; font-size: 0.85rem; }
+    .close-modal {
+      float: left;
+      font-size: 28px;
+      cursor: pointer;
+      color: #aaa;
+    }
+    
+    .editable-title, .editable-content {
+      transition: 0.2s;
+      border-radius: 12px;
+    }
+    .editable-title[contenteditable="true"], 
+    .editable-content[contenteditable="true"] {
+      background: #fff5e6;
+      border: 1px dashed #2c5e2e;
+      padding: 6px 10px;
+      outline: none;
+    }
+    .box-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 28px;
+      margin-top: 20px;
+    }
+    .content-box {
+      border-radius: 28px;
+      padding: 18px 20px;
+      background: white;
+      border: 1px solid #e8dcc8;
+    }
+    .content-box h3 {
+      color: #1e5629;
+      border-right: 5px solid #2c9e3a;
+      padding-right: 14px;
+    }
+    .page { display: none; }
+    .page.active { display: block; }
+    .hero {
+      text-align: center;
+      padding: 40px 20px;
+      background: linear-gradient(115deg, #2c5e2e10, #fef2df);
+      border-radius: 40px;
+      margin-bottom: 30px;
+    }
+    .hero h2 { color: #1e5629; font-size: 1.8rem; }
+    .calendar-container {
+      background: white;
+      border-radius: 28px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+      text-align: center;
+    }
+    .weekday {
+      font-weight: bold;
+      background: #d9e6c3;
+      padding: 10px;
+      border-radius: 40px;
+    }
+    .day-cell {
+      background: #fff7ec;
+      padding: 12px;
+      border-radius: 28px;
+      cursor: pointer;
+      border: 1px solid #e9dfcc;
+    }
+    .day-cell.has-event { background: #2c5e2ecc; color: white; }
+    #map { height: 520px; border-radius: 32px; margin: 20px 0; }
+    .control-panel button {
+      background: #2c5e2e;
+      color: white;
+      border: none;
+      padding: 8px 24px;
+      border-radius: 40px;
+      cursor: pointer;
+    }
+    button { background: #2c5e2e; color: white; border: none; border-radius: 40px; padding: 8px 18px; cursor: pointer; }
+    @media (max-width: 700px) {
+      header { flex-direction: column; gap: 14px; }
+      .day-cell { padding: 6px; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>📿 ذكرى</h1>
+    <div>
+      <button class="nav-link" data-page="home">🏠 الرئيسية</button>
+      <button class="nav-link" data-page="athkar">📿 الأذكار</button>
+      <button class="nav-link" data-page="tafsir">📖 التفسير</button>
+      <button class="nav-link" data-page="days">🌟 الأيام المباركة</button>
+      <button class="nav-link" data-page="stories">🌍 قصص الأنبياء</button>
+    </div>
+  </header>
+
+  <div class="admin-toggle">
+    <label>
+      <input type="checkbox" id="adminToggle"> ✏️ وضع الإدارة (تعديل المحتوى)
+    </label>
+    <div class="sync-status" id="syncStatus">✅ متصل</div>
+  </div>
+
+  <div class="login-modal" id="loginModal">
+    <div class="login-box">
+      <span class="close-modal" id="closeModal">&times;</span>
+      <h2>🔐 تسجيل دخول المشرف</h2>
+      <p>الرجاء إدخال بيانات حساب المشرف</p>
+      <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
+      <input type="password" id="loginPassword" placeholder="كلمة المرور">
+      <button id="loginBtn">دخول</button>
+      <div id="loginError" class="error-msg"></div>
+    </div>
+  </div>
+
+  <div id="home" class="page active">
+    <div class="hero">
+      <h2>﴿ وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ ﴾</h2>
+      <p style="font-size:1.2rem;">منصة روحانية متزامنة - التعديلات تظهر لجميع المستخدمين ✨</p>
+    </div>
+    <div class="box-grid">
+      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'athkar\']').click();"><h3>📿 أذكار اليوم والليل</h3><p>أذكار الصباح، المساء، النوم</p></div>
+      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'tafsir\']').click();"><h3>📖 كنوز التفسير</h3><p>تفسير ميسر لآيات وسور عظيمة</p></div>
+      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'days\']').click();"><h3>📅 الأيام المباركة</h3><p>تقويم هجري مع إضافة المناسبات</p></div>
+      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'stories\']').click();"><h3>🗺️ سير الأنبياء</h3><p>خريطة تفاعلية لقصص الأنبياء</p></div>
+    </div>
+  </div>
+
+  <div id="athkar" class="page"><div class="box-grid" id="athkarBoxes"></div></div>
+  <div id="tafsir" class="page"><div class="box-grid" id="tafsirBoxes"></div></div>
+  
+  <div id="days" class="page">
+    <div class="calendar-container">
+      <div class="calendar-header">
+        <button id="prevMonth">‹ السابق</button>
+        <span id="monthYear" style="font-size:1.5rem; font-weight:bold;"></span>
+        <button id="nextMonth">التالي ›</button>
+      </div>
+      <div class="calendar-grid" id="calendarDays"></div>
+    </div>
+    <div class="event-panel" id="eventPanel" style="display: none;">
+      <h3>📌 تفاصيل اليوم</h3>
+      <div id="selectedDate"></div>
+      <textarea id="eventDesc" rows="3"></textarea>
+      <button id="saveEvent">💾 حفظ</button>
+    </div>
+  </div>
+
+  <div id="stories" class="page">
+    <div class="control-panel">
+      <button id="addPinMode">📍 إضافة نقطة</button>
+      <button id="addRouteMode">✏️ رسم مسار</button>
+      <button id="cancelDraw">❌ إلغاء</button>
+    </div>
+    <div id="map"></div>
+    <div class="stories-detail">
+      <h3>📖 تفاصيل القصة</h3>
+      <div id="storyContent">🌟 اختر نقطة على الخريطة</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAZbj5qwH-SxYoq2nP4jwoGgzj1GhoAQmw",
+    authDomain: "zikra-e5c2a.firebaseapp.com",
+    projectId: "zikra-e5c2a",
+    storageBucket: "zikra-e5c2a.firebasestorage.app",
+    messagingSenderId: "93622067047",
+    appId: "1:93622067047:web:997f6a2932833dc94299c2",
+    databaseURL: "https://zikra-e5c2a-default-rtdb.firebaseio.com/"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+  const auth = firebase.auth();
+
+  let isAdmin = false;
+  let adminMode = false;
+
+  const adminToggle = document.getElementById('adminToggle');
+  const loginModal = document.getElementById('loginModal');
+  const closeModal = document.getElementById('closeModal');
+  const loginBtn = document.getElementById('loginBtn');
+  const loginEmail = document.getElementById('loginEmail');
+  const loginPassword = document.getElementById('loginPassword');
+  const loginError = document.getElementById('loginError');
+  const syncStatus = document.getElementById('syncStatus');
+
+  // Show login ONLY when admin toggle clicked
+  adminToggle.addEventListener('change', (e) => {
+    if (!isAdmin) {
+      if (e.target.checked) {
+        loginModal.style.display = 'flex';
+        adminToggle.checked = false;
+      }
+    } else {
+      enableAdminMode(e.target.checked);
+    }
+  });
+
+  closeModal.addEventListener('click', () => {
+    loginModal.style.display = 'none';
+    loginEmail.value = '';
+    loginPassword.value = '';
+    loginError.innerText = '';
+  });
+
+  loginBtn.addEventListener('click', async () => {
+    const email = loginEmail.value.trim();
+    const password = loginPassword.value;
+    
+    if (!email || !password) {
+      loginError.innerText = 'الرجاء إدخال البريد الإلكتروني وكلمة المرور';
+      return;
+    }
+    
+    try {
+      syncStatus.innerHTML = '🔄 جاري تسجيل الدخول...';
+      syncStatus.className = 'sync-status saving';
+      
+      const userCredential = await auth.signInWithEmailAndPassword(email, password);
+      isAdmin = true;
+      loginModal.style.display = 'none';
+      adminToggle.checked = true;
+      enableAdminMode(true);
+      syncStatus.innerHTML = '✅ مشرف متصل';
+      syncStatus.className = 'sync-status';
+      loginError.innerText = '';
+      loadAllContent();
+      
+    } catch (error) {
+      console.error("Login error:", error);
+      syncStatus.innerHTML = '❌ فشل الاتصال';
+      syncStatus.className = 'sync-status error';
+      
+      if (error.code === 'auth/user-not-found') {
+        loginError.innerText = 'المستخدم غير موجود. تأكد من إنشاء حساب المشرف في Firebase Authentication';
+      } else if (error.code === 'auth/wrong-password') {
+        loginError.innerText = 'كلمة المرور غير صحيحة';
+      } else if (error.code === 'auth/network-request-failed') {
+        loginError.innerText = 'خطأ في الشبكة. تأكد من إضافة zikra.neocities.org إلى Authorized Domains';
+      } else {
+        loginError.innerText = 'خطأ: ' + error.message;
+      }
+    }
+  });
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      isAdmin = true;
+      syncStatus.innerHTML = '✅ مشرف متصل';
+      syncStatus.className = 'sync-status';
+      loadAllContent();
+    } else {
+      isAdmin = false;
+      adminToggle.checked = false;
+      enableAdminMode(false);
+      syncStatus.innerHTML = '✅ متصل';
+      syncStatus.className = 'sync-status';
+    }
+  });
+
+  function enableAdminMode(enabled) {
+    adminMode = enabled && isAdmin;
+    document.querySelectorAll('.editable-title, .editable-content').forEach(el => {
+      if (adminMode) {
+        el.setAttribute('contenteditable', 'true');
+        el.style.cursor = 'text';
+      } else {
+        el.setAttribute('contenteditable', 'false');
+        el.style.cursor = 'default';
+      }
+    });
+  }
+
+  async function saveToFirebase(path, data) {
+    if (!isAdmin) return;
+    try {
+      await database.ref(path).set(data);
+      syncStatus.innerHTML = '💾 تم الحفظ';
+      syncStatus.className = 'sync-status saving';
+      setTimeout(() => {
+        syncStatus.innerHTML = '✅ مشرف متصل';
+        syncStatus.className = 'sync-status';
+      }, 1500);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function setupAutoSave() {
+    document.addEventListener('blur', async (e) => {
+      if (!adminMode) return;
+      const target = e.target;
+      if (target.classList && (target.classList.contains('editable-title') || target.classList.contains('editable-content'))) {
+        const pageId = target.closest('.page')?.id;
+        const dataId = target.getAttribute('data-id');
+        const type = target.classList.contains('editable-title') ? 'title' : 'content';
+        if (pageId && dataId) {
+          await saveToFirebase(`content/${pageId}/${type}/${dataId}`, { content: target.innerHTML });
+        }
+      }
+    }, true);
+  }
+
+  async function loadAllContent() {
+    try {
+      const snapshot = await database.ref('content').once('value');
+      const data = snapshot.val();
+      if (data) {
+        for (let pageId in data) {
+          for (let type in data[pageId]) {
+            for (let dataId in data[pageId][type]) {
+              const element = document.querySelector(`#${pageId} .editable-${type}[data-id="${dataId}"]`);
+              if (element && data[pageId][type][dataId]?.content) {
+                element.innerHTML = data[pageId][type][dataId].content;
+              }
+            }
+          }
+        }
+      }
+    } catch (error) { console.log(error); }
+  }
+
+  function initContent() {
+    const athkarContainer = document.getElementById('athkarBoxes');
+    const athkarData = [
+      { title: '🌅 أذكار الصباح', content: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ.<br><br>أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له.' },
+      { title: '🌙 أذكار المساء', content: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لله، وَالْحَمْدُ لله، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.' },
+      { title: '😴 أذكار النوم', content: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا.<br><br>اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ.' },
+      { title: '🕌 أذكار ما بعد الصلاة', content: 'أَسْتَغْفِرُ اللَّهَ (ثلاثاً)، اللَّهُمَّ أَنْتَ السَّلاَمُ وَمِنْكَ السَّلاَمُ تَبَارَكْتَ يَا ذَا الْجَلاَلِ وَالإِكْرَامِ.' },
+      { title: '💚 أذكار متنوعة', content: 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ.' }
+    ];
+    athkarData.forEach((item, i) => {
+      const box = document.createElement('div'); box.className = 'content-box';
+      box.innerHTML = `<h3 class="editable-title" data-id="athkar_title_${i}">${item.title}</h3><div class="box-content editable-content" data-id="athkar_content_${i}">${item.content}</div>`;
+      athkarContainer.appendChild(box);
+    });
+    
+    const tafsirContainer = document.getElementById('tafsirBoxes');
+    const tafsirItems = [
+      { title: '📖 تفسير الفاتحة', content: 'الفاتحة أم الكتاب، سبع مثاني.' },
+      { title: '✨ آية الكرسي', content: 'أعظم آية في القرآن.' },
+      { title: '🤍 سورة الإخلاص', content: 'تعدل ثلث القرآن.' },
+      { title: '🌟 سورة الفلق', content: 'الاستعاذة من شر ما خلق.' },
+      { title: '🌙 سورة الناس', content: 'الاستعاذة من الوسواس.' }
+    ];
+    tafsirItems.forEach((item, i) => {
+      const box = document.createElement('div'); box.className = 'content-box';
+      box.innerHTML = `<h3 class="editable-title" data-id="tafsir_title_${i}">${item.title}</h3><div class="box-content editable-content" data-id="tafsir_content_${i}">${item.content}</div>`;
+      tafsirContainer.appendChild(box);
+    });
+  }
+
+  let currentDate = new Date();
+  let currentYear = currentDate.getFullYear();
+  let currentMonth = currentDate.getMonth();
+  let events = {};
+
+  async function loadEvents() {
+    const snapshot = await database.ref('events').once('value');
+    events = snapshot.val() || {};
+    renderCalendar();
+  }
+
+  async function saveEvent(dateKey, description) {
+    if (isAdmin) await database.ref(`events/${dateKey}`).set({ description });
+    events[dateKey] = { description };
+    renderCalendar();
+  }
+
+  function renderCalendar() {
+    const firstDay = new Date(currentYear, currentMonth, 1);
+    const startDay = firstDay.getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const grid = document.getElementById('calendarDays');
+    if (!grid) return;
+    grid.innerHTML = '';
+    const weekdays = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+    weekdays.forEach(day => { const d = document.createElement('div'); d.className = 'weekday'; d.innerText = day; grid.appendChild(d); });
+    for (let i = 0; i < startDay; i++) { const empty = document.createElement('div'); empty.className = 'day-cell'; grid.appendChild(empty); }
+    for (let d = 1; d <= daysInMonth; d++) {
+      const cell = document.createElement('div'); cell.className = 'day-cell'; cell.innerText = d;
+      const dateKey = `${currentYear}-${currentMonth+1}-${d}`;
+      if (events[dateKey]) cell.classList.add('has-event');
+      cell.addEventListener('click', () => {
+        const panel = document.getElementById('eventPanel');
+        panel.style.display = 'block';
+        document.getElementById('selectedDate').innerHTML = `${d}/${currentMonth+1}/${currentYear}`;
+        document.getElementById('eventDesc').value = events[dateKey]?.description || '';
+        document.getElementById('saveEvent').onclick = async () => {
+          await saveEvent(dateKey, document.getElementById('eventDesc').value);
+          alert('تم الحفظ');
+          panel.style.display = 'none';
+        };
+      });
+      grid.appendChild(cell);
+    }
+    document.getElementById('monthYear').innerHTML = `${currentYear}/${currentMonth+1}`;
+  }
+
+  document.getElementById('prevMonth')?.addEventListener('click', () => {
+    currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    renderCalendar();
+  });
+  document.getElementById('nextMonth')?.addEventListener('click', () => {
+    currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+    renderCalendar();
+  });
+
+  let mapInitialized = false;
+  function initMap() {
+    if (mapInitialized) return;
+    const map = L.map('map').setView([27.0, 30.0], 4);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© OpenStreetMap',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+    mapInitialized = true;
+  }
+
+  document.querySelectorAll('.nav-link').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(btn.getAttribute('data-page')).classList.add('active');
+      if (btn.getAttribute('data-page') === 'stories') initMap();
+      if (btn.getAttribute('data-page') === 'days') loadEvents();
+    });
+  });
+
+  initContent();
+  setupAutoSave();
+  loadAllContent();
+  loadEvents();
+  renderCalendar();
+  
+  console.log('✅ Platform ready! Visit https://zikra.neocities.org');
+</script>
+</body>
+</html>
