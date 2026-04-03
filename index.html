@@ -128,7 +128,6 @@
     }
     .close-modal:hover { color: #333; }
     
-    /* Cards Grid */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -183,7 +182,6 @@
     }
     .more-btn:hover { background: #1e4a2a; transform: scale(0.98); }
     
-    /* Delete button for admin */
     .delete-card-btn {
       position: absolute;
       top: 10px;
@@ -200,12 +198,10 @@
       align-items: center;
       justify-content: center;
       z-index: 10;
-      transition: 0.2s;
     }
-    .delete-card-btn:hover { background: #d32f2f; transform: scale(1.1); }
+    .delete-card-btn:hover { background: #d32f2f; }
     .info-card:hover .delete-card-btn { display: flex; }
     
-    /* Add Button */
     .add-card-btn {
       background: linear-gradient(135deg, #2c5e2e, #1e4a2a);
       color: white;
@@ -219,15 +215,10 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      transition: 0.3s;
-      min-height: 200px;
+      margin-top: 30px;
     }
-    .add-card-btn:hover {
-      background: linear-gradient(135deg, #1e4a2a, #143d1f);
-      transform: scale(1.02);
-    }
+    .add-card-btn:hover { background: linear-gradient(135deg, #1e4a2a, #143d1f); }
     
-    /* Modal */
     .content-modal {
       position: fixed;
       top: 0;
@@ -249,11 +240,6 @@
       overflow-y: auto;
       padding: 35px;
       position: relative;
-      animation: fadeIn 0.3s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
     }
     .close-modal-btn {
       position: absolute;
@@ -262,7 +248,6 @@
       font-size: 32px;
       cursor: pointer;
       color: #999;
-      transition: 0.2s;
     }
     .close-modal-btn:hover { color: #333; }
     .modal-header {
@@ -298,7 +283,6 @@
       border-radius: 12px;
     }
     
-    /* Add Form Modal */
     .add-form-modal {
       position: fixed;
       top: 0;
@@ -317,7 +301,6 @@
       width: 90%;
       max-width: 500px;
       padding: 35px;
-      position: relative;
     }
     .add-form-content h3 { color: #1e5629; margin-bottom: 20px; text-align: center; }
     .add-form-content input, .add-form-content textarea {
@@ -327,9 +310,8 @@
       border: 2px solid #e0d5b9;
       border-radius: 28px;
       font-family: 'Tajawal';
-      font-size: 1rem;
     }
-    .add-form-content textarea { min-height: 100px; resize: vertical; }
+    .add-form-content textarea { min-height: 100px; }
     .add-form-content button {
       background: #2c5e2e;
       color: white;
@@ -338,8 +320,7 @@
       border-radius: 40px;
       cursor: pointer;
       width: 100%;
-      margin-top: 15px;
-      font-size: 1rem;
+      margin-top: 10px;
     }
     
     #map { height: 500px; border-radius: 28px; margin: 20px 0; border: 2px solid #e0d5b9; }
@@ -408,17 +389,13 @@
       border-radius: 28px;
       cursor: pointer;
       border: 1px solid #e9dfcc;
-      transition: 0.2s;
     }
-    .day-cell:hover { background: #e8dcc8; }
     .day-cell.has-event { background: #2c5e2ecc; color: white; }
     button { background: #2c5e2e; color: white; border: none; border-radius: 40px; padding: 8px 18px; cursor: pointer; }
     @media (max-width: 700px) {
       header { flex-direction: column; gap: 14px; }
       .cards-grid { grid-template-columns: 1fr; }
       #map { height: 350px; }
-      .modal-header { font-size: 1.3rem; }
-      .modal-body { font-size: 1rem; padding: 15px; }
     }
   </style>
 </head>
@@ -440,7 +417,6 @@
     <div class="sync-status" id="syncStatus">✅ متصل</div>
   </div>
 
-  <!-- Login Modal -->
   <div class="login-modal" id="loginModal">
     <div class="login-box">
       <span class="close-modal" id="closeModal">&times;</span>
@@ -452,7 +428,6 @@
     </div>
   </div>
 
-  <!-- Content Modal -->
   <div class="content-modal" id="contentModal">
     <div class="modal-content">
       <span class="close-modal-btn" id="closeModalBtn">&times;</span>
@@ -462,7 +437,6 @@
     </div>
   </div>
 
-  <!-- Add New Card Form Modal -->
   <div class="add-form-modal" id="addFormModal">
     <div class="add-form-content">
       <h3 id="addFormTitle">➕ إضافة بطاقة جديدة</h3>
@@ -470,7 +444,7 @@
       <textarea id="newCardBody" placeholder="المحتوى الكامل..."></textarea>
       <input type="text" id="newCardFooter" placeholder="النص السفلي (تذكير)">
       <button id="saveNewCardBtn">💾 حفظ البطاقة</button>
-      <button id="cancelAddBtn" style="background:#999; margin-top:10px;">إلغاء</button>
+      <button id="cancelAddBtn" style="background:#999;">إلغاء</button>
     </div>
   </div>
 
@@ -487,21 +461,18 @@
     </div>
   </div>
 
-  <!-- Athkar Page -->
   <div id="athkar" class="page">
     <div class="hero"><h2>📿 حصن المسلم اليومي</h2><p>اضغط "المزيد" لقراءة الذكر كاملاً</p></div>
     <div class="cards-grid" id="athkarBoxes"></div>
     <div id="athkarAddBtn" class="add-card-btn" style="display: none;">➕ إضافة بطاقة أذكار جديدة</div>
   </div>
   
-  <!-- Tafsir Page -->
   <div id="tafsir" class="page">
     <div class="hero"><h2>📖 كنوز التفسير</h2><p>اضغط "المزيد" لقراءة التفسير كاملاً</p></div>
     <div class="cards-grid" id="tafsirBoxes"></div>
     <div id="tafsirAddBtn" class="add-card-btn" style="display: none;">➕ إضافة بطاقة تفسير جديدة</div>
   </div>
   
-  <!-- Days Page -->
   <div id="days" class="page">
     <div class="calendar-container">
       <div class="calendar-header">
@@ -513,7 +484,6 @@
     </div>
   </div>
 
-  <!-- Stories Page -->
   <div id="stories" class="page">
     <div class="control-panel">
       <button id="addPinMode">📍 إضافة نقطة</button>
@@ -549,7 +519,6 @@
   let currentType = null;
   let pendingAddType = null;
 
-  // DOM Elements
   const adminToggle = document.getElementById('adminToggle');
   const loginModal = document.getElementById('loginModal');
   const closeModal = document.getElementById('closeModal');
@@ -592,6 +561,7 @@
       adminToggle.checked = true;
       enableAdminMode(true);
       syncStatus.innerHTML = '✅ مشرف متصل';
+      loadAllCards();
     } catch (error) {
       loginError.innerText = 'خطأ: ' + error.message;
     }
@@ -614,9 +584,10 @@
 
   function enableAdminMode(enabled) {
     adminMode = enabled && isAdmin;
-    // Show/hide add buttons
-    document.getElementById('athkarAddBtn').style.display = adminMode ? 'flex' : 'none';
-    document.getElementById('tafsirAddBtn').style.display = adminMode ? 'flex' : 'none';
+    const athkarBtn = document.getElementById('athkarAddBtn');
+    const tafsirBtn = document.getElementById('tafsirAddBtn');
+    if (athkarBtn) athkarBtn.style.display = adminMode ? 'flex' : 'none';
+    if (tafsirBtn) tafsirBtn.style.display = adminMode ? 'flex' : 'none';
     
     if (contentModal.style.display === 'flex') {
       modalHeader.setAttribute('contenteditable', adminMode ? 'true' : 'false');
@@ -625,6 +596,15 @@
     }
   }
 
+  window.deleteCard = async function(type, id) {
+    if (!adminMode) return;
+    if (confirm('هل أنت متأكد من حذف هذه البطاقة؟')) {
+      await database.ref(`${type}_full/${id}`).remove();
+      await database.ref(`${type}_list/${id}`).remove();
+      loadCardsOfType(type);
+    }
+  };
+
   async function saveContent() {
     if (!adminMode || !currentItemId || !currentType) return;
     await database.ref(`${currentType}_full/${currentItemId}`).set({
@@ -632,21 +612,12 @@
       body: modalBody.innerHTML,
       footer: modalFooter.innerHTML
     });
-    const card = document.querySelector(`.info-card[data-id="${currentItemId}"][data-type="${currentType}"]`);
+    const card = document.querySelector(`.info-card[data-id="${currentItemId}"]`);
     if (card) {
       card.querySelector('.card-header').innerHTML = modalHeader.innerHTML;
       let short = modalBody.innerText.substring(0, 120);
       if (modalBody.innerText.length > 120) short += '...';
       card.querySelector('.card-preview p').innerHTML = short;
-    }
-  }
-
-  async function deleteCard(type, id) {
-    if (!adminMode) return;
-    if (confirm('هل أنت متأكد من حذف هذه البطاقة؟')) {
-      await database.ref(`${type}_full/${id}`).remove();
-      await database.ref(`${type}_list/${id}`).remove();
-      loadCardsOfType(type);
     }
   }
 
@@ -690,11 +661,10 @@
     const cardIds = Object.keys(list);
     
     if (cardIds.length === 0 && type === 'athkar') {
-      // Load default cards if none exist
       const defaultCards = [
-        { id: 'morning', header: '🌅 أذكار الصباح', body: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ.<br><br>أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ.', footer: '🤲 رَطِّبْ لِسَانَكَ بِذِكْرِ اللَّهِ', preview: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا...' },
-        { id: 'evening', header: '🌙 أذكار المساء', body: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ.', footer: '🌙 احْفَظْ بِهَا نَفْسَكَ', preview: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ...' },
-        { id: 'sleep', header: '😴 أذكار النوم', body: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا.<br><br>اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ.', footer: '💤 تَوَكَّلْ عَلَى اللَّهِ', preview: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا...' }
+        { id: 'morning', header: '🌅 أذكار الصباح', body: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ.<br><br>أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ.', footer: '🤲 رَطِّبْ لِسَانَكَ بِذِكْرِ اللَّهِ' },
+        { id: 'evening', header: '🌙 أذكار المساء', body: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ.', footer: '🌙 احْفَظْ بِهَا نَفْسَكَ' },
+        { id: 'sleep', header: '😴 أذكار النوم', body: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا.<br><br>اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ.', footer: '💤 تَوَكَّلْ عَلَى اللَّهِ' }
       ];
       for (const card of defaultCards) {
         await database.ref(`${type}_full/${card.id}`).set({ header: card.header, body: card.body, footer: card.footer });
@@ -706,9 +676,9 @@
     
     if (cardIds.length === 0 && type === 'tafsir') {
       const defaultCards = [
-        { id: 'fatiha', header: '📖 تفسير سورة الفاتحة', body: 'الفاتحة هي أم الكتاب، سبع مثاني، وهي أعظم سورة في القرآن. تشتمل على الثناء على الله وطلب الهداية إلى الصراط المستقيم.', footer: '💎 أم القرآن', preview: 'الفاتحة هي أم الكتاب، سبع مثاني...' },
-        { id: 'kursi', header: '✨ تفسير آية الكرسي', body: 'آية الكرسي هي أعظم آية في القرآن الكريم. تتضمن توحيد الله، حياته، قيوميته، وسع كرسيه السماوات والأرض.', footer: '🛡️ حصن من الشيطان', preview: 'آية الكرسي هي أعظم آية في القرآن...' },
-        { id: 'ikhlas', header: '🤍 تفسير سورة الإخلاص', body: 'سورة الإخلاص تعدل ثلث القرآن. وهي خلاصة التوحيد: قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ.', footer: '🌟 ثلث القرآن', preview: 'سورة الإخلاص تعدل ثلث القرآن...' }
+        { id: 'fatiha', header: '📖 تفسير سورة الفاتحة', body: 'الفاتحة هي أم الكتاب، سبع مثاني، وهي أعظم سورة في القرآن. تشتمل على الثناء على الله وطلب الهداية إلى الصراط المستقيم.', footer: '💎 أم القرآن' },
+        { id: 'kursi', header: '✨ تفسير آية الكرسي', body: 'آية الكرسي هي أعظم آية في القرآن الكريم. تتضمن توحيد الله، حياته، قيوميته، وسع كرسيه السماوات والأرض.', footer: '🛡️ حصن من الشيطان' },
+        { id: 'ikhlas', header: '🤍 تفسير سورة الإخلاص', body: 'سورة الإخلاص تعدل ثلث القرآن. وهي خلاصة التوحيد: قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ.', footer: '🌟 ثلث القرآن' }
       ];
       for (const card of defaultCards) {
         await database.ref(`${type}_full/${card.id}`).set({ header: card.header, body: card.body, footer: card.footer });
@@ -726,7 +696,6 @@
         const div = document.createElement('div');
         div.className = 'info-card';
         div.setAttribute('data-id', id);
-        div.setAttribute('data-type', type);
         let shortText = data.body.substring(0, 120);
         if (data.body.length > 120) shortText += '...';
         div.innerHTML = `
@@ -746,7 +715,6 @@
     await loadCardsOfType('tafsir');
   }
 
-  // Add button handlers
   document.getElementById('athkarAddBtn').onclick = () => {
     pendingAddType = 'athkar';
     document.getElementById('addFormTitle').innerHTML = '➕ إضافة بطاقة أذكار جديدة';
@@ -768,7 +736,32 @@
     newCardFooter.value = '';
   };
 
-  // Calendar
+  modalHeader.addEventListener('blur', () => saveContent());
+  modalBody.addEventListener('blur', () => saveContent());
+  modalFooter.addEventListener('blur', () => saveContent());
+
   let currentDate = new Date(), currentYear = currentDate.getFullYear(), currentMonth = currentDate.getMonth(), events = {};
   async function loadEvents() {
-    const
+    const snapshot = await database.ref('events').once('value');
+    events = snapshot.val() || {};
+    renderCalendar();
+  }
+  function renderCalendar() {
+    const firstDay = new Date(currentYear, currentMonth, 1), startDay = firstDay.getDay(), daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const grid = document.getElementById('calendarDays');
+    if (!grid) return;
+    grid.innerHTML = '';
+    const weekdays = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+    weekdays.forEach(day => { const d = document.createElement('div'); d.className = 'weekday'; d.innerText = day; grid.appendChild(d); });
+    for (let i = 0; i < startDay; i++) { const empty = document.createElement('div'); empty.className = 'day-cell'; grid.appendChild(empty); }
+    for (let d = 1; d <= daysInMonth; d++) {
+      const cell = document.createElement('div'); cell.className = 'day-cell'; cell.innerText = d;
+      const dateKey = `${currentYear}-${currentMonth+1}-${d}`;
+      if (events[dateKey]) cell.classList.add('has-event');
+      cell.onclick = () => {
+        const desc = prompt('وصف اليوم:', events[dateKey] || '');
+        if (desc !== null) {
+          if (desc.trim()) events[dateKey] = desc;
+          else delete events[dateKey];
+          database.ref(`events/${dateKey}`).set({ description: desc });
+         
