@@ -46,40 +46,16 @@
     body.dark-mode .search-box input { color: #eee; background: transparent; }
     body.dark-mode .subpage-btn { background: #2c5e2e; color: #fef3d6; }
     body.dark-mode .subpage-btn.active { background: #ff9800; color: white; }
+    body.dark-mode .modal-body a { color: #d4a843; }
     
-    /* Modal content styles for links and videos */
     .modal-body a {
       color: #2c5e2e;
       text-decoration: underline;
-    }
-    body.dark-mode .modal-body a {
-      color: #d4a843;
-    }
-    .modal-body iframe {
-      max-width: 100%;
-      border-radius: 16px;
-      margin: 10px 0;
-    }
-    .modal-body .video-container {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-      border-radius: 16px;
-      margin: 15px 0;
-    }
-    .modal-body .video-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 16px;
+      word-break: break-all;
     }
     
     .container { max-width: 1300px; margin: 0 auto; background: rgba(255, 250, 240, 0.95); border-radius: 24px; padding: 15px; transition: background 0.3s; }
     
-    /* Header */
     header {
       background: linear-gradient(135deg, #1e4a2a, #2c5e2e);
       color: #fff9e8;
@@ -97,20 +73,17 @@
     .hijri-date { font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 40px; font-family: 'Tajawal'; }
     .dark-mode-toggle { background: #fef3d6; color: #1e4a2a; border: none; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-size: 0.75rem; }
     
-    /* Navigation */
     .nav-wrapper { margin-bottom: 20px; overflow-x: auto; overflow-y: hidden; white-space: nowrap; scrollbar-width: thin; -webkit-overflow-scrolling: touch; padding-bottom: 5px; }
     .nav-wrapper::-webkit-scrollbar { height: 3px; }
     .nav-links { display: inline-flex; gap: 8px; padding: 0 5px; }
     .nav-link { background: #fef3d6; color: #1e4a2a; padding: 8px 16px; border-radius: 40px; cursor: pointer; border: none; font-size: 0.8rem; transition: 0.2s; white-space: nowrap; display: inline-block; }
     .nav-link:hover { background: #ffe2a4; transform: translateY(-2px); }
     
-    /* Verse Panel */
     .verse-panel { text-align: center; margin: 15px 0 20px; padding: 15px; border-radius: 30px; background: linear-gradient(135deg, #2c5e2e15, #fef2df); border-right: 4px solid #d4a843; }
     .verse-panel-text { font-size: 1rem; line-height: 1.8; font-weight: 500; color: #1e5629; }
     body.dark-mode .verse-panel-text { color: #d4a843; }
     .verse-panel-ref { font-size: 0.75rem; margin-top: 8px; opacity: 0.8; color: #8b6b3d; }
     
-    /* Hadith Panel */
     .hadith-panel { text-align: center; margin: 15px 0 20px; padding: 15px; border-radius: 30px; }
     .hadith-panel.true-hadith { background: linear-gradient(135deg, #2c5e2e15, #c8e6d9); border-right: 4px solid #2c5e2e; }
     .hadith-panel.weak-hadith { background: linear-gradient(135deg, #f4433615, #ffcdd2); border-right: 4px solid #f44336; }
@@ -122,7 +95,6 @@
     .hadith-source { font-size: 0.75rem; margin-top: 8px; opacity: 0.8; }
     .warning-badge { display: inline-block; background: #f44336; color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; margin-bottom: 8px; }
     
-    /* Search Bar */
     .search-container { margin: 15px 0 20px; display: flex; justify-content: center; }
     .search-box { display: flex; align-items: center; background: white; border-radius: 60px; padding: 8px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; border: 2px solid #e0d5b9; }
     .search-box input { flex: 1; padding: 14px 12px; border: none; outline: none; font-size: 1rem; font-family: 'Tajawal'; background: transparent; }
@@ -134,14 +106,12 @@
     .result-type { font-size: 0.75rem; color: #8b6b3d; margin-right: 8px; }
     .close-results { float: left; background: none; border: none; font-size: 24px; cursor: pointer; }
     
-    /* Admin Toggle */
     .admin-toggle { margin: 10px 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
     .admin-toggle label { background: #2c5e2e; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-size: 0.85rem; font-weight: bold; }
     .sync-status { background: #4caf50; padding: 6px 12px; border-radius: 40px; font-size: 0.75rem; color: white; font-weight: bold; }
     .sync-status.error { background: #f44336; }
     .sync-status.admin { background: #2196f3; }
     
-    /* Login Modal */
     .login-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
     .login-box { background: white; padding: 35px 30px; border-radius: 50px; width: 85%; max-width: 380px; text-align: center; }
     .login-box h2 { color: #1e5629; margin-bottom: 20px; font-size: 1.4rem; }
@@ -150,7 +120,6 @@
     .error-msg { color: #f44336; margin-top: 10px; font-size: 0.8rem; }
     .close-modal { float: left; font-size: 28px; cursor: pointer; color: #aaa; }
     
-    /* Cards Grid */
     .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-top: 15px; }
     .info-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e8dcc8; transition: transform 0.2s; position: relative; }
     .info-card:active { transform: scale(0.98); }
@@ -164,18 +133,15 @@
     .info-card:hover .delete-card-btn { display: flex; }
     .add-card-btn { background: linear-gradient(135deg, #2c5e2e, #1e4a2a); color: white; border: 1px dashed #d4a843; padding: 12px; border-radius: 20px; cursor: pointer; text-align: center; margin-top: 15px; font-size: 0.8rem; }
     
-    /* Modal */
     .content-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2000; }
     .modal-content { background: white; border-radius: 32px; width: 92%; max-width: 750px; max-height: 85vh; overflow-y: auto; padding: 25px; position: relative; }
     .close-modal-btn { position: absolute; top: 12px; left: 15px; font-size: 28px; cursor: pointer; color: #999; }
     .modal-header { font-size: 1.3rem; font-weight: bold; color: #1e5629; text-align: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #2c5e2e; }
     .modal-body { font-size: 1rem; line-height: 1.8; margin: 15px 0; padding: 20px; background: #fef9e6; border-radius: 24px; }
-    .modal-body a { color: #2c5e2e; text-decoration: underline; }
-    .modal-body iframe { max-width: 100%; border-radius: 16px; }
+    .modal-body a { color: #2c5e2e; text-decoration: underline; word-break: break-all; }
     .modal-footer { font-size: 0.85rem; color: #8b6b3d; text-align: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid #e0d5b9; }
     [contenteditable="true"] { background: #fff5e6; border: 1px dashed #2c5e2e; padding: 6px; outline: none; border-radius: 12px; }
     
-    /* Add Form Modal */
     .add-form-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2001; }
     .add-form-content { background: white; border-radius: 32px; width: 90%; max-width: 450px; padding: 25px; }
     .add-form-content h3 { color: #1e5629; margin-bottom: 15px; text-align: center; font-size: 1.1rem; }
@@ -183,14 +149,12 @@
     .add-form-content textarea { min-height: 100px; }
     .add-form-content button { background: #2c5e2e; color: white; border: none; padding: 10px; border-radius: 40px; cursor: pointer; width: 100%; margin-top: 8px; }
     
-    /* Subpage Navigation */
     .subpage-nav { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; padding: 10px; background: white; border-radius: 50px; border: 1px solid #e8dcc8; }
     .subpage-btn { background: #e8dcc8; color: #1e4a2a; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; flex: 1; text-align: center; }
     .subpage-btn.active { background: #2c5e2e; color: white; }
     .subpage-content { display: none; }
     .subpage-content.active { display: block; }
     
-    /* Zakat Calculator */
     .calculator-box { background: white; border-radius: 28px; padding: 30px 25px; margin-top: 15px; text-align: center; }
     .calculator-box h3 { font-size: 1.4rem; margin-bottom: 20px; color: #1e5629; }
     .calculator-input { margin: 20px 0; }
@@ -199,7 +163,6 @@
     .calculator-result { background: linear-gradient(135deg, #2c5e2e15, #fef2df); padding: 25px; border-radius: 28px; margin-top: 20px; }
     .zakat-amount { font-size: 2rem; font-weight: bold; color: #2c5e2e; margin: 15px 0; }
     
-    /* Hijri Converter */
     .converter-box { display: flex; flex-direction: column; gap: 20px; align-items: center; }
     .converter-input { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
     .converter-input input, .converter-input select { padding: 14px; border: 2px solid #e0d5b9; border-radius: 60px; font-family: 'Tajawal'; font-size: 1rem; min-width: 100px; }
@@ -208,7 +171,6 @@
     .converter-result h4 { font-size: 1.1rem; margin-bottom: 10px; }
     .converter-result p { font-size: 1.2rem; font-weight: bold; color: #1e5629; }
     
-    /* Calendar */
     .calendar-container { background: white; border-radius: 24px; padding: 15px; margin-top: 15px; }
     .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
     .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
@@ -217,7 +179,6 @@
     .day-cell.has-event { background: #2c5e2ecc; color: white; }
     button { background: #2c5e2e; color: white; border: none; border-radius: 40px; padding: 6px 14px; cursor: pointer; font-size: 0.75rem; }
     
-    /* Map Styles */
     #map { height: 450px; border-radius: 24px; margin: 15px 0; border: 2px solid #e0d5b9; z-index: 1; }
     .control-panel { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; justify-content: center; }
     .control-panel button { background: #2c5e2e; color: white; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 0.75rem; transition: 0.2s; }
@@ -226,7 +187,6 @@
     .stories-detail { background: white; border-radius: 24px; padding: 15px; margin-top: 15px; }
     .stories-detail h3 { font-size: 0.95rem; margin-bottom: 8px; }
     
-    /* Homepage Grid */
     .box-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-top: 15px; }
     .content-box { border-radius: 20px; padding: 12px; background: white; border: 1px solid #e8dcc8; cursor: pointer; transition: 0.2s; }
     .content-box:active { transform: scale(0.98); }
@@ -262,7 +222,6 @@
     </div>
   </header>
 
-  <!-- Navigation -->
   <div class="nav-wrapper">
     <div class="nav-links">
       <button class="nav-link" data-page="home">🏠 الرئيسية</button>
@@ -276,7 +235,6 @@
     </div>
   </div>
 
-  <!-- Search Bar -->
   <div class="search-container">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="🔍 ابحث في الأذكار والتفسير والأحاديث...">
@@ -295,7 +253,6 @@
     <div class="sync-status" id="syncStatus">✅ متصل</div>
   </div>
 
-  <!-- Login Modal -->
   <div class="login-modal" id="loginModal">
     <div class="login-box">
       <span class="close-modal" id="closeModal">&times;</span>
@@ -320,7 +277,7 @@
     <div class="add-form-content">
       <h3 id="addFormTitle">➕ إضافة بطاقة جديدة</h3>
       <input type="text" id="newCardTitle" placeholder="العنوان">
-      <textarea id="newCardBody" placeholder="المحتوى الكامل... (يمكنك إضافة روابط يوتيوب أو روابط عادية)"></textarea>
+      <textarea id="newCardBody" placeholder="المحتوى الكامل... (يمكنك إضافة روابط عادية أو روابط يوتيوب)"></textarea>
       <input type="text" id="newCardFooter" placeholder="المصدر / الراوي">
       <button id="saveNewCardBtn">💾 حفظ</button>
       <button id="cancelAddBtn" style="background:#999;">إلغاء</button>
@@ -485,7 +442,7 @@
     </div>
   </div>
 
-  <!-- STORIES PAGE WITH WORKING PATH DRAWING -->
+  <!-- STORIES PAGE -->
   <div id="stories" class="page">
     <div class="hero"><h2>🌍 قصص الأنبياء</h2></div>
     <div class="verse-panel">
@@ -530,7 +487,6 @@
   let currentType = null;
   let pendingAddType = null;
   
-  // Map variables
   let map, mapInitialized = false;
   let markers = {};
   let labels = {};
@@ -542,18 +498,28 @@
   
   let allAthkar = [], allTafsir = [], allTrueHadith = [], allWeakHadith = [];
 
-  // Helper function to convert URLs and YouTube links to HTML
+  // ============ HELPER FUNCTION: Convert URLs to clickable links (NO embedded videos) ============
   function convertUrlsToHtml(text) {
     if (!text) return '';
     
-    // Convert YouTube links to embedded videos
-    let converted = text.replace(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)(?:\S+)?/g, function(match, videoId) {
-      return `<div class="video-container"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe></div>`;
-    });
-    
-    // Convert regular URLs to clickable links
-    converted = converted.replace(/(https?:\/\/[^\s<]+)/g, function(url) {
-      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+    // Convert ANY URL to clickable text link (no embedded videos)
+    let converted = text.replace(/(https?:\/\/[^\s<]+)/g, function(url) {
+      let displayUrl = url;
+      // Clean up YouTube URLs for better display
+      if (url.includes('youtube.com/watch?v=')) {
+        const videoId = url.match(/v=([^&]+)/)?.[1];
+        if (videoId) {
+          displayUrl = `🎬 رابط يوتيوب: ${videoId}`;
+        }
+      } else if (url.includes('youtu.be/')) {
+        const videoId = url.match(/youtu\.be\/([^?]+)/)?.[1];
+        if (videoId) {
+          displayUrl = `🎬 رابط يوتيوب: ${videoId}`;
+        }
+      } else if (url.length > 50) {
+        displayUrl = url.substring(0, 40) + '...';
+      }
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #2c5e2e; text-decoration: underline; word-break: break-all;">${displayUrl}</a>`;
     });
     
     return converted;
@@ -722,7 +688,6 @@
     loadCardsOfType(type);
   }
 
-  // FIXED: Open modal with proper HTML rendering (links, videos, etc.)
   async function openModal(type, id, defaultHeader, defaultBody, defaultFooter) {
     currentType = type; currentItemId = id;
     const saved = await database.ref(`${type}_full/${id}`).once('value');
@@ -732,7 +697,6 @@
     const footer = data?.footer || defaultFooter;
     
     modalHeader.innerHTML = header;
-    // Convert URLs and YouTube links to clickable/embeddable HTML
     modalBody.innerHTML = convertUrlsToHtml(body);
     modalFooter.innerHTML = footer;
     
@@ -823,8 +787,7 @@
   document.getElementById('prevMonth')?.addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
   document.getElementById('nextMonth')?.addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
 
-  // ============ MAP WITH WORKING PATH DRAWING ============
-  
+  // ============ MAP FUNCTIONS ============
   function createCustomLabel(lat, lng, text, color = '#1e5629') {
     return L.marker([lat, lng], { icon: L.divIcon({ className: 'custom-label', html: `<div style="background:${color};color:white;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:bold;">${text}</div>`, iconSize: [null, null], popupAnchor: [0, -8] }) });
   }
@@ -1031,7 +994,7 @@
   document.getElementById('calculateZakatBtn').addEventListener('click', calculateZakat);
   document.getElementById('convertBtn').addEventListener('click', convertDate);
   initializeFeatures(); loadEvents(); renderCalendar();
-  console.log('✅ Platform ready with working links and YouTube embeds!');
+  console.log('✅ Platform ready with clickable YouTube links (not embedded)!');
 </script>
 </body>
 </html>
