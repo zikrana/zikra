@@ -179,6 +179,9 @@
     .weekday { font-weight: bold; background: #d9e6c3; padding: 6px; border-radius: 30px; font-size: 0.7rem; }
     .day-cell { background: #fff7ec; padding: 8px 4px; border-radius: 20px; cursor: pointer; border: 1px solid #e9dfcc; font-size: 0.75rem; position: relative; }
     .day-cell.has-event { background: #2c5e2ecc; color: white; }
+    .day-event-preview { font-size: 0.65rem; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+    .delete-event-btn { position: absolute; top: 2px; left: 2px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; cursor: pointer; display: none; align-items: center; justify-content: center; }
+    .day-cell:hover .delete-event-btn { display: flex; }
     button { background: #2c5e2e; color: white; border: none; border-radius: 40px; padding: 6px 14px; cursor: pointer; font-size: 0.75rem; }
     
     #map { height: 450px; border-radius: 24px; margin: 15px 0; border: 2px solid #e0d5b9; z-index: 1; }
@@ -211,6 +214,7 @@
       #map { height: 500px; }
       .hadith-text, .verse-panel-text { font-size: 1.1rem; }
       .search-box input { font-size: 1.1rem; }
+      .day-event-preview { font-size: 0.7rem; }
     }
   </style>
 </head>
@@ -427,7 +431,7 @@
     </div>
   </div>
   
-  <!-- DAYS PAGE -->
+  <!-- DAYS PAGE - UPDATED with fixed calendar -->
   <div id="days" class="page">
     <div class="hero"><h2>🌟 الأيام المباركة</h2></div>
     <div class="verse-panel">
@@ -700,9 +704,13 @@
     contentModal.style.display = 'flex';
   }
 
-  // FIXED: loadCardsOfType - ensures cards persist after refresh
   async function loadCardsOfType(type) {
-    const containerMap = { athkar: 'athkarBoxes', tafsir: 'tafsirBoxes', trueHadith: 'trueHadithBoxes', weakHadith: 'weakHadithBoxes' };
+    const containerMap = { 
+      athkar: 'athkarBoxes', 
+      tafsir: 'tafsirBoxes', 
+      trueHadith: 'trueHadithBoxes', 
+      weakHadith: 'weakHadithBoxes' 
+    };
     const container = document.getElementById(containerMap[type]);
     if (!container) return;
     
@@ -711,7 +719,6 @@
       let list = listSnapshot.val() || {};
       let cardIds = Object.keys(list);
       
-      // If no cards exist in Firebase, create default ones
       if (cardIds.length === 0) {
         let defaultCards = [];
         
@@ -738,22 +745,15 @@
           ];
         }
         
-        // Save default cards to Firebase
         for (const card of defaultCards) {
-          await database.ref(`${type}_full/${card.id}`).set({ 
-            header: card.header, 
-            body: card.body, 
-            footer: card.footer 
-          });
+          await database.ref(`${type}_full/${card.id}`).set({ header: card.header, body: card.body, footer: card.footer });
           await database.ref(`${type}_list/${card.id}`).set({ id: card.id, order: Date.now() });
         }
         
-        // Reload the cards after saving defaults
         await loadCardsOfType(type);
         return;
       }
       
-      // Load existing cards
       container.innerHTML = '';
       const itemsArray = [];
       
@@ -762,21 +762,30 @@
         const data = cardData.val();
         if (data) {
           itemsArray.push({ id, header: data.header, body: data.body, footer: data.footer });
+          
           const div = document.createElement('div');
           div.className = 'info-card';
           div.setAttribute('data-id', id);
+          
           let shortText = data.body.substring(0, 80);
           if (data.body.length > 80) shortText += '...';
+          
           let headerClass = '';
           if (type === 'trueHadith') headerClass = 'hadith-true';
           if (type === 'weakHadith') headerClass = 'hadith-weak';
+          
           div.innerHTML = `
             <div class="card-header ${headerClass}">${data.header}</div>
             <div class="card-preview"><p>${shortText}</p></div>
             <button class="more-btn">📖 المزيد</button>
             ${adminMode ? '<button class="delete-card-btn" onclick="deleteCard(\'' + type + '\', \'' + id + '\')">×</button>' : ''}
           `;
-          div.querySelector('.more-btn').onclick = () => openModal(type, id, data.header, data.body, data.footer);
+          
+          const moreBtn = div.querySelector('.more-btn');
+          if (moreBtn) {
+            moreBtn.onclick = () => openModal(type, id, data.header, data.body, data.footer);
+          }
+          
           container.appendChild(div);
         }
       }
@@ -808,37 +817,96 @@
   modalBody.addEventListener('blur', () => saveContent());
   modalFooter.addEventListener('blur', () => saveContent());
 
-  // Calendar
+  // ============ CALENDAR FUNCTIONS - FIXED ============
+  // Everyone can SEE events, only admin can ADD/EDIT/DELETE
+  
   let currentDate = new Date(), currentYear = currentDate.getFullYear(), currentMonth = currentDate.getMonth(), events = {};
-  async function loadEvents() { events = (await database.ref('events').once('value')).val() || {}; renderCalendar(); }
-  async function addEventToDay(dateKey) {
-    if (!adminMode) { alert('❌ فقط المشرف يمكنه إضافة مناسبات'); return; }
-    const desc = prompt('📝 وصف لهذا اليوم:', events[dateKey]?.description || '');
-    if (desc !== null) {
-      if (desc.trim()) { events[dateKey] = { description: desc }; await database.ref(`events/${dateKey}`).set({ description: desc }); }
-      else { delete events[dateKey]; await database.ref(`events/${dateKey}`).remove(); }
+  
+  async function loadEvents() { 
+    events = (await database.ref('events').once('value')).val() || {}; 
+    renderCalendar(); 
+  }
+  
+  // Delete event function (admin only)
+  async function deleteEventFromDay(dateKey) {
+    if (!adminMode) return;
+    if (confirm('هل تريد حذف هذا الحدث؟')) {
+      delete events[dateKey];
+      await database.ref(`events/${dateKey}`).remove();
       renderCalendar();
+      alert('✅ تم حذف الحدث بنجاح');
     }
   }
+  
+  // Add/View event function - Everyone can VIEW, only admin can ADD/EDIT
+  async function addEventToDay(dateKey) {
+    // If there's already an event, show it to everyone
+    if (events[dateKey] && events[dateKey].description) {
+      alert(`📅 حدث هذا اليوم:\n\n${events[dateKey].description}`);
+      return;
+    }
+    
+    // If no event exists, only admin can add one
+    if (!adminMode) {
+      alert('❌ لا توجد مناسبة في هذا اليوم. فقط المشرف يمكنه إضافة مناسبات جديدة.');
+      return;
+    }
+    
+    const desc = prompt('📝 أضف وصفاً لهذا اليوم:');
+    if (desc && desc.trim()) {
+      events[dateKey] = { description: desc };
+      await database.ref(`events/${dateKey}`).set({ description: desc });
+      renderCalendar();
+      alert('✅ تم إضافة المناسبة بنجاح');
+    }
+  }
+  
   function renderCalendar() {
     const firstDay = new Date(currentYear, currentMonth, 1), startDay = firstDay.getDay(), daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const grid = document.getElementById('calendarDays'); if (!grid) return;
+    const grid = document.getElementById('calendarDays');
+    if (!grid) return;
     grid.innerHTML = '';
-    ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'].forEach(day => { const d = document.createElement('div'); d.className = 'weekday'; d.innerText = day; grid.appendChild(d); });
+    const weekdays = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
+    weekdays.forEach(day => { const d = document.createElement('div'); d.className = 'weekday'; d.innerText = day; grid.appendChild(d); });
     for (let i = 0; i < startDay; i++) { const empty = document.createElement('div'); empty.className = 'day-cell'; grid.appendChild(empty); }
     for (let d = 1; d <= daysInMonth; d++) {
       const cell = document.createElement('div'); cell.className = 'day-cell'; cell.innerText = d;
-      const key = `${currentYear}-${currentMonth+1}-${d}`;
-      if (events[key]) cell.classList.add('has-event');
-      cell.onclick = () => addEventToDay(key);
+      const dateKey = `${currentYear}-${currentMonth+1}-${d}`;
+      
+      if (events[dateKey] && events[dateKey].description) {
+        cell.classList.add('has-event');
+        
+        // Show preview of event text
+        const preview = document.createElement('div');
+        preview.className = 'day-event-preview';
+        let shortDesc = events[dateKey].description.substring(0, 15);
+        if (events[dateKey].description.length > 15) shortDesc += '...';
+        preview.innerText = shortDesc;
+        cell.appendChild(preview);
+        
+        // Add delete button for admin only
+        if (adminMode) {
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'delete-event-btn';
+          deleteBtn.innerHTML = '×';
+          deleteBtn.onclick = (e) => {
+            e.stopPropagation();
+            deleteEventFromDay(dateKey);
+          };
+          cell.appendChild(deleteBtn);
+        }
+      }
+      
+      cell.onclick = () => addEventToDay(dateKey);
       grid.appendChild(cell);
     }
     document.getElementById('monthYear').innerHTML = `${currentYear}/${currentMonth+1}`;
   }
+  
   document.getElementById('prevMonth')?.addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
   document.getElementById('nextMonth')?.addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
 
-  // ============ MAP FUNCTIONS WITH CLICKABLE LINKS ============
+  // ============ MAP FUNCTIONS ============
   function createCustomLabel(lat, lng, text, color = '#1e5629') {
     return L.marker([lat, lng], { icon: L.divIcon({ className: 'custom-label', html: `<div style="background:${color};color:white;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:bold;">${text}</div>`, iconSize: [null, null], popupAnchor: [0, -8] }) });
   }
@@ -1048,7 +1116,7 @@
   document.getElementById('calculateZakatBtn').addEventListener('click', calculateZakat);
   document.getElementById('convertBtn').addEventListener('click', convertDate);
   initializeFeatures(); loadEvents(); renderCalendar();
-  console.log('✅ Platform ready with persistent cards and clickable map links!');
+  console.log('✅ Platform ready with fixed calendar (everyone can see events, admin can add/delete)!');
 </script>
 </body>
 </html>
