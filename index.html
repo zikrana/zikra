@@ -33,7 +33,8 @@
     body.dark-mode .calendar-container,
     body.dark-mode .stories-detail,
     body.dark-mode .search-results,
-    body.dark-mode .calculator-box {
+    body.dark-mode .calculator-box,
+    body.dark-mode .subpage-nav {
       background: #1e1e3a;
       border-color: #2c5e2e;
       color: #eee;
@@ -62,6 +63,14 @@
     }
     body.dark-mode .nav-scroll {
       background: #1e1e3a;
+    }
+    body.dark-mode .subpage-btn {
+      background: #2c5e2e;
+      color: #fef3d6;
+    }
+    body.dark-mode .subpage-btn.active {
+      background: #ff9800;
+      color: white;
     }
     
     .container {
@@ -125,14 +134,6 @@
     .nav-wrapper::-webkit-scrollbar {
       height: 3px;
     }
-    .nav-wrapper::-webkit-scrollbar-track {
-      background: #e0d5b9;
-      border-radius: 10px;
-    }
-    .nav-wrapper::-webkit-scrollbar-thumb {
-      background: #2c5e2e;
-      border-radius: 10px;
-    }
     .nav-links {
       display: inline-flex;
       gap: 8px;
@@ -153,6 +154,41 @@
     }
     .nav-link:hover { background: #ffe2a4; transform: translateY(-2px); }
     
+    /* Subpage Navigation (for Ahadeeth) */
+    .subpage-nav {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: white;
+      border-radius: 50px;
+      border: 1px solid #e8dcc8;
+    }
+    .subpage-btn {
+      background: #e8dcc8;
+      color: #1e4a2a;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-family: 'Tajawal';
+      font-size: 0.85rem;
+      transition: 0.2s;
+      flex: 1;
+      text-align: center;
+    }
+    .subpage-btn.active {
+      background: #2c5e2e;
+      color: white;
+    }
+    .subpage-content {
+      display: none;
+    }
+    .subpage-content.active {
+      display: block;
+    }
+    
     .daily-verse {
       text-align: center;
       margin: 15px 0;
@@ -172,8 +208,6 @@
       color: #8b6b3d;
       margin-top: 6px;
     }
-    body.dark-mode .verse-text { color: #d4a843; }
-    body.dark-mode .verse-reference { color: #c9a96e; }
     
     /* Search Bar */
     .search-container {
@@ -297,7 +331,7 @@
     .error-msg { color: #f44336; margin-top: 8px; font-size: 0.75rem; }
     .close-modal { float: left; font-size: 24px; cursor: pointer; color: #aaa; }
     
-    /* Cards Grid - Mobile Optimized (2-3 per row) */
+    /* Cards Grid */
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
@@ -325,6 +359,8 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+    .card-header.hadith-true { background: linear-gradient(135deg, #1e6e2a, #2c8e3e); }
+    .card-header.hadith-weak { background: linear-gradient(135deg, #8e6e1e, #a8882e); }
     .card-preview {
       padding: 10px;
       min-height: 80px;
@@ -698,6 +734,7 @@
       <button class="nav-link" data-page="home">🏠 الرئيسية</button>
       <button class="nav-link" data-page="athkar">📿 الأذكار</button>
       <button class="nav-link" data-page="tafsir">📖 التفسير</button>
+      <button class="nav-link" data-page="ahadeeth">📜 الأحاديث</button>
       <button class="nav-link" data-page="zakat">💎 الزكاة</button>
       <button class="nav-link" data-page="hijri">📅 محول التاريخ</button>
       <button class="nav-link" data-page="days">🌟 الأيام المباركة</button>
@@ -708,7 +745,7 @@
   <!-- Search Bar -->
   <div class="search-container">
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="🔍 ابحث في الأذكار والتفسير...">
+      <input type="text" id="searchInput" placeholder="🔍 ابحث في الأذكار والتفسير والأحاديث...">
       <button id="searchBtn">بحث</button>
     </div>
   </div>
@@ -750,7 +787,7 @@
       <h3 id="addFormTitle">➕ إضافة بطاقة جديدة</h3>
       <input type="text" id="newCardTitle" placeholder="العنوان">
       <textarea id="newCardBody" placeholder="المحتوى الكامل..."></textarea>
-      <input type="text" id="newCardFooter" placeholder="النص السفلي">
+      <input type="text" id="newCardFooter" placeholder="المصدر / الراوي">
       <button id="saveNewCardBtn">💾 حفظ</button>
       <button id="cancelAddBtn" style="background:#999;">إلغاء</button>
     </div>
@@ -768,6 +805,7 @@
     <div class="box-grid">
       <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'athkar\']').click();"><h3>📿 الأذكار</h3><p>أذكار الصباح والمساء</p></div>
       <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'tafsir\']').click();"><h3>📖 التفسير</h3><p>تفسير آيات القرآن</p></div>
+      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'ahadeeth\']').click();"><h3>📜 الأحاديث</h3><p>صحيح وضعيف الأحاديث</p></div>
       <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'zakat\']').click();"><h3>💎 الزكاة</h3><p>احسب زكاتك</p></div>
       <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'hijri\']').click();"><h3>📅 محول التاريخ</h3><p>ميلادي - هجري</p></div>
       <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'days\']').click();"><h3>🌟 الأيام المباركة</h3><p>تقويم إسلامي</p></div>
@@ -787,6 +825,29 @@
     <div class="hero"><h2>📖 كنوز التفسير</h2><p>اضغط "المزيد" لقراءة التفسير</p></div>
     <div class="cards-grid" id="tafsirBoxes"></div>
     <div id="tafsirAddBtn" class="add-card-btn" style="display: none;">➕ إضافة بطاقة تفسير جديدة</div>
+  </div>
+
+  <!-- AHADEETH PAGE -->
+  <div id="ahadeeth" class="page">
+    <div class="hero"><h2>📜 موسوعة الأحاديث النبوية</h2><p>اختر القسم لعرض الأحاديث</p></div>
+    
+    <!-- Subpage Navigation -->
+    <div class="subpage-nav">
+      <button class="subpage-btn active" data-subpage="true-hadith">📖 الأحاديث الصحيحة</button>
+      <button class="subpage-btn" data-subpage="weak-hadith">⚠️ الأحاديث الضعيفة والبدع</button>
+    </div>
+    
+    <!-- True Ahadith Subpage -->
+    <div id="true-hadith" class="subpage-content active">
+      <div class="cards-grid" id="trueHadithBoxes"></div>
+      <div id="trueHadithAddBtn" class="add-card-btn" style="display: none;">➕ إضافة حديث صحيح جديد</div>
+    </div>
+    
+    <!-- Weak Ahadith & Bidaa Subpage -->
+    <div id="weak-hadith" class="subpage-content">
+      <div class="cards-grid" id="weakHadithBoxes"></div>
+      <div id="weakHadithAddBtn" class="add-card-btn" style="display: none;">➕ إضافة حديث ضعيف أو بدعة جديدة</div>
+    </div>
   </div>
 
   <!-- ZAKAT CALCULATOR PAGE -->
@@ -913,6 +974,7 @@
   let currentItemId = null;
   let currentType = null;
   let pendingAddType = null;
+  let currentSubpage = 'true-hadith';
   
   // Map variables
   let map, mapInitialized = false;
@@ -926,39 +988,34 @@
   
   let allAthkar = [];
   let allTafsir = [];
+  let allTrueHadith = [];
+  let allWeakHadith = [];
 
   const quranVerses = [
     { text: "إِنَّ اللَّهَ يَأْمُرُ بِالْعَدْلِ وَالْإِحْسَانِ وَإِيتَاءِ ذِي الْقُرْبَىٰ", ref: "سورة النحل - 90" },
     { text: "وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ", ref: "سورة الذاريات - 55" },
-    { text: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", ref: "سورة الشرح - 6" },
-    { text: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً", ref: "سورة البقرة - 201" },
-    { text: "وَلَا تَيْأَسُوا مِن رَّوْحِ اللَّهِ", ref: "سورة يوسف - 87" }
+    { text: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", ref: "سورة الشرح - 6" }
   ];
   
   const zakatVerses = [
     { text: "وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ", ref: "سورة البقرة - 43" },
-    { text: "خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا", ref: "سورة التوبة - 103" },
-    { text: "وَالَّذِينَ فِي أَمْوَالِهِمْ حَقٌّ مَّعْلُومٌ", ref: "سورة المعارج - 24" }
+    { text: "خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا", ref: "سورة التوبة - 103" }
   ];
   
   const hijriVerses = [
-    { text: "إِلَّا تَنصُرُوهُ فَقَدْ نَصَرَهُ اللَّهُ إِذْ أَخْرَجَهُ الَّذِينَ كَفَرُوا ثَانِيَ اثْنَيْنِ", ref: "سورة التوبة - 40" },
-    { text: "لَقَدْ كَانَ لَكُمْ فِي رَسُولِ اللَّهِ أُسْوَةٌ حَسَنَةٌ", ref: "سورة الأحزاب - 21" }
+    { text: "إِلَّا تَنصُرُوهُ فَقَدْ نَصَرَهُ اللَّهُ إِذْ أَخْرَجَهُ الَّذِينَ كَفَرُوا ثَانِيَ اثْنَيْنِ", ref: "سورة التوبة - 40" }
   ];
 
   function getDailyVerse(versesArray) {
     const today = new Date();
     const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-    const index = dayOfYear % versesArray.length;
-    return versesArray[index];
+    return versesArray[dayOfYear % versesArray.length];
   }
 
   function getAccurateHijriDate() {
     const today = new Date();
     return new Intl.DateTimeFormat('ar-TN-u-ca-islamic', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
+      day: 'numeric', month: 'long', year: 'numeric'
     }).format(today);
   }
 
@@ -968,8 +1025,7 @@
     const currencySymbols = { 'SAR': '﷼', 'USD': '$', 'EUR': '€', 'EGP': 'ج.م', 'AED': 'د.إ', 'KWD': 'د.ك', 'GBP': '£', 'TRY': '₺' };
     if (isNaN(wealth) || wealth <= 0) { alert('الرجاء إدخال مبلغ صحيح'); return; }
     const zakat = wealth * 0.025;
-    const symbol = currencySymbols[currency] || currency;
-    document.getElementById('zakatAmount').innerHTML = `${zakat.toFixed(2)} ${symbol}`;
+    document.getElementById('zakatAmount').innerHTML = `${zakat.toFixed(2)} ${currencySymbols[currency] || currency}`;
     document.getElementById('zakatResult').style.display = 'block';
   }
 
@@ -1001,9 +1057,8 @@
   const darkModeToggle = document.getElementById('darkModeToggle');
   darkModeToggle.addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
-    const isDark = document.body.classList.contains('dark-mode');
-    darkModeToggle.innerHTML = isDark ? '☀️ نهاري' : '🌙 ليلي';
-    localStorage.setItem('darkMode', isDark);
+    darkModeToggle.innerHTML = document.body.classList.contains('dark-mode') ? '☀️ نهاري' : '🌙 ليلي';
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
   });
   
   if (localStorage.getItem('darkMode') === 'true') {
@@ -1015,6 +1070,7 @@
     document.getElementById('hijriDateDisplay').innerHTML = getAccurateHijriDate();
   }
 
+  // DOM Elements
   const adminToggle = document.getElementById('adminToggle');
   const loginModal = document.getElementById('loginModal');
   const closeModal = document.getElementById('closeModal');
@@ -1069,8 +1125,6 @@
       if (mapInitialized) loadMapData();
     } catch (error) {
       loginError.innerText = 'خطأ: ' + error.message;
-      syncStatus.innerHTML = '❌ فشل';
-      syncStatus.className = 'sync-status error';
     }
   });
 
@@ -1095,12 +1149,12 @@
 
   function enableAdminMode(enabled) {
     adminMode = enabled && isAdmin;
-    const athkarBtn = document.getElementById('athkarAddBtn');
-    const tafsirBtn = document.getElementById('tafsirAddBtn');
-    if (athkarBtn) athkarBtn.style.display = adminMode ? 'flex' : 'none';
-    if (tafsirBtn) tafsirBtn.style.display = adminMode ? 'flex' : 'none';
+    document.getElementById('athkarAddBtn').style.display = adminMode ? 'flex' : 'none';
+    document.getElementById('tafsirAddBtn').style.display = adminMode ? 'flex' : 'none';
+    document.getElementById('trueHadithAddBtn').style.display = adminMode ? 'flex' : 'none';
+    document.getElementById('weakHadithAddBtn').style.display = adminMode ? 'flex' : 'none';
     const mapButtons = document.querySelectorAll('#addPinBtn, #addLabelBtn, #addPathBtn, #deleteModeBtn');
-    mapButtons.forEach(btn => { btn.style.display = adminMode ? 'inline-block' : 'none'; });
+    mapButtons.forEach(btn => { if(btn) btn.style.display = adminMode ? 'inline-block' : 'none'; });
     if (contentModal.style.display === 'flex') {
       modalHeader.setAttribute('contenteditable', adminMode ? 'true' : 'false');
       modalBody.setAttribute('contenteditable', adminMode ? 'true' : 'false');
@@ -1108,20 +1162,33 @@
     }
   }
 
+  // Search Function - includes all content types
   function performSearch() {
     const query = searchInput.value.trim().toLowerCase();
     if (query.length < 2) { alert('الرجاء إدخال حرفين على الأقل'); return; }
     const results = [];
+    
     allAthkar.forEach(item => {
-      if (item.header.toLowerCase().includes(query) || item.body.toLowerCase().includes(query) || (item.footer && item.footer.toLowerCase().includes(query))) {
+      if (item.header.toLowerCase().includes(query) || item.body.toLowerCase().includes(query)) {
         results.push({ type: 'athkar', typeName: '📿 ذكر', id: item.id, title: item.header, preview: item.body.substring(0, 80) + '...', fullBody: item.body, footer: item.footer });
       }
     });
     allTafsir.forEach(item => {
-      if (item.header.toLowerCase().includes(query) || item.body.toLowerCase().includes(query) || (item.footer && item.footer.toLowerCase().includes(query))) {
+      if (item.header.toLowerCase().includes(query) || item.body.toLowerCase().includes(query)) {
         results.push({ type: 'tafsir', typeName: '📖 تفسير', id: item.id, title: item.header, preview: item.body.substring(0, 80) + '...', fullBody: item.body, footer: item.footer });
       }
     });
+    allTrueHadith.forEach(item => {
+      if (item.header.toLowerCase().includes(query) || item.body.toLowerCase().includes(query)) {
+        results.push({ type: 'trueHadith', typeName: '📜 حديث صحيح', id: item.id, title: item.header, preview: item.body.substring(0, 80) + '...', fullBody: item.body, footer: item.footer });
+      }
+    });
+    allWeakHadith.forEach(item => {
+      if (item.header.toLowerCase().includes(query) || item.body.toLowerCase().includes(query)) {
+        results.push({ type: 'weakHadith', typeName: '⚠️ حديث ضعيف', id: item.id, title: item.header, preview: item.body.substring(0, 80) + '...', fullBody: item.body, footer: item.footer });
+      }
+    });
+    
     displayResults(results, query);
   }
   
@@ -1193,10 +1260,45 @@
   }
 
   async function loadCardsOfType(type) {
-    const container = document.getElementById(`${type}Boxes`);
+    let containerId, addBtnId;
+    if (type === 'athkar') { containerId = 'athkarBoxes'; addBtnId = 'athkarAddBtn'; }
+    else if (type === 'tafsir') { containerId = 'tafsirBoxes'; addBtnId = 'tafsirAddBtn'; }
+    else if (type === 'trueHadith') { containerId = 'trueHadithBoxes'; addBtnId = 'trueHadithAddBtn'; }
+    else if (type === 'weakHadith') { containerId = 'weakHadithBoxes'; addBtnId = 'weakHadithAddBtn'; }
+    else return;
+    
+    const container = document.getElementById(containerId);
     const listSnapshot = await database.ref(`${type}_list`).once('value');
     const list = listSnapshot.val() || {};
     const cardIds = Object.keys(list);
+    
+    // Default data for ahadeeth
+    if (cardIds.length === 0 && type === 'trueHadith') {
+      const defaultCards = [
+        { id: 'true1', header: '📖 حديث النية', body: 'عن عمر بن الخطاب رضي الله عنه قال: سمعت رسول الله ﷺ يقول: "إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى..."', footer: 'رواه البخاري ومسلم' },
+        { id: 'true2', header: '📖 حديث جبريل', body: 'عن عمر بن الخطاب رضي الله عنه قال: بينما نحن جلوس عند رسول الله ﷺ إذ طلع علينا رجل شديد بياض الثياب... فسأله عن الإسلام والإيمان والإحسان', footer: 'رواه مسلم' },
+        { id: 'true3', header: '📖 حديث الرحمة', body: 'عن أبي هريرة رضي الله عنه قال: سمعت رسول الله ﷺ يقول: "مَنْ لَا يَرْحَمْ لَا يُرْحَمْ"', footer: 'رواه البخاري' }
+      ];
+      for (const card of defaultCards) {
+        await database.ref(`${type}_full/${card.id}`).set({ header: card.header, body: card.body, footer: card.footer });
+        await database.ref(`${type}_list/${card.id}`).set({ id: card.id });
+      }
+      loadCardsOfType(type);
+      return;
+    }
+    
+    if (cardIds.length === 0 && type === 'weakHadith') {
+      const defaultCards = [
+        { id: 'weak1', header: '⚠️ حديث الطيرة', body: 'عن ابن عباس رضي الله عنهما قال: قال رسول الله ﷺ: "لا عدوى ولا طيرة ولا هامة ولا صفر" (وهذا حديث صحيح وليس ضعيفاً، هذا مثال توضيحي)', footer: 'رواه البخاري (هذا حديث صحيح، المثال للتوضيح)' },
+        { id: 'weak2', header: '⚠️ تنبيه', body: 'هذا القسم مخصص للأحاديث الضعيفة والموضوعة والبدع، لتنبيه المسلمين من الأحاديث غير الصحيحة المنتشرة.', footer: 'تنبيه: استشر العلماء' }
+      ];
+      for (const card of defaultCards) {
+        await database.ref(`${type}_full/${card.id}`).set({ header: card.header, body: card.body, footer: card.footer });
+        await database.ref(`${type}_list/${card.id}`).set({ id: card.id });
+      }
+      loadCardsOfType(type);
+      return;
+    }
     
     if (cardIds.length === 0 && type === 'athkar') {
       const defaultCards = [
@@ -1238,22 +1340,32 @@
         div.setAttribute('data-id', id);
         let shortText = data.body.substring(0, 80);
         if (data.body.length > 80) shortText += '...';
-        div.innerHTML = `<div class="card-header">${data.header}</div><div class="card-preview"><p>${shortText}</p></div><button class="more-btn">📖 المزيد</button>${adminMode ? '<button class="delete-card-btn" onclick="deleteCard(\'' + type + '\', \'' + id + '\')">×</button>' : ''}`;
+        let headerClass = '';
+        if (type === 'trueHadith') headerClass = 'hadith-true';
+        if (type === 'weakHadith') headerClass = 'hadith-weak';
+        div.innerHTML = `<div class="card-header ${headerClass}">${data.header}</div><div class="card-preview"><p>${shortText}</p></div><button class="more-btn">📖 المزيد</button>${adminMode ? '<button class="delete-card-btn" onclick="deleteCard(\'' + type + '\', \'' + id + '\')">×</button>' : ''}`;
         div.querySelector('.more-btn').onclick = () => openModal(type, id, data.header, data.body, data.footer);
         container.appendChild(div);
       }
     }
     if (type === 'athkar') allAthkar = itemsArray;
     else if (type === 'tafsir') allTafsir = itemsArray;
+    else if (type === 'trueHadith') allTrueHadith = itemsArray;
+    else if (type === 'weakHadith') allWeakHadith = itemsArray;
   }
 
   async function loadAllCards() {
     await loadCardsOfType('athkar');
     await loadCardsOfType('tafsir');
+    await loadCardsOfType('trueHadith');
+    await loadCardsOfType('weakHadith');
   }
 
   document.getElementById('athkarAddBtn').onclick = () => { pendingAddType = 'athkar'; document.getElementById('addFormTitle').innerHTML = '➕ إضافة بطاقة أذكار جديدة'; addFormModal.style.display = 'flex'; };
   document.getElementById('tafsirAddBtn').onclick = () => { pendingAddType = 'tafsir'; document.getElementById('addFormTitle').innerHTML = '➕ إضافة بطاقة تفسير جديدة'; addFormModal.style.display = 'flex'; };
+  document.getElementById('trueHadithAddBtn').onclick = () => { pendingAddType = 'trueHadith'; document.getElementById('addFormTitle').innerHTML = '➕ إضافة حديث صحيح جديد'; addFormModal.style.display = 'flex'; };
+  document.getElementById('weakHadithAddBtn').onclick = () => { pendingAddType = 'weakHadith'; document.getElementById('addFormTitle').innerHTML = '➕ إضافة حديث ضعيف أو بدعة جديدة'; addFormModal.style.display = 'flex'; };
+  
   saveNewCardBtn.onclick = async () => { if (pendingAddType) await addNewCard(pendingAddType); };
   cancelAddBtn.onclick = () => { addFormModal.style.display = 'none'; newCardTitle.value = ''; newCardBody.value = ''; newCardFooter.value = ''; };
 
@@ -1299,7 +1411,7 @@
 
   // Map
   function createCustomLabel(lat, lng, text, color = '#1e5629') {
-    const icon = L.divIcon({ className: 'custom-label', html: `<div style="background: ${color}; color: white; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: bold; white-space: nowrap;">${text}</div>`, iconSize: [null, null], popupAnchor: [0, -8] });
+    const icon = L.divIcon({ className: 'custom-label', html: `<div style="background: ${color}; color: white; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: bold;">${text}</div>`, iconSize: [null, null], popupAnchor: [0, -8] });
     return L.marker([lat, lng], { icon: icon });
   }
 
@@ -1315,7 +1427,7 @@
     for (let id in pins) {
       const pin = pins[id];
       const marker = L.marker([pin.lat, pin.lng]).addTo(map);
-      marker.bindPopup(`<b>📍 ${pin.title}</b><br><p>${pin.description || ''}</p>${adminMode ? '<br><button onclick="editPin(\'' + id + '\', \'' + pin.title.replace(/'/g, "\\'") + '\', \'' + (pin.description || '').replace(/'/g, "\\'") + '\')" style="background:#2c5e2e; color:white; border:none; padding:3px 8px; border-radius:15px;">✏️</button><button onclick="deletePin(\'' + id + '\')" style="background:#f44336; color:white; border:none; padding:3px 8px; border-radius:15px;">🗑️</button>' : ''}`);
+      marker.bindPopup(`<b>📍 ${pin.title}</b><br><p>${pin.description || ''}</p>${adminMode ? '<br><button onclick="editPin(\'' + id + '\')" style="background:#2c5e2e; color:white; border:none; padding:3px 8px; border-radius:15px;">✏️</button><button onclick="deletePin(\'' + id + '\')" style="background:#f44336; color:white; border:none; padding:3px 8px; border-radius:15px;">🗑️</button>' : ''}`);
       marker.on('click', () => { document.getElementById('storyContent').innerHTML = `<strong>📍 ${pin.title}</strong><br><p>${pin.description || ''}</p>`; });
       markers[id] = marker;
     }
@@ -1326,22 +1438,15 @@
       const label = mapLabels[id];
       const labelMarker = createCustomLabel(label.lat, label.lng, label.text);
       labelMarker.addTo(map);
-      labelMarker.bindPopup(`<b>🏷️ ${label.text}</b><br><p>${label.description || ''}</p>${adminMode ? '<br><button onclick="editLabel(\'' + id + '\', \'' + label.text.replace(/'/g, "\\'") + '\', \'' + (label.description || '').replace(/'/g, "\\'") + '\')" style="background:#2c5e2e; color:white; border:none; padding:3px 8px; border-radius:15px;">✏️</button><button onclick="deleteLabel(\'' + id + '\')" style="background:#f44336; color:white; border:none; padding:3px 8px; border-radius:15px;">🗑️</button>' : ''}`);
+      labelMarker.bindPopup(`<b>🏷️ ${label.text}</b><br><p>${label.description || ''}</p>${adminMode ? '<br><button onclick="editLabel(\'' + id + '\')" style="background:#2c5e2e; color:white; border:none; padding:3px 8px; border-radius:15px;">✏️</button><button onclick="deleteLabel(\'' + id + '\')" style="background:#f44336; color:white; border:none; padding:3px 8px; border-radius:15px;">🗑️</button>' : ''}`);
       labelMarker.on('click', () => { document.getElementById('storyContent').innerHTML = `<strong>🏷️ ${label.text}</strong><br><p>${label.description || ''}</p>`; });
       labels[id] = labelMarker;
     }
   }
   
-  window.editPin = async function(id, currentTitle, currentDesc) {
-    if (!adminMode) return;
-    const newTitle = prompt('الاسم الجديد:', currentTitle);
-    if (!newTitle) return;
-    const newDesc = prompt('الوصف الجديد:', currentDesc);
-    const pinData = (await database.ref(`map_pins/${id}`).once('value')).val();
-    if (pinData) { await database.ref(`map_pins/${id}`).set({ ...pinData, title: newTitle, description: newDesc || '' }); loadMapData(); }
-  };
+  window.editPin = async function(id) { if (!adminMode) return; const newTitle = prompt('الاسم الجديد:'); if (!newTitle) return; const newDesc = prompt('الوصف الجديد:'); const pinData = (await database.ref(`map_pins/${id}`).once('value')).val(); if (pinData) { await database.ref(`map_pins/${id}`).set({ ...pinData, title: newTitle, description: newDesc || '' }); loadMapData(); } };
   window.deletePin = async function(id) { if (!adminMode) return; if (confirm('حذف؟')) { await database.ref(`map_pins/${id}`).remove(); loadMapData(); } };
-  window.editLabel = async function(id, currentText, currentDesc) { if (!adminMode) return; const newText = prompt('النص الجديد:', currentText); if (!newText) return; const newDesc = prompt('الوصف الجديد:', currentDesc); const labelData = (await database.ref(`map_labels/${id}`).once('value')).val(); if (labelData) { await database.ref(`map_labels/${id}`).set({ ...labelData, text: newText, description: newDesc || '' }); loadMapData(); } };
+  window.editLabel = async function(id) { if (!adminMode) return; const newText = prompt('النص الجديد:'); if (!newText) return; const newDesc = prompt('الوصف الجديد:'); const labelData = (await database.ref(`map_labels/${id}`).once('value')).val(); if (labelData) { await database.ref(`map_labels/${id}`).set({ ...labelData, text: newText, description: newDesc || '' }); loadMapData(); } };
   window.deleteLabel = async function(id) { if (!adminMode) return; if (confirm('حذف؟')) { await database.ref(`map_labels/${id}`).remove(); loadMapData(); } };
   
   function initMap() {
@@ -1354,12 +1459,10 @@
     map.on('click', async (e) => {
       if (!adminMode) return;
       if (currentDrawMode === 'pin') {
-        const title = prompt('📍 اسم النقطة:');
-        if (title) { const desc = prompt('📝 الوصف:'); const newId = `pin_${Date.now()}`; await database.ref(`map_pins/${newId}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, title: title, description: desc || '' }); loadMapData(); }
+        const title = prompt('📍 اسم النقطة:'); if (title) { const desc = prompt('📝 الوصف:'); const newId = `pin_${Date.now()}`; await database.ref(`map_pins/${newId}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, title: title, description: desc || '' }); loadMapData(); }
         currentDrawMode = null; document.getElementById('drawingInstruction').style.display = 'none'; document.getElementById('addPinBtn').classList.remove('active');
       } else if (currentDrawMode === 'label') {
-        const text = prompt('🏷️ النص:');
-        if (text) { const desc = prompt('📝 الوصف:'); const newId = `label_${Date.now()}`; await database.ref(`map_labels/${newId}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, text: text, description: desc || '', color: '#1e5629' }); loadMapData(); }
+        const text = prompt('🏷️ النص:'); if (text) { const desc = prompt('📝 الوصف:'); const newId = `label_${Date.now()}`; await database.ref(`map_labels/${newId}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, text: text, description: desc || '' }); loadMapData(); }
         currentDrawMode = null; document.getElementById('drawingInstruction').style.display = 'none'; document.getElementById('addLabelBtn').classList.remove('active');
       }
     });
@@ -1370,6 +1473,19 @@
   document.getElementById('cancelDrawBtn').onclick = () => { currentDrawMode = null; document.getElementById('drawingInstruction').style.display = 'none'; document.getElementById('addPinBtn').classList.remove('active'); document.getElementById('addLabelBtn').classList.remove('active'); };
   document.getElementById('deleteModeBtn').onclick = () => { if (!adminMode) return; deleteModeActive = !deleteModeActive; document.getElementById('deleteModeBtn').style.background = deleteModeActive ? '#d32f2f' : '#f44336'; document.getElementById('deleteModeBtn').innerHTML = deleteModeActive ? '🚫 خروج' : '🗑️ حذف'; if (deleteModeActive) alert('وضع الحذف مفعل'); };
 
+  // Subpage navigation for Ahadeeth
+  document.querySelectorAll('.subpage-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.subpage-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const subpage = btn.getAttribute('data-subpage');
+      document.querySelectorAll('.subpage-content').forEach(content => content.classList.remove('active'));
+      document.getElementById(subpage).classList.add('active');
+      currentSubpage = subpage;
+    });
+  });
+
+  // Main Navigation
   document.querySelectorAll('.nav-link').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1384,15 +1500,12 @@
   function initializeFeatures() {
     updateHijriDate();
     setInterval(updateHijriDate, 60000);
-    const dailyVerse = getDailyVerse(quranVerses);
-    document.getElementById('verseText').innerHTML = `﴿ ${dailyVerse.text} ﴾`;
-    document.getElementById('verseReference').innerHTML = dailyVerse.ref;
-    const zakatVerse = getDailyVerse(zakatVerses);
-    document.getElementById('zakatVerseText').innerHTML = `﴿ ${zakatVerse.text} ﴾`;
-    document.getElementById('zakatVerseRef').innerHTML = zakatVerse.ref;
-    const hijriVerse = getDailyVerse(hijriVerses);
-    document.getElementById('hijriVerseText').innerHTML = `﴿ ${hijriVerse.text} ﴾`;
-    document.getElementById('hijriVerseRef').innerHTML = hijriVerse.ref;
+    document.getElementById('verseText').innerHTML = `﴿ ${getDailyVerse(quranVerses).text} ﴾`;
+    document.getElementById('verseReference').innerHTML = getDailyVerse(quranVerses).ref;
+    document.getElementById('zakatVerseText').innerHTML = `﴿ ${getDailyVerse(zakatVerses).text} ﴾`;
+    document.getElementById('zakatVerseRef').innerHTML = getDailyVerse(zakatVerses).ref;
+    document.getElementById('hijriVerseText').innerHTML = `﴿ ${getDailyVerse(hijriVerses).text} ﴾`;
+    document.getElementById('hijriVerseRef').innerHTML = getDailyVerse(hijriVerses).ref;
   }
   
   document.getElementById('calculateZakatBtn').addEventListener('click', calculateZakat);
@@ -1401,7 +1514,7 @@
   initializeFeatures();
   loadEvents();
   renderCalendar();
-  console.log('✅ Mobile-optimized platform ready!');
+  console.log('✅ Platform ready with Ahadeeth section!');
 </script>
 </body>
 </html>
