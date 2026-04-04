@@ -34,7 +34,8 @@
     body.dark-mode .stories-detail,
     body.dark-mode .search-results,
     body.dark-mode .calculator-box,
-    body.dark-mode .subpage-nav {
+    body.dark-mode .subpage-nav,
+    body.dark-mode .hadith-panel {
       background: #1e1e3a;
       border-color: #2c5e2e;
       color: #eee;
@@ -154,7 +155,58 @@
     }
     .nav-link:hover { background: #ffe2a4; transform: translateY(-2px); }
     
-    /* Subpage Navigation (for Ahadeeth) */
+    /* Hadith Panel (for Ahadeeth pages) */
+    .hadith-panel {
+      text-align: center;
+      margin: 15px 0 20px;
+      padding: 15px;
+      border-radius: 30px;
+      font-family: 'Amiri', serif;
+    }
+    .hadith-panel.true-hadith {
+      background: linear-gradient(135deg, #2c5e2e15, #c8e6d9);
+      border-right: 4px solid #2c5e2e;
+    }
+    .hadith-panel.weak-hadith {
+      background: linear-gradient(135deg, #f4433615, #ffcdd2);
+      border-right: 4px solid #f44336;
+    }
+    .hadith-panel.main-hadith {
+      background: linear-gradient(135deg, #d4a84315, #fef2df);
+      border-right: 4px solid #d4a843;
+    }
+    body.dark-mode .hadith-panel.true-hadith { background: #1e3a2e; }
+    body.dark-mode .hadith-panel.weak-hadith { background: #3a1e1e; }
+    body.dark-mode .hadith-panel.main-hadith { background: #3a351e; }
+    
+    .hadith-text {
+      font-size: 1rem;
+      line-height: 1.8;
+      font-weight: 500;
+    }
+    .hadith-text.true { color: #1e5629; }
+    .hadith-text.weak { color: #c62828; }
+    .hadith-text.main { color: #8b6b3d; }
+    body.dark-mode .hadith-text.true { color: #81c784; }
+    body.dark-mode .hadith-text.weak { color: #ef9a9a; }
+    body.dark-mode .hadith-text.main { color: #d4a843; }
+    
+    .hadith-source {
+      font-size: 0.75rem;
+      margin-top: 8px;
+      opacity: 0.8;
+    }
+    .warning-badge {
+      display: inline-block;
+      background: #f44336;
+      color: white;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      margin-bottom: 8px;
+    }
+    
+    /* Subpage Navigation */
     .subpage-nav {
       display: flex;
       gap: 10px;
@@ -188,148 +240,6 @@
     .subpage-content.active {
       display: block;
     }
-    
-    .daily-verse {
-      text-align: center;
-      margin: 15px 0;
-      padding: 15px;
-      background: linear-gradient(135deg, #2c5e2e15, #fef2df);
-      border-radius: 30px;
-      font-family: 'Amiri', serif;
-    }
-    .verse-text {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #1e5629;
-      font-weight: 500;
-    }
-    .verse-reference {
-      font-size: 0.75rem;
-      color: #8b6b3d;
-      margin-top: 6px;
-    }
-    
-    /* Search Bar */
-    .search-container {
-      margin: 15px 0 20px;
-      display: flex;
-      justify-content: center;
-    }
-    .search-box {
-      display: flex;
-      align-items: center;
-      background: white;
-      border-radius: 50px;
-      padding: 3px 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
-      border: 1px solid #e0d5b9;
-    }
-    .search-box input {
-      flex: 1;
-      padding: 10px 8px;
-      border: none;
-      outline: none;
-      font-size: 0.85rem;
-      font-family: 'Tajawal';
-      background: transparent;
-    }
-    .search-box button {
-      background: #2c5e2e;
-      border: none;
-      color: white;
-      padding: 6px 15px;
-      border-radius: 40px;
-      cursor: pointer;
-      font-size: 0.75rem;
-    }
-    .search-results {
-      margin: 15px 0;
-      padding: 15px;
-      background: white;
-      border-radius: 24px;
-      display: none;
-    }
-    .result-item {
-      padding: 10px;
-      border-bottom: 1px solid #e8dcc8;
-      cursor: pointer;
-    }
-    .result-item:hover { background: #fef3d6; border-radius: 16px; }
-    .result-title { font-weight: bold; color: #2c5e2e; font-size: 0.85rem; }
-    .result-type { font-size: 0.7rem; color: #8b6b3d; margin-right: 8px; }
-    .close-results { float: left; background: none; border: none; font-size: 20px; cursor: pointer; }
-    
-    /* Admin Toggle */
-    .admin-toggle {
-      margin: 10px 0 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .admin-toggle label {
-      background: #2c5e2e;
-      color: white;
-      padding: 6px 16px;
-      border-radius: 40px;
-      cursor: pointer;
-      font-size: 0.8rem;
-    }
-    .sync-status {
-      background: #4caf50;
-      padding: 6px 12px;
-      border-radius: 40px;
-      font-size: 0.7rem;
-      color: white;
-      font-weight: bold;
-    }
-    .sync-status.error { background: #f44336; }
-    .sync-status.admin { background: #2196f3; }
-    
-    /* Login Modal */
-    .login-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.85);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .login-box {
-      background: white;
-      padding: 30px 25px;
-      border-radius: 40px;
-      width: 85%;
-      max-width: 350px;
-      text-align: center;
-    }
-    .login-box h2 { color: #1e5629; margin-bottom: 15px; font-size: 1.3rem; }
-    .login-box input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 2px solid #e0d5b9;
-      border-radius: 50px;
-      font-family: 'Tajawal';
-    }
-    .login-box button {
-      background: #2c5e2e;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 50px;
-      cursor: pointer;
-      width: 100%;
-    }
-    .error-msg { color: #f44336; margin-top: 8px; font-size: 0.75rem; }
-    .close-modal { float: left; font-size: 24px; cursor: pointer; color: #aaa; }
     
     /* Cards Grid */
     .cards-grid {
@@ -522,84 +432,56 @@
       margin-top: 8px;
     }
     
-    /* Calculator & Converter */
-    .calculator-box {
+    .page { display: none; }
+    .page.active { display: block; }
+    .hero {
+      text-align: center;
+      padding: 20px 15px;
+      background: linear-gradient(115deg, #2c5e2e10, #fef2df);
+      border-radius: 30px;
+      margin-bottom: 20px;
+    }
+    .hero h2 { color: #1e5629; font-size: 1.2rem; }
+    
+    /* Calendar */
+    .calendar-container {
       background: white;
       border-radius: 24px;
-      padding: 20px;
-      margin-top: 15px;
-      text-align: center;
-    }
-    .calculator-box h3 { font-size: 1.1rem; margin-bottom: 15px; }
-    .calculator-input {
-      margin: 15px 0;
-    }
-    .calculator-input label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-      color: #1e5629;
-      font-size: 0.85rem;
-    }
-    .calculator-input input, .calculator-input select {
-      width: 100%;
-      max-width: 250px;
-      padding: 10px;
-      border: 2px solid #e0d5b9;
-      border-radius: 28px;
-      font-family: 'Tajawal';
-      font-size: 0.9rem;
-      text-align: center;
-    }
-    .calculator-result {
-      background: linear-gradient(135deg, #2c5e2e15, #fef2df);
       padding: 15px;
-      border-radius: 24px;
       margin-top: 15px;
     }
-    .zakat-amount {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #2c5e2e;
-      margin: 10px 0;
-    }
-    .converter-box {
+    .calendar-header {
       display: flex;
-      flex-direction: column;
-      gap: 15px;
+      justify-content: space-between;
       align-items: center;
+      margin-bottom: 15px;
     }
-    .converter-input {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .converter-input input, .converter-input select {
-      padding: 8px;
-      border: 2px solid #e0d5b9;
-      border-radius: 24px;
-      font-family: 'Tajawal';
-      font-size: 0.85rem;
-    }
-    .convert-btn {
-      background: #2c5e2e;
-      color: white;
-      border: none;
-      padding: 10px 25px;
-      border-radius: 40px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-    .converter-result {
-      background: linear-gradient(135deg, #2c5e2e15, #fef2df);
-      padding: 15px;
-      border-radius: 24px;
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
       text-align: center;
-      min-width: 200px;
     }
+    .weekday {
+      font-weight: bold;
+      background: #d9e6c3;
+      padding: 6px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+    }
+    .day-cell {
+      background: #fff7ec;
+      padding: 8px 4px;
+      border-radius: 20px;
+      cursor: pointer;
+      border: 1px solid #e9dfcc;
+      font-size: 0.75rem;
+      position: relative;
+    }
+    .day-cell.has-event { background: #2c5e2ecc; color: white; }
+    button { background: #2c5e2e; color: white; border: none; border-radius: 40px; padding: 6px 14px; cursor: pointer; font-size: 0.75rem; }
     
-    /* Map */
+    /* Map Styles */
     #map { height: 300px; border-radius: 24px; margin: 15px 0; border: 2px solid #e0d5b9; }
     .control-panel { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; justify-content: center; }
     .control-panel button {
@@ -656,55 +538,6 @@
     }
     .content-box p { font-size: 0.7rem; }
     
-    .page { display: none; }
-    .page.active { display: block; }
-    .hero {
-      text-align: center;
-      padding: 20px 15px;
-      background: linear-gradient(115deg, #2c5e2e10, #fef2df);
-      border-radius: 30px;
-      margin-bottom: 20px;
-    }
-    .hero h2 { color: #1e5629; font-size: 1.2rem; }
-    
-    /* Calendar */
-    .calendar-container {
-      background: white;
-      border-radius: 24px;
-      padding: 15px;
-      margin-top: 15px;
-    }
-    .calendar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-      text-align: center;
-    }
-    .weekday {
-      font-weight: bold;
-      background: #d9e6c3;
-      padding: 6px;
-      border-radius: 30px;
-      font-size: 0.7rem;
-    }
-    .day-cell {
-      background: #fff7ec;
-      padding: 8px 4px;
-      border-radius: 20px;
-      cursor: pointer;
-      border: 1px solid #e9dfcc;
-      font-size: 0.75rem;
-      position: relative;
-    }
-    .day-cell.has-event { background: #2c5e2ecc; color: white; }
-    button { background: #2c5e2e; color: white; border: none; border-radius: 40px; padding: 6px 14px; cursor: pointer; font-size: 0.75rem; }
-    
     @media (min-width: 768px) {
       body { padding: 20px; }
       .container { padding: 20px 25px; border-radius: 32px; }
@@ -712,9 +545,9 @@
       .box-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
       .card-header { font-size: 1rem; padding: 12px; }
       .card-preview { font-size: 0.85rem; padding: 12px; }
-      .verse-text { font-size: 1.2rem; }
       header h1 { font-size: 1.8rem; }
       #map { height: 450px; }
+      .hadith-text { font-size: 1.1rem; }
     }
   </style>
 </head>
@@ -797,7 +630,7 @@
   <div id="home" class="page active">
     <div class="hero">
       <h2>﴿ وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ ﴾</h2>
-      <div class="daily-verse" id="dailyVerse">
+      <div class="daily-verse" id="dailyVerse" style="margin:15px 0; padding:15px; background:linear-gradient(135deg, #2c5e2e15, #fef2df); border-radius:30px;">
         <div class="verse-text" id="verseText">جاري تحميل آية اليوم...</div>
         <div class="verse-reference" id="verseReference"></div>
       </div>
@@ -829,7 +662,16 @@
 
   <!-- AHADEETH PAGE -->
   <div id="ahadeeth" class="page">
-    <div class="hero"><h2>📜 موسوعة الأحاديث النبوية</h2><p>اختر القسم لعرض الأحاديث</p></div>
+    <div class="hero">
+      <h2>📜 موسوعة الأحاديث النبوية</h2>
+      <p>اختر القسم لعرض الأحاديث</p>
+    </div>
+    
+    <!-- Main Hadith Panel (Daily rotating hadith about importance of hadith) -->
+    <div class="hadith-panel main-hadith" id="mainHadithPanel">
+      <div class="hadith-text main" id="mainHadithText">جاري تحميل الحديث...</div>
+      <div class="hadith-source" id="mainHadithSource"></div>
+    </div>
     
     <!-- Subpage Navigation -->
     <div class="subpage-nav">
@@ -839,12 +681,24 @@
     
     <!-- True Ahadith Subpage -->
     <div id="true-hadith" class="subpage-content active">
+      <!-- True Hadith Panel -->
+      <div class="hadith-panel true-hadith" id="trueHadithPanel">
+        <div class="hadith-text true" id="trueHadithText">جاري تحميل الحديث...</div>
+        <div class="hadith-source" id="trueHadithSource"></div>
+      </div>
       <div class="cards-grid" id="trueHadithBoxes"></div>
       <div id="trueHadithAddBtn" class="add-card-btn" style="display: none;">➕ إضافة حديث صحيح جديد</div>
     </div>
     
     <!-- Weak Ahadith & Bidaa Subpage -->
     <div id="weak-hadith" class="subpage-content">
+      <!-- Weak Hadith Panel (Rotating warning hadiths) -->
+      <div class="hadith-panel weak-hadith" id="weakHadithPanel">
+        <div class="warning-badge">⚠️ تنبيه مهم ⚠️</div>
+        <div class="hadith-text weak" id="weakHadithText">جاري تحميل الحديث...</div>
+        <div class="hadith-source" id="weakHadithSource"></div>
+        <p style="font-size:0.7rem; margin-top:10px;">هذا القسم يهدف إلى تنبيه المسلمين من الأحاديث الضعيفة والموضوعة والبدع المنتشرة</p>
+      </div>
       <div class="cards-grid" id="weakHadithBoxes"></div>
       <div id="weakHadithAddBtn" class="add-card-btn" style="display: none;">➕ إضافة حديث ضعيف أو بدعة جديدة</div>
     </div>
@@ -852,13 +706,7 @@
 
   <!-- ZAKAT CALCULATOR PAGE -->
   <div id="zakat" class="page">
-    <div class="hero">
-      <h2>💎 حاسبة الزكاة</h2>
-      <div class="daily-verse" id="zakatVerse">
-        <div class="verse-text" id="zakatVerseText">جاري تحميل آية عن الزكاة...</div>
-        <div class="verse-reference" id="zakatVerseRef"></div>
-      </div>
-    </div>
+    <div class="hero"><h2>💎 حاسبة الزكاة</h2></div>
     <div class="calculator-box">
       <h3>💰 احسب زكاتك</h3>
       <div class="calculator-input">
@@ -889,13 +737,7 @@
 
   <!-- HIJRI DATE CONVERTER PAGE -->
   <div id="hijri" class="page">
-    <div class="hero">
-      <h2>📅 محول التاريخ</h2>
-      <div class="daily-verse" id="hijriVerse">
-        <div class="verse-text" id="hijriVerseText">جاري تحميل آية عن الهجرة...</div>
-        <div class="verse-reference" id="hijriVerseRef"></div>
-      </div>
-    </div>
+    <div class="hero"><h2>📅 محول التاريخ</h2></div>
     <div class="calculator-box">
       <h3>🔄 تحويل التاريخ</h3>
       <div class="converter-box">
@@ -991,19 +833,47 @@
   let allTrueHadith = [];
   let allWeakHadith = [];
 
+  // ============ HADITH DATABASES ============
+  
+  // Main Ahadeeth page - Hadiths about importance of hadith (rotates daily)
+  const mainHadiths = [
+    { text: "نَضَّرَ اللَّهُ امْرَأً سَمِعَ مِنَّا حَدِيثًا فَحَفِظَهُ حَتَّى يُبَلِّغَهُ", source: "رواه الترمذي - حديث صحيح" },
+    { text: "بَلِّغُوا عَنِّي وَلَوْ آيَةً", source: "رواه البخاري" },
+    { text: "مَنْ حَفِظَ عَلَى أُمَّتِي أَرْبَعِينَ حَدِيثًا مِنْ أَمْرِ دِينِهَا بَعَثَهُ اللَّهُ يَوْمَ الْقِيَامَةِ فَقِيهًا", source: "رواه الدارمي" },
+    { text: "إِنَّ اللَّهَ يُذَكِّرُ بِالْحَدِيثِ الضَّعِيفِ", source: "حديث حسن" }
+  ];
+  
+  // True Ahadith page - Hadiths about authentic knowledge
+  const trueHadiths = [
+    { text: "نَضَّرَ اللَّهُ امْرَأً سَمِعَ مِنَّا حَدِيثًا فَحَفِظَهُ حَتَّى يُبَلِّغَهُ", source: "رواه الترمذي - حديث صحيح" },
+    { text: "بَلِّغُوا عَنِّي وَلَوْ آيَةً", source: "رواه البخاري" },
+    { text: "لَا يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لِأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ", source: "رواه البخاري ومسلم" }
+  ];
+  
+  // Weak Ahadith page - Warning hadiths (rotates between the two you requested)
+  const weakHadiths = [
+    { text: "مَنْ كَذَبَ عَلَيَّ مُتَعَمِّدًا فَلْيَتَبَوَّأْ مَقْعَدَهُ مِنَ النَّارِ", source: "متفق عليه - البخاري ومسلم" },
+    { text: "لَا تَكْذِبُوا عَلَيَّ فَإِنَّهُ مَنْ يَكْذِبْ عَلَيَّ يَلِجِ النَّارَ", source: "رواه مسلم" }
+  ];
+
+  // Function to get daily rotating hadith
+  function getDailyHadith(hadithArray) {
+    const today = new Date();
+    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+    return hadithArray[dayOfYear % hadithArray.length];
+  }
+
+  function getWeakHadith() {
+    const today = new Date();
+    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+    return weakHadiths[dayOfYear % weakHadiths.length];
+  }
+
+  // Quran Verses
   const quranVerses = [
     { text: "إِنَّ اللَّهَ يَأْمُرُ بِالْعَدْلِ وَالْإِحْسَانِ وَإِيتَاءِ ذِي الْقُرْبَىٰ", ref: "سورة النحل - 90" },
     { text: "وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ", ref: "سورة الذاريات - 55" },
     { text: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", ref: "سورة الشرح - 6" }
-  ];
-  
-  const zakatVerses = [
-    { text: "وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ", ref: "سورة البقرة - 43" },
-    { text: "خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا", ref: "سورة التوبة - 103" }
-  ];
-  
-  const hijriVerses = [
-    { text: "إِلَّا تَنصُرُوهُ فَقَدْ نَصَرَهُ اللَّهُ إِذْ أَخْرَجَهُ الَّذِينَ كَفَرُوا ثَانِيَ اثْنَيْنِ", ref: "سورة التوبة - 40" }
   ];
 
   function getDailyVerse(versesArray) {
@@ -1162,7 +1032,7 @@
     }
   }
 
-  // Search Function - includes all content types
+  // Search Function
   function performSearch() {
     const query = searchInput.value.trim().toLowerCase();
     if (query.length < 2) { alert('الرجاء إدخال حرفين على الأقل'); return; }
@@ -1289,8 +1159,8 @@
     
     if (cardIds.length === 0 && type === 'weakHadith') {
       const defaultCards = [
-        { id: 'weak1', header: '⚠️ حديث الطيرة', body: 'عن ابن عباس رضي الله عنهما قال: قال رسول الله ﷺ: "لا عدوى ولا طيرة ولا هامة ولا صفر" (وهذا حديث صحيح وليس ضعيفاً، هذا مثال توضيحي)', footer: 'رواه البخاري (هذا حديث صحيح، المثال للتوضيح)' },
-        { id: 'weak2', header: '⚠️ تنبيه', body: 'هذا القسم مخصص للأحاديث الضعيفة والموضوعة والبدع، لتنبيه المسلمين من الأحاديث غير الصحيحة المنتشرة.', footer: 'تنبيه: استشر العلماء' }
+        { id: 'weak1', header: '⚠️ حديث الطيرة (موضوع)', body: 'عن ابن عباس رضي الله عنهما قال: قال رسول الله ﷺ: "لا عدوى ولا طيرة ولا هامة ولا صفر" (هذا حديث صحيح وليس ضعيفاً، هذا مثال توضيحي للقسم)', footer: 'رواه البخاري (هذا حديث صحيح، المثال للتوضيح)' },
+        { id: 'weak2', header: '⚠️ تنبيه', body: 'هذا القسم مخصص للأحاديث الضعيفة والموضوعة والبدع، لتنبيه المسلمين من الأحاديث غير الصحيحة المنتشرة. استشر العلماء دائماً.', footer: 'تنبيه: استشر العلماء الموثوقين' }
       ];
       for (const card of defaultCards) {
         await database.ref(`${type}_full/${card.id}`).set({ header: card.header, body: card.body, footer: card.footer });
@@ -1500,12 +1370,26 @@
   function initializeFeatures() {
     updateHijriDate();
     setInterval(updateHijriDate, 60000);
-    document.getElementById('verseText').innerHTML = `﴿ ${getDailyVerse(quranVerses).text} ﴾`;
-    document.getElementById('verseReference').innerHTML = getDailyVerse(quranVerses).ref;
-    document.getElementById('zakatVerseText').innerHTML = `﴿ ${getDailyVerse(zakatVerses).text} ﴾`;
-    document.getElementById('zakatVerseRef').innerHTML = getDailyVerse(zakatVerses).ref;
-    document.getElementById('hijriVerseText').innerHTML = `﴿ ${getDailyVerse(hijriVerses).text} ﴾`;
-    document.getElementById('hijriVerseRef').innerHTML = getDailyVerse(hijriVerses).ref;
+    
+    // Daily Quran Verse
+    const dailyVerse = getDailyVerse(quranVerses);
+    document.getElementById('verseText').innerHTML = `﴿ ${dailyVerse.text} ﴾`;
+    document.getElementById('verseReference').innerHTML = dailyVerse.ref;
+    
+    // Main Ahadeeth Page - Daily Hadith
+    const mainHadith = getDailyHadith(mainHadiths);
+    document.getElementById('mainHadithText').innerHTML = `﴿ ${mainHadith.text} ﴾`;
+    document.getElementById('mainHadithSource').innerHTML = mainHadith.source;
+    
+    // True Ahadith Page - Daily Hadith
+    const trueHadith = getDailyHadith(trueHadiths);
+    document.getElementById('trueHadithText').innerHTML = `﴿ ${trueHadith.text} ﴾`;
+    document.getElementById('trueHadithSource').innerHTML = trueHadith.source;
+    
+    // Weak Ahadith Page - Rotating Warning Hadith (alternates between the two)
+    const weakHadith = getWeakHadith();
+    document.getElementById('weakHadithText').innerHTML = `﴿ ${weakHadith.text} ﴾`;
+    document.getElementById('weakHadithSource').innerHTML = weakHadith.source;
   }
   
   document.getElementById('calculateZakatBtn').addEventListener('click', calculateZakat);
@@ -1514,7 +1398,7 @@
   initializeFeatures();
   loadEvents();
   renderCalendar();
-  console.log('✅ Platform ready with Ahadeeth section!');
+  console.log('✅ Platform ready with full Ahadeeth section and rotating hadith panels!');
 </script>
 </body>
 </html>
