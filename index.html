@@ -46,13 +46,15 @@
     body.dark-mode .search-box input { color: #eee; background: transparent; }
     body.dark-mode .subpage-btn { background: #2c5e2e; color: #fef3d6; }
     body.dark-mode .subpage-btn.active { background: #ff9800; color: white; }
-    body.dark-mode .modal-body a { color: #d4a843; }
+    body.dark-mode .modal-body a, body.dark-mode .leaflet-popup-content a { color: #d4a843; }
     
-    .modal-body a {
+    .modal-body a, .leaflet-popup-content a {
       color: #2c5e2e;
       text-decoration: underline;
       word-break: break-all;
     }
+    .leaflet-popup-content { font-family: 'Amiri', 'Tajawal', serif; font-size: 14px; line-height: 1.6; }
+    .leaflet-popup-content a { color: #2c5e2e; text-decoration: underline; }
     
     .container { max-width: 1300px; margin: 0 auto; background: rgba(255, 250, 240, 0.95); border-radius: 24px; padding: 15px; transition: background 0.3s; }
     
@@ -498,30 +500,22 @@
   
   let allAthkar = [], allTafsir = [], allTrueHadith = [], allWeakHadith = [];
 
-  // ============ HELPER FUNCTION: Convert URLs to clickable links (NO embedded videos) ============
+  // Helper function: Convert URLs to clickable links (NO embedded videos)
   function convertUrlsToHtml(text) {
     if (!text) return '';
-    
-    // Convert ANY URL to clickable text link (no embedded videos)
     let converted = text.replace(/(https?:\/\/[^\s<]+)/g, function(url) {
       let displayUrl = url;
-      // Clean up YouTube URLs for better display
       if (url.includes('youtube.com/watch?v=')) {
         const videoId = url.match(/v=([^&]+)/)?.[1];
-        if (videoId) {
-          displayUrl = `🎬 رابط يوتيوب: ${videoId}`;
-        }
+        if (videoId) displayUrl = `🎬 رابط يوتيوب: ${videoId}`;
       } else if (url.includes('youtu.be/')) {
         const videoId = url.match(/youtu\.be\/([^?]+)/)?.[1];
-        if (videoId) {
-          displayUrl = `🎬 رابط يوتيوب: ${videoId}`;
-        }
+        if (videoId) displayUrl = `🎬 رابط يوتيوب: ${videoId}`;
       } else if (url.length > 50) {
         displayUrl = url.substring(0, 40) + '...';
       }
       return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #2c5e2e; text-decoration: underline; word-break: break-all;">${displayUrl}</a>`;
     });
-    
     return converted;
   }
 
@@ -706,38 +700,95 @@
     contentModal.style.display = 'flex';
   }
 
+  // FIXED: loadCardsOfType - ensures cards persist after refresh
   async function loadCardsOfType(type) {
-    const map = { athkar: 'athkarBoxes', tafsir: 'tafsirBoxes', trueHadith: 'trueHadithBoxes', weakHadith: 'weakHadithBoxes' };
-    const container = document.getElementById(map[type]);
-    const list = (await database.ref(`${type}_list`).once('value')).val() || {};
-    const ids = Object.keys(list);
+    const containerMap = { athkar: 'athkarBoxes', tafsir: 'tafsirBoxes', trueHadith: 'trueHadithBoxes', weakHadith: 'weakHadithBoxes' };
+    const container = document.getElementById(containerMap[type]);
+    if (!container) return;
     
-    if (ids.length === 0) {
-      const defaults = type === 'athkar' ? [{ id: 'm1', header: '🌅 أذكار الصباح', body: 'اللَّهُمَّ بِكَ أَصْبَحْنَا...', footer: '🤲 رَطِّبْ لِسَانَكَ' }] :
-                      type === 'tafsir' ? [{ id: 't1', header: '📖 تفسير الفاتحة', body: 'الفاتحة هي أم الكتاب...', footer: '💎 أم القرآن' }] :
-                      type === 'trueHadith' ? [{ id: 'h1', header: '📖 حديث النية', body: 'إنما الأعمال بالنيات...', footer: 'رواه البخاري' }] :
-                      [{ id: 'w1', header: '⚠️ تنبيه', body: 'هذا القسم للتنبيه من الأحاديث الضعيفة', footer: 'تنبيه' }];
-      for (const card of defaults) await database.ref(`${type}_full/${card.id}`).set(card);
-      for (const card of defaults) await database.ref(`${type}_list/${card.id}`).set({ id: card.id });
-      loadCardsOfType(type); return;
-    }
-    
-    container.innerHTML = ''; const items = [];
-    for (const id of ids) {
-      const data = (await database.ref(`${type}_full/${id}`).once('value')).val();
-      if (data) {
-        items.push({ id, header: data.header, body: data.body, footer: data.footer });
-        const div = document.createElement('div'); div.className = 'info-card'; div.setAttribute('data-id', id);
-        let short = data.body.substring(0, 80); if (data.body.length > 80) short += '...';
-        div.innerHTML = `<div class="card-header ${type === 'trueHadith' ? 'hadith-true' : type === 'weakHadith' ? 'hadith-weak' : ''}">${data.header}</div><div class="card-preview"><p>${short}</p></div><button class="more-btn">📖 المزيد</button>${adminMode ? '<button class="delete-card-btn" onclick="deleteCard(\'' + type + '\', \'' + id + '\')">×</button>' : ''}`;
-        div.querySelector('.more-btn').onclick = () => openModal(type, id, data.header, data.body, data.footer);
-        container.appendChild(div);
+    try {
+      let listSnapshot = await database.ref(`${type}_list`).once('value');
+      let list = listSnapshot.val() || {};
+      let cardIds = Object.keys(list);
+      
+      // If no cards exist in Firebase, create default ones
+      if (cardIds.length === 0) {
+        let defaultCards = [];
+        
+        if (type === 'athkar') {
+          defaultCards = [
+            { id: 'athkar_morning', header: '🌅 أذكار الصباح', body: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ.<br><br>أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ.', footer: '🤲 رَطِّبْ لِسَانَكَ' },
+            { id: 'athkar_evening', header: '🌙 أذكار المساء', body: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ.', footer: '🌙 احْفَظْ بِهَا نَفْسَكَ' },
+            { id: 'athkar_sleep', header: '😴 أذكار النوم', body: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا.<br><br>اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ.', footer: '💤 تَوَكَّلْ عَلَى اللَّهِ' }
+          ];
+        } else if (type === 'tafsir') {
+          defaultCards = [
+            { id: 'tafsir_fatiha', header: '📖 تفسير سورة الفاتحة', body: 'الفاتحة هي أم الكتاب، سبع مثاني، وهي أعظم سورة في القرآن. تشتمل على الثناء على الله وطلب الهداية إلى الصراط المستقيم.', footer: '💎 أم القرآن' },
+            { id: 'tafsir_kursi', header: '✨ تفسير آية الكرسي', body: 'آية الكرسي هي أعظم آية في القرآن الكريم. تتضمن توحيد الله، حياته، قيوميته، وسع كرسيه السماوات والأرض.', footer: '🛡️ حصن من الشيطان' },
+            { id: 'tafsir_ikhlas', header: '🤍 تفسير سورة الإخلاص', body: 'سورة الإخلاص تعدل ثلث القرآن. وهي خلاصة التوحيد: قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ.', footer: '🌟 ثلث القرآن' }
+          ];
+        } else if (type === 'trueHadith') {
+          defaultCards = [
+            { id: 'hadith_niyah', header: '📖 حديث النية', body: 'عن عمر بن الخطاب رضي الله عنه قال: سمعت رسول الله ﷺ يقول: "إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى..."', footer: 'رواه البخاري ومسلم' },
+            { id: 'hadith_jibreel', header: '📖 حديث جبريل', body: 'عن عمر بن الخطاب رضي الله عنه قال: بينما نحن جلوس عند رسول الله ﷺ إذ طلع علينا رجل شديد بياض الثياب... فسأله عن الإسلام والإيمان والإحسان', footer: 'رواه مسلم' }
+          ];
+        } else if (type === 'weakHadith') {
+          defaultCards = [
+            { id: 'weak_warning', header: '⚠️ تنبيه', body: 'هذا القسم مخصص للأحاديث الضعيفة والموضوعة والبدع، لتنبيه المسلمين من الأحاديث غير الصحيحة المنتشرة.', footer: 'تنبيه: استشر العلماء الموثوقين' }
+          ];
+        }
+        
+        // Save default cards to Firebase
+        for (const card of defaultCards) {
+          await database.ref(`${type}_full/${card.id}`).set({ 
+            header: card.header, 
+            body: card.body, 
+            footer: card.footer 
+          });
+          await database.ref(`${type}_list/${card.id}`).set({ id: card.id, order: Date.now() });
+        }
+        
+        // Reload the cards after saving defaults
+        await loadCardsOfType(type);
+        return;
       }
+      
+      // Load existing cards
+      container.innerHTML = '';
+      const itemsArray = [];
+      
+      for (const id of cardIds) {
+        const cardData = await database.ref(`${type}_full/${id}`).once('value');
+        const data = cardData.val();
+        if (data) {
+          itemsArray.push({ id, header: data.header, body: data.body, footer: data.footer });
+          const div = document.createElement('div');
+          div.className = 'info-card';
+          div.setAttribute('data-id', id);
+          let shortText = data.body.substring(0, 80);
+          if (data.body.length > 80) shortText += '...';
+          let headerClass = '';
+          if (type === 'trueHadith') headerClass = 'hadith-true';
+          if (type === 'weakHadith') headerClass = 'hadith-weak';
+          div.innerHTML = `
+            <div class="card-header ${headerClass}">${data.header}</div>
+            <div class="card-preview"><p>${shortText}</p></div>
+            <button class="more-btn">📖 المزيد</button>
+            ${adminMode ? '<button class="delete-card-btn" onclick="deleteCard(\'' + type + '\', \'' + id + '\')">×</button>' : ''}
+          `;
+          div.querySelector('.more-btn').onclick = () => openModal(type, id, data.header, data.body, data.footer);
+          container.appendChild(div);
+        }
+      }
+      
+      if (type === 'athkar') allAthkar = itemsArray;
+      else if (type === 'tafsir') allTafsir = itemsArray;
+      else if (type === 'trueHadith') allTrueHadith = itemsArray;
+      else if (type === 'weakHadith') allWeakHadith = itemsArray;
+      
+    } catch (error) {
+      console.error(`Error loading ${type}:`, error);
     }
-    if (type === 'athkar') allAthkar = items;
-    else if (type === 'tafsir') allTafsir = items;
-    else if (type === 'trueHadith') allTrueHadith = items;
-    else allWeakHadith = items;
   }
 
   async function loadAllCards() {
@@ -787,7 +838,7 @@
   document.getElementById('prevMonth')?.addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
   document.getElementById('nextMonth')?.addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
 
-  // ============ MAP FUNCTIONS ============
+  // ============ MAP FUNCTIONS WITH CLICKABLE LINKS ============
   function createCustomLabel(lat, lng, text, color = '#1e5629') {
     return L.marker([lat, lng], { icon: L.divIcon({ className: 'custom-label', html: `<div style="background:${color};color:white;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:bold;">${text}</div>`, iconSize: [null, null], popupAnchor: [0, -8] }) });
   }
@@ -803,8 +854,9 @@
     for (let id in pins) {
       const pin = pins[id];
       const marker = L.marker([pin.lat, pin.lng]).addTo(map);
-      marker.bindPopup(`<b>📍 ${pin.title}</b><br><p>${pin.description || ''}</p>${adminMode ? '<br><button onclick="editPin(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;margin:2px;">✏️</button><button onclick="deletePin(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;margin:2px;">🗑️</button>' : ''}`);
-      marker.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>📍 ${pin.title}</strong><br><p>${pin.description || ''}</p>`);
+      const descriptionWithLinks = convertUrlsToHtml(pin.description || '');
+      marker.bindPopup(`<b>📍 ${pin.title}</b><br><p>${descriptionWithLinks}</p>${adminMode ? '<br><button onclick="editPin(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;margin:2px;">✏️</button><button onclick="deletePin(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;margin:2px;">🗑️</button>' : ''}`);
+      marker.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>📍 ${pin.title}</strong><br><p>${descriptionWithLinks}</p>`);
       markers[id] = marker;
     }
     
@@ -813,8 +865,9 @@
       const label = mapLabels[id];
       const labelMarker = createCustomLabel(label.lat, label.lng, label.text);
       labelMarker.addTo(map);
-      labelMarker.bindPopup(`<b>🏷️ ${label.text}</b><br><p>${label.description || ''}</p>${adminMode ? '<br><button onclick="editLabel(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;">✏️</button><button onclick="deleteLabel(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;">🗑️</button>' : ''}`);
-      labelMarker.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>🏷️ ${label.text}</strong><br><p>${label.description || ''}</p>`);
+      const labelDescriptionWithLinks = convertUrlsToHtml(label.description || '');
+      labelMarker.bindPopup(`<b>🏷️ ${label.text}</b><br><p>${labelDescriptionWithLinks}</p>${adminMode ? '<br><button onclick="editLabel(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;">✏️</button><button onclick="deleteLabel(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;">🗑️</button>' : ''}`);
+      labelMarker.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>🏷️ ${label.text}</strong><br><p>${labelDescriptionWithLinks}</p>`);
       labels[id] = labelMarker;
     }
     
@@ -823,8 +876,9 @@
       const path = paths[id];
       const latlngs = path.points.map(p => [p.lat, p.lng]);
       const polyline = L.polyline(latlngs, { color: '#2c5e2e', weight: 4, opacity: 0.8 }).addTo(map);
-      polyline.bindPopup(`<b>🗺️ ${path.title || 'مسار'}</b><br><p>${path.description || ''}</p>${adminMode ? '<br><button onclick="editPath(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;">✏️</button><button onclick="deletePath(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;">🗑️</button>' : ''}`);
-      polyline.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>🗺️ ${path.title || 'مسار'}</strong><br><p>${path.description || ''}</p>`);
+      const pathDescriptionWithLinks = convertUrlsToHtml(path.description || '');
+      polyline.bindPopup(`<b>🗺️ ${path.title || 'مسار'}</b><br><p>${pathDescriptionWithLinks}</p>${adminMode ? '<br><button onclick="editPath(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;">✏️</button><button onclick="deletePath(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;">🗑️</button>' : ''}`);
+      polyline.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>🗺️ ${path.title || 'مسار'}</strong><br><p>${pathDescriptionWithLinks}</p>`);
       polylines[id] = polyline;
     }
   }
@@ -994,7 +1048,7 @@
   document.getElementById('calculateZakatBtn').addEventListener('click', calculateZakat);
   document.getElementById('convertBtn').addEventListener('click', convertDate);
   initializeFeatures(); loadEvents(); renderCalendar();
-  console.log('✅ Platform ready with clickable YouTube links (not embedded)!');
+  console.log('✅ Platform ready with persistent cards and clickable map links!');
 </script>
 </body>
 </html>
