@@ -92,7 +92,7 @@
     .hadith-source { font-size: 0.75rem; margin-top: 8px; opacity: 0.8; }
     .warning-badge { display: inline-block; background: #f44336; color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; margin-bottom: 8px; }
     
-    /* Search Bar - Bigger, at top */
+    /* Search Bar */
     .search-container { margin: 15px 0 20px; display: flex; justify-content: center; }
     .search-box { display: flex; align-items: center; background: white; border-radius: 60px; padding: 8px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; border: 2px solid #e0d5b9; }
     .search-box input { flex: 1; padding: 14px 12px; border: none; outline: none; font-size: 1rem; font-family: 'Tajawal'; background: transparent; }
@@ -111,7 +111,7 @@
     .sync-status.error { background: #f44336; }
     .sync-status.admin { background: #2196f3; }
     
-    /* Login Modal - Only appears when admin toggle clicked */
+    /* Login Modal */
     .login-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
     .login-box { background: white; padding: 35px 30px; border-radius: 50px; width: 85%; max-width: 380px; text-align: center; }
     .login-box h2 { color: #1e5629; margin-bottom: 20px; font-size: 1.4rem; }
@@ -158,7 +158,7 @@
     .subpage-content { display: none; }
     .subpage-content.active { display: block; }
     
-    /* Zakat Calculator - Bigger */
+    /* Zakat Calculator */
     .calculator-box { background: white; border-radius: 28px; padding: 30px 25px; margin-top: 15px; text-align: center; }
     .calculator-box h3 { font-size: 1.4rem; margin-bottom: 20px; color: #1e5629; }
     .calculator-input { margin: 20px 0; }
@@ -167,7 +167,7 @@
     .calculator-result { background: linear-gradient(135deg, #2c5e2e15, #fef2df); padding: 25px; border-radius: 28px; margin-top: 20px; }
     .zakat-amount { font-size: 2rem; font-weight: bold; color: #2c5e2e; margin: 15px 0; }
     
-    /* Hijri Converter - Bigger */
+    /* Hijri Converter */
     .converter-box { display: flex; flex-direction: column; gap: 20px; align-items: center; }
     .converter-input { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
     .converter-input input, .converter-input select { padding: 14px; border: 2px solid #e0d5b9; border-radius: 60px; font-family: 'Tajawal'; font-size: 1rem; min-width: 100px; }
@@ -185,11 +185,12 @@
     .day-cell.has-event { background: #2c5e2ecc; color: white; }
     button { background: #2c5e2e; color: white; border: none; border-radius: 40px; padding: 6px 14px; cursor: pointer; font-size: 0.75rem; }
     
-    /* Map */
-    #map { height: 300px; border-radius: 24px; margin: 15px 0; border: 2px solid #e0d5b9; }
+    /* Map Styles - FIXED PATH DRAWING */
+    #map { height: 450px; border-radius: 24px; margin: 15px 0; border: 2px solid #e0d5b9; z-index: 1; }
     .control-panel { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; justify-content: center; }
-    .control-panel button { background: #2c5e2e; color: white; border: none; padding: 6px 12px; border-radius: 30px; cursor: pointer; font-size: 0.7rem; }
-    .drawing-instruction { background: #fef3d6; padding: 8px; border-radius: 24px; text-align: center; margin: 8px 0; display: none; color: #1e5629; font-weight: bold; font-size: 0.75rem; }
+    .control-panel button { background: #2c5e2e; color: white; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 0.75rem; transition: 0.2s; }
+    .control-panel button.active { background: #ff9800; box-shadow: 0 0 5px rgba(255,152,0,0.5); }
+    .drawing-instruction { background: #fef3d6; padding: 10px; border-radius: 24px; text-align: center; margin: 8px 0; display: none; color: #1e5629; font-weight: bold; font-size: 0.8rem; }
     .stories-detail { background: white; border-radius: 24px; padding: 15px; margin-top: 15px; }
     .stories-detail h3 { font-size: 0.95rem; margin-bottom: 8px; }
     
@@ -213,7 +214,7 @@
       .card-header { font-size: 1rem; padding: 12px; }
       .card-preview { font-size: 0.85rem; padding: 12px; }
       header h1 { font-size: 1.8rem; }
-      #map { height: 450px; }
+      #map { height: 500px; }
       .hadith-text, .verse-panel-text { font-size: 1.1rem; }
       .search-box input { font-size: 1.1rem; }
     }
@@ -229,7 +230,7 @@
     </div>
   </header>
 
-  <!-- Horizontal Scrollable Navigation -->
+  <!-- Navigation -->
   <div class="nav-wrapper">
     <div class="nav-links">
       <button class="nav-link" data-page="home">🏠 الرئيسية</button>
@@ -243,7 +244,7 @@
     </div>
   </div>
 
-  <!-- Search Bar - Bigger, at top -->
+  <!-- Search Bar -->
   <div class="search-container">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="🔍 ابحث في الأذكار والتفسير والأحاديث...">
@@ -262,7 +263,7 @@
     <div class="sync-status" id="syncStatus">✅ متصل</div>
   </div>
 
-  <!-- Login Modal - ONLY appears when admin toggle is clicked -->
+  <!-- Login Modal -->
   <div class="login-modal" id="loginModal">
     <div class="login-box">
       <span class="close-modal" id="closeModal">&times;</span>
@@ -365,7 +366,7 @@
     </div>
   </div>
 
-  <!-- ZAKAT PAGE - Bigger -->
+  <!-- ZAKAT PAGE -->
   <div id="zakat" class="page">
     <div class="hero"><h2>💎 حاسبة الزكاة</h2></div>
     <div class="verse-panel">
@@ -400,7 +401,7 @@
     </div>
   </div>
 
-  <!-- HIJRI CONVERTER PAGE - Bigger -->
+  <!-- HIJRI CONVERTER PAGE -->
   <div id="hijri" class="page">
     <div class="hero"><h2>📅 محول التاريخ الهجري</h2></div>
     <div class="verse-panel">
@@ -452,7 +453,7 @@
     </div>
   </div>
 
-  <!-- STORIES PAGE -->
+  <!-- STORIES PAGE WITH WORKING PATH DRAWING -->
   <div id="stories" class="page">
     <div class="hero"><h2>🌍 قصص الأنبياء</h2></div>
     <div class="verse-panel">
@@ -463,6 +464,7 @@
       <button id="addPinBtn">📍 إضافة نقطة</button>
       <button id="addLabelBtn">🏷️ إضافة نص</button>
       <button id="addPathBtn">✏️ رسم مسار</button>
+      <button id="finishPathBtn" style="background:#ff9800; display:none;">✅ إنهاء المسار</button>
       <button id="cancelDrawBtn">❌ إلغاء</button>
       <button id="deleteModeBtn" style="background:#f44336;">🗑️ حذف</button>
     </div>
@@ -470,7 +472,7 @@
     <div id="map"></div>
     <div class="stories-detail">
       <h3>📖 التفاصيل</h3>
-      <div id="storyContent">🌟 اختر نقطة على الخريطة</div>
+      <div id="storyContent">🌟 اختر نقطة أو مسار على الخريطة</div>
     </div>
   </div>
 </div>
@@ -496,37 +498,40 @@
   let currentType = null;
   let pendingAddType = null;
   
+  // Map variables
   let map, mapInitialized = false;
-  let markers = {}, labels = {}, polylines = {};
-  let currentDrawMode = null, currentPathPoints = [], currentPolyline = null, deleteModeActive = false;
+  let markers = {};
+  let labels = {};
+  let polylines = {};
+  let currentDrawMode = null;
+  let currentPathPoints = [];
+  let currentPolyline = null;
+  let deleteModeActive = false;
   
   let allAthkar = [], allTafsir = [], allTrueHadith = [], allWeakHadith = [];
 
   const mainHadiths = [
     { text: "نَضَّرَ اللَّهُ امْرَأً سَمِعَ مِنَّا حَدِيثًا فَحَفِظَهُ حَتَّى يُبَلِّغَهُ", source: "رواه الترمذي - حديث صحيح" },
-    { text: "بَلِّغُوا عَنِّي وَلَوْ آيَةً", source: "رواه البخاري" },
-    { text: "مَنْ حَفِظَ عَلَى أُمَّتِي أَرْبَعِينَ حَدِيثًا مِنْ أَمْرِ دِينِهَا بَعَثَهُ اللَّهُ يَوْمَ الْقِيَامَةِ فَقِيهًا", source: "رواه الدارمي" }
+    { text: "بَلِّغُوا عَنِّي وَلَوْ آيَةً", source: "رواه البخاري" }
   ];
   const trueHadiths = [
-    { text: "نَضَّرَ اللَّهُ امْرَأً سَمِعَ مِنَّا حَدِيثًا فَحَفِظَهُ حَتَّى يُبَلِّغَهُ", source: "رواه الترمذي - حديث صحيح" },
+    { text: "نَضَّرَ اللَّهُ امْرَأً سَمِعَ مِنَّا حَدِيثًا فَحَفِظَهُ حَتَّى يُبَلِّغَهُ", source: "رواه الترمذي" },
     { text: "بَلِّغُوا عَنِّي وَلَوْ آيَةً", source: "رواه البخاري" }
   ];
   const weakHadiths = [
-    { text: "مَنْ كَذَبَ عَلَيَّ مُتَعَمِّدًا فَلْيَتَبَوَّأْ مَقْعَدَهُ مِنَ النَّارِ", source: "متفق عليه - البخاري ومسلم" },
+    { text: "مَنْ كَذَبَ عَلَيَّ مُتَعَمِّدًا فَلْيَتَبَوَّأْ مَقْعَدَهُ مِنَ النَّارِ", source: "متفق عليه" },
     { text: "لَا تَكْذِبُوا عَلَيَّ فَإِنَّهُ مَنْ يَكْذِبْ عَلَيَّ يَلِجِ النَّارَ", source: "رواه مسلم" }
   ];
   const quranVerses = [
-    { text: "إِنَّ اللَّهَ يَأْمُرُ بِالْعَدْلِ وَالْإِحْسَانِ وَإِيتَاءِ ذِي الْقُرْبَىٰ", ref: "سورة النحل - 90" },
-    { text: "وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ", ref: "سورة الذاريات - 55" },
-    { text: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", ref: "سورة الشرح - 6" }
+    { text: "إِنَّ اللَّهَ يَأْمُرُ بِالْعَدْلِ وَالْإِحْسَانِ", ref: "سورة النحل - 90" },
+    { text: "وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ", ref: "سورة الذاريات - 55" }
   ];
   const zakatVerses = [
     { text: "وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ", ref: "سورة البقرة - 43" },
-    { text: "خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا", ref: "سورة التوبة - 103" }
+    { text: "خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً", ref: "سورة التوبة - 103" }
   ];
   const hijriVerses = [
-    { text: "إِلَّا تَنصُرُوهُ فَقَدْ نَصَرَهُ اللَّهُ إِذْ أَخْرَجَهُ الَّذِينَ كَفَرُوا ثَانِيَ اثْنَيْنِ", ref: "سورة التوبة - 40" },
-    { text: "هُوَ الَّذِي جَعَلَ الشَّمْسَ ضِيَاءً وَالْقَمَرَ نُورًا", ref: "سورة يونس - 5" }
+    { text: "إِلَّا تَنصُرُوهُ فَقَدْ نَصَرَهُ اللَّهُ", ref: "سورة التوبة - 40" }
   ];
 
   function getDailyVerse(arr) { const d = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000); return arr[d % arr.length]; }
@@ -762,24 +767,30 @@
   document.getElementById('prevMonth')?.addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
   document.getElementById('nextMonth')?.addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
 
-  // Map
+  // ============ MAP WITH WORKING PATH DRAWING ============
+  
   function createCustomLabel(lat, lng, text, color = '#1e5629') {
     return L.marker([lat, lng], { icon: L.divIcon({ className: 'custom-label', html: `<div style="background:${color};color:white;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:bold;">${text}</div>`, iconSize: [null, null], popupAnchor: [0, -8] }) });
   }
+
   async function loadMapData() {
     if (!mapInitialized) return;
     Object.values(markers).forEach(m => map.removeLayer(m));
     Object.values(labels).forEach(l => map.removeLayer(l));
     Object.values(polylines).forEach(p => map.removeLayer(p));
     markers = {}; labels = {}; polylines = {};
+    
+    // Load pins
     const pins = (await database.ref('map_pins').once('value')).val() || {};
     for (let id in pins) {
       const pin = pins[id];
       const marker = L.marker([pin.lat, pin.lng]).addTo(map);
-      marker.bindPopup(`<b>📍 ${pin.title}</b><br><p>${pin.description || ''}</p>${adminMode ? '<br><button onclick="editPin(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;">✏️</button><button onclick="deletePin(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;">🗑️</button>' : ''}`);
+      marker.bindPopup(`<b>📍 ${pin.title}</b><br><p>${pin.description || ''}</p>${adminMode ? '<br><button onclick="editPin(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;margin:2px;">✏️</button><button onclick="deletePin(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;margin:2px;">🗑️</button>' : ''}`);
       marker.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>📍 ${pin.title}</strong><br><p>${pin.description || ''}</p>`);
       markers[id] = marker;
     }
+    
+    // Load text labels
     const mapLabels = (await database.ref('map_labels').once('value')).val() || {};
     for (let id in mapLabels) {
       const label = mapLabels[id];
@@ -789,32 +800,154 @@
       labelMarker.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>🏷️ ${label.text}</strong><br><p>${label.description || ''}</p>`);
       labels[id] = labelMarker;
     }
+    
+    // Load paths (polylines)
+    const paths = (await database.ref('map_paths').once('value')).val() || {};
+    for (let id in paths) {
+      const path = paths[id];
+      const latlngs = path.points.map(p => [p.lat, p.lng]);
+      const polyline = L.polyline(latlngs, { color: '#2c5e2e', weight: 4, opacity: 0.8 }).addTo(map);
+      polyline.bindPopup(`<b>🗺️ ${path.title || 'مسار'}</b><br><p>${path.description || ''}</p>${adminMode ? '<br><button onclick="editPath(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;">✏️</button><button onclick="deletePath(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;">🗑️</button>' : ''}`);
+      polyline.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>🗺️ ${path.title || 'مسار'}</strong><br><p>${path.description || ''}</p>`);
+      polylines[id] = polyline;
+    }
   }
+
+  // Admin functions for map elements
   window.editPin = async function(id) { if (!adminMode) return; const newTitle = prompt('الاسم الجديد:'); if (!newTitle) return; const newDesc = prompt('الوصف الجديد:'); const data = (await database.ref(`map_pins/${id}`).once('value')).val(); if (data) { await database.ref(`map_pins/${id}`).set({ ...data, title: newTitle, description: newDesc || '' }); loadMapData(); } };
-  window.deletePin = async function(id) { if (!adminMode) return; if (confirm('حذف؟')) { await database.ref(`map_pins/${id}`).remove(); loadMapData(); } };
+  window.deletePin = async function(id) { if (!adminMode) return; if (confirm('حذف هذه النقطة؟')) { await database.ref(`map_pins/${id}`).remove(); loadMapData(); } };
   window.editLabel = async function(id) { if (!adminMode) return; const newText = prompt('النص الجديد:'); if (!newText) return; const newDesc = prompt('الوصف الجديد:'); const data = (await database.ref(`map_labels/${id}`).once('value')).val(); if (data) { await database.ref(`map_labels/${id}`).set({ ...data, text: newText, description: newDesc || '' }); loadMapData(); } };
-  window.deleteLabel = async function(id) { if (!adminMode) return; if (confirm('حذف؟')) { await database.ref(`map_labels/${id}`).remove(); loadMapData(); } };
+  window.deleteLabel = async function(id) { if (!adminMode) return; if (confirm('حذف هذه التسمية؟')) { await database.ref(`map_labels/${id}`).remove(); loadMapData(); } };
+  window.editPath = async function(id) { if (!adminMode) return; const newTitle = prompt('اسم المسار الجديد:'); if (!newTitle) return; const newDesc = prompt('الوصف الجديد:'); const data = (await database.ref(`map_paths/${id}`).once('value')).val(); if (data) { await database.ref(`map_paths/${id}`).set({ ...data, title: newTitle, description: newDesc || '' }); loadMapData(); } };
+  window.deletePath = async function(id) { if (!adminMode) return; if (confirm('حذف هذا المسار؟')) { await database.ref(`map_paths/${id}`).remove(); loadMapData(); } };
+
   function initMap() {
     if (mapInitialized) return;
     map = L.map('map').setView([27.0, 30.0], 4);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '© OSM' }).addTo(map);
     mapInitialized = true;
     loadMapData();
+    
+    // Map click handler for adding points/labels/paths
     map.on('click', async (e) => {
       if (!adminMode) return;
+      if (deleteModeActive) { alert('⚠️ اخرج من وضع الحذف أولاً'); return; }
+      
       if (currentDrawMode === 'pin') {
-        const title = prompt('📍 اسم النقطة:'); if (title) { const desc = prompt('📝 الوصف:'); await database.ref(`map_pins/pin_${Date.now()}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, title, description: desc || '' }); loadMapData(); }
-        currentDrawMode = null; document.getElementById('drawingInstruction').style.display = 'none'; document.getElementById('addPinBtn').classList.remove('active');
-      } else if (currentDrawMode === 'label') {
-        const text = prompt('🏷️ النص:'); if (text) { const desc = prompt('📝 الوصف:'); await database.ref(`map_labels/label_${Date.now()}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, text, description: desc || '' }); loadMapData(); }
-        currentDrawMode = null; document.getElementById('drawingInstruction').style.display = 'none'; document.getElementById('addLabelBtn').classList.remove('active');
+        const title = prompt('📍 اسم النقطة (اسم النبي أو المكان):');
+        if (title) {
+          const desc = prompt('📝 وصف القصة:');
+          const newId = `pin_${Date.now()}`;
+          await database.ref(`map_pins/${newId}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, title: title, description: desc || '' });
+          loadMapData();
+        }
+        currentDrawMode = null;
+        document.getElementById('drawingInstruction').style.display = 'none';
+        document.getElementById('addPinBtn').classList.remove('active');
+      } 
+      else if (currentDrawMode === 'label') {
+        const text = prompt('🏷️ النص (اسم الدولة/المدينة):');
+        if (text) {
+          const desc = prompt('📝 وصف إضافي:');
+          const newId = `label_${Date.now()}`;
+          await database.ref(`map_labels/${newId}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, text: text, description: desc || '' });
+          loadMapData();
+        }
+        currentDrawMode = null;
+        document.getElementById('drawingInstruction').style.display = 'none';
+        document.getElementById('addLabelBtn').classList.remove('active');
+      }
+      else if (currentDrawMode === 'path') {
+        currentPathPoints.push(e.latlng);
+        if (currentPolyline) map.removeLayer(currentPolyline);
+        currentPolyline = L.polyline(currentPathPoints, { color: '#ff9800', weight: 5, opacity: 0.9 }).addTo(map);
       }
     });
   }
-  document.getElementById('addPinBtn').onclick = () => { if (!adminMode) { alert('❌ للمشرف فقط'); return; } currentDrawMode = 'pin'; document.getElementById('drawingInstruction').innerHTML = '📍 انقر على الخريطة لإضافة نقطة'; document.getElementById('drawingInstruction').style.display = 'block'; document.getElementById('addPinBtn').classList.add('active'); };
-  document.getElementById('addLabelBtn').onclick = () => { if (!adminMode) { alert('❌ للمشرف فقط'); return; } currentDrawMode = 'label'; document.getElementById('drawingInstruction').innerHTML = '🏷️ انقر على الخريطة لإضافة نص'; document.getElementById('drawingInstruction').style.display = 'block'; document.getElementById('addLabelBtn').classList.add('active'); };
-  document.getElementById('cancelDrawBtn').onclick = () => { currentDrawMode = null; document.getElementById('drawingInstruction').style.display = 'none'; document.getElementById('addPinBtn').classList.remove('active'); document.getElementById('addLabelBtn').classList.remove('active'); };
-  document.getElementById('deleteModeBtn').onclick = () => { if (!adminMode) return; deleteModeActive = !deleteModeActive; document.getElementById('deleteModeBtn').style.background = deleteModeActive ? '#d32f2f' : '#f44336'; document.getElementById('deleteModeBtn').innerHTML = deleteModeActive ? '🚫 خروج' : '🗑️ حذف'; if (deleteModeActive) alert('وضع الحذف مفعل'); };
+
+  // Map control buttons
+  document.getElementById('addPinBtn').onclick = () => {
+    if (!adminMode) { alert('❌ فقط المشرف يمكنه إضافة نقاط'); return; }
+    currentDrawMode = 'pin';
+    currentPathPoints = [];
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    document.getElementById('drawingInstruction').innerHTML = '📍 وضع إضافة النقاط - انقر على الخريطة لإضافة نقطة جديدة';
+    document.getElementById('drawingInstruction').style.display = 'block';
+    document.getElementById('addPinBtn').classList.add('active');
+    document.getElementById('addLabelBtn').classList.remove('active');
+    document.getElementById('addPathBtn').classList.remove('active');
+    document.getElementById('finishPathBtn').style.display = 'none';
+  };
+
+  document.getElementById('addLabelBtn').onclick = () => {
+    if (!adminMode) { alert('❌ فقط المشرف يمكنه إضافة نصوص'); return; }
+    currentDrawMode = 'label';
+    currentPathPoints = [];
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    document.getElementById('drawingInstruction').innerHTML = '🏷️ وضع إضافة النصوص - انقر على الخريطة لإضافة تسمية (اسم دولة/مدينة)';
+    document.getElementById('drawingInstruction').style.display = 'block';
+    document.getElementById('addLabelBtn').classList.add('active');
+    document.getElementById('addPinBtn').classList.remove('active');
+    document.getElementById('addPathBtn').classList.remove('active');
+    document.getElementById('finishPathBtn').style.display = 'none';
+  };
+
+  document.getElementById('addPathBtn').onclick = () => {
+    if (!adminMode) { alert('❌ فقط المشرف يمكنه رسم المسارات'); return; }
+    currentDrawMode = 'path';
+    currentPathPoints = [];
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    document.getElementById('drawingInstruction').innerHTML = '✏️ وضع رسم المسار - انقر على الخريطة لتحديد النقاط، ثم اضغط "إنهاء المسار"';
+    document.getElementById('drawingInstruction').style.display = 'block';
+    document.getElementById('addPathBtn').classList.add('active');
+    document.getElementById('addPinBtn').classList.remove('active');
+    document.getElementById('addLabelBtn').classList.remove('active');
+    document.getElementById('finishPathBtn').style.display = 'inline-block';
+  };
+
+  document.getElementById('finishPathBtn').onclick = async () => {
+    if (!adminMode) return;
+    if (currentPathPoints.length < 2) {
+      alert('يلزم نقطتان على الأقل لرسم مسار');
+      return;
+    }
+    const title = prompt('🏷️ اسم المسار (مثل: هجرة النبي ﷺ):');
+    if (title) {
+      const desc = prompt('📝 وصف المسار:');
+      const newId = `path_${Date.now()}`;
+      await database.ref(`map_paths/${newId}`).set({
+        points: currentPathPoints.map(p => ({ lat: p.lat, lng: p.lng })),
+        title: title,
+        description: desc || ''
+      });
+      loadMapData();
+    }
+    currentDrawMode = null;
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    currentPathPoints = [];
+    document.getElementById('drawingInstruction').style.display = 'none';
+    document.getElementById('addPathBtn').classList.remove('active');
+    document.getElementById('finishPathBtn').style.display = 'none';
+  };
+
+  document.getElementById('cancelDrawBtn').onclick = () => {
+    currentDrawMode = null;
+    if (currentPolyline) map.removeLayer(currentPolyline);
+    currentPathPoints = [];
+    document.getElementById('drawingInstruction').style.display = 'none';
+    document.getElementById('addPinBtn').classList.remove('active');
+    document.getElementById('addLabelBtn').classList.remove('active');
+    document.getElementById('addPathBtn').classList.remove('active');
+    document.getElementById('finishPathBtn').style.display = 'none';
+  };
+
+  document.getElementById('deleteModeBtn').onclick = () => {
+    if (!adminMode) return;
+    deleteModeActive = !deleteModeActive;
+    document.getElementById('deleteModeBtn').style.background = deleteModeActive ? '#d32f2f' : '#f44336';
+    document.getElementById('deleteModeBtn').innerHTML = deleteModeActive ? '🚫 خروج من الحذف' : '🗑️ وضع الحذف';
+    if (deleteModeActive) alert('🗑️ وضع الحذف مفعل. انقر على أي عنصر (نقطة، تسمية، مسار) ثم اضغط زر الحذف في النافذة المنبثقة');
+  };
 
   document.querySelectorAll('.subpage-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -848,7 +981,7 @@
   document.getElementById('calculateZakatBtn').addEventListener('click', calculateZakat);
   document.getElementById('convertBtn').addEventListener('click', convertDate);
   initializeFeatures(); loadEvents(); renderCalendar();
-  console.log('✅ Platform ready with all features!');
+  console.log('✅ Platform ready with working path drawing!');
 </script>
 </body>
 </html>
