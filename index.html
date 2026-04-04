@@ -28,60 +28,26 @@
     body.dark-mode .container {
       background: rgba(30, 30, 50, 0.95);
     }
-    body.dark-mode .content-box,
-    body.dark-mode .info-card,
-    body.dark-mode .calendar-container,
-    body.dark-mode .stories-detail,
-    body.dark-mode .search-results,
-    body.dark-mode .calculator-box,
-    body.dark-mode .subpage-nav,
-    body.dark-mode .hadith-panel {
+    body.dark-mode .content-box, body.dark-mode .info-card, body.dark-mode .calendar-container,
+    body.dark-mode .stories-detail, body.dark-mode .search-results, body.dark-mode .calculator-box,
+    body.dark-mode .subpage-nav, body.dark-mode .hadith-panel, body.dark-mode .verse-panel {
       background: #1e1e3a;
       border-color: #2c5e2e;
       color: #eee;
     }
-    body.dark-mode .card-preview,
-    body.dark-mode .modal-body,
-    body.dark-mode .calculator-result,
+    body.dark-mode .card-preview, body.dark-mode .modal-body, body.dark-mode .calculator-result,
     body.dark-mode .converter-result {
       background: #25254a;
       color: #ddd;
     }
-    body.dark-mode .hero {
-      background: linear-gradient(115deg, #2c5e2e20, #1a1a3e);
-    }
-    body.dark-mode .day-cell {
-      background: #25254a;
-      color: #ddd;
-    }
-    body.dark-mode .search-box {
-      background: #1e1e3a;
-      border-color: #2c5e2e;
-    }
-    body.dark-mode .search-box input {
-      color: #eee;
-      background: transparent;
-    }
-    body.dark-mode .nav-scroll {
-      background: #1e1e3a;
-    }
-    body.dark-mode .subpage-btn {
-      background: #2c5e2e;
-      color: #fef3d6;
-    }
-    body.dark-mode .subpage-btn.active {
-      background: #ff9800;
-      color: white;
-    }
+    body.dark-mode .hero, body.dark-mode .verse-panel { background: linear-gradient(115deg, #2c5e2e20, #1a1a3e); }
+    body.dark-mode .day-cell { background: #25254a; color: #ddd; }
+    body.dark-mode .search-box { background: #1e1e3a; border-color: #2c5e2e; }
+    body.dark-mode .search-box input { color: #eee; background: transparent; }
+    body.dark-mode .subpage-btn { background: #2c5e2e; color: #fef3d6; }
+    body.dark-mode .subpage-btn.active { background: #ff9800; color: white; }
     
-    .container {
-      max-width: 1300px;
-      margin: 0 auto;
-      background: rgba(255, 250, 240, 0.95);
-      border-radius: 24px;
-      padding: 15px;
-      transition: background 0.3s;
-    }
+    .container { max-width: 1300px; margin: 0 auto; background: rgba(255, 250, 240, 0.95); border-radius: 24px; padding: 15px; transition: background 0.3s; }
     
     /* Header */
     header {
@@ -96,447 +62,148 @@
       flex-wrap: wrap;
       gap: 10px;
     }
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .header-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     header h1 { font-size: 1.5rem; }
-    .hijri-date {
-      font-size: 0.7rem;
-      background: rgba(255,255,255,0.2);
-      padding: 4px 10px;
-      border-radius: 40px;
-      font-family: 'Tajawal';
-    }
-    .dark-mode-toggle {
-      background: #fef3d6;
-      color: #1e4a2a;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 40px;
-      cursor: pointer;
-      font-family: 'Tajawal';
-      font-weight: bold;
-      font-size: 0.75rem;
-    }
+    .hijri-date { font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 40px; font-family: 'Tajawal'; }
+    .dark-mode-toggle { background: #fef3d6; color: #1e4a2a; border: none; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-size: 0.75rem; }
     
-    /* Horizontal Scrollable Navigation */
-    .nav-wrapper {
-      margin-bottom: 20px;
-      overflow-x: auto;
-      overflow-y: hidden;
-      white-space: nowrap;
-      scrollbar-width: thin;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 5px;
-    }
-    .nav-wrapper::-webkit-scrollbar {
-      height: 3px;
-    }
-    .nav-links {
-      display: inline-flex;
-      gap: 8px;
-      padding: 0 5px;
-    }
-    .nav-link {
-      background: #fef3d6;
-      color: #1e4a2a;
-      padding: 8px 16px;
-      border-radius: 40px;
-      cursor: pointer;
-      border: none;
-      font-family: 'Tajawal';
-      font-size: 0.8rem;
-      transition: 0.2s;
-      white-space: nowrap;
-      display: inline-block;
-    }
+    /* Navigation */
+    .nav-wrapper { margin-bottom: 20px; overflow-x: auto; overflow-y: hidden; white-space: nowrap; scrollbar-width: thin; -webkit-overflow-scrolling: touch; padding-bottom: 5px; }
+    .nav-wrapper::-webkit-scrollbar { height: 3px; }
+    .nav-links { display: inline-flex; gap: 8px; padding: 0 5px; }
+    .nav-link { background: #fef3d6; color: #1e4a2a; padding: 8px 16px; border-radius: 40px; cursor: pointer; border: none; font-size: 0.8rem; transition: 0.2s; white-space: nowrap; display: inline-block; }
     .nav-link:hover { background: #ffe2a4; transform: translateY(-2px); }
     
-    /* Hadith Panel (for Ahadeeth pages) */
-    .hadith-panel {
-      text-align: center;
-      margin: 15px 0 20px;
-      padding: 15px;
-      border-radius: 30px;
-      font-family: 'Amiri', serif;
-    }
-    .hadith-panel.true-hadith {
-      background: linear-gradient(135deg, #2c5e2e15, #c8e6d9);
-      border-right: 4px solid #2c5e2e;
-    }
-    .hadith-panel.weak-hadith {
-      background: linear-gradient(135deg, #f4433615, #ffcdd2);
-      border-right: 4px solid #f44336;
-    }
-    .hadith-panel.main-hadith {
-      background: linear-gradient(135deg, #d4a84315, #fef2df);
-      border-right: 4px solid #d4a843;
-    }
-    body.dark-mode .hadith-panel.true-hadith { background: #1e3a2e; }
-    body.dark-mode .hadith-panel.weak-hadith { background: #3a1e1e; }
-    body.dark-mode .hadith-panel.main-hadith { background: #3a351e; }
+    /* Verse Panel */
+    .verse-panel { text-align: center; margin: 15px 0 20px; padding: 15px; border-radius: 30px; background: linear-gradient(135deg, #2c5e2e15, #fef2df); border-right: 4px solid #d4a843; }
+    .verse-panel-text { font-size: 1rem; line-height: 1.8; font-weight: 500; color: #1e5629; }
+    body.dark-mode .verse-panel-text { color: #d4a843; }
+    .verse-panel-ref { font-size: 0.75rem; margin-top: 8px; opacity: 0.8; color: #8b6b3d; }
     
-    .hadith-text {
-      font-size: 1rem;
-      line-height: 1.8;
-      font-weight: 500;
-    }
+    /* Hadith Panel */
+    .hadith-panel { text-align: center; margin: 15px 0 20px; padding: 15px; border-radius: 30px; }
+    .hadith-panel.true-hadith { background: linear-gradient(135deg, #2c5e2e15, #c8e6d9); border-right: 4px solid #2c5e2e; }
+    .hadith-panel.weak-hadith { background: linear-gradient(135deg, #f4433615, #ffcdd2); border-right: 4px solid #f44336; }
+    .hadith-panel.main-hadith { background: linear-gradient(135deg, #d4a84315, #fef2df); border-right: 4px solid #d4a843; }
+    .hadith-text { font-size: 1rem; line-height: 1.8; font-weight: 500; }
     .hadith-text.true { color: #1e5629; }
     .hadith-text.weak { color: #c62828; }
     .hadith-text.main { color: #8b6b3d; }
-    body.dark-mode .hadith-text.true { color: #81c784; }
-    body.dark-mode .hadith-text.weak { color: #ef9a9a; }
-    body.dark-mode .hadith-text.main { color: #d4a843; }
+    .hadith-source { font-size: 0.75rem; margin-top: 8px; opacity: 0.8; }
+    .warning-badge { display: inline-block; background: #f44336; color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; margin-bottom: 8px; }
     
-    .hadith-source {
-      font-size: 0.75rem;
-      margin-top: 8px;
-      opacity: 0.8;
-    }
-    .warning-badge {
-      display: inline-block;
-      background: #f44336;
-      color: white;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      margin-bottom: 8px;
-    }
+    /* Search Bar - Bigger, at top */
+    .search-container { margin: 15px 0 20px; display: flex; justify-content: center; }
+    .search-box { display: flex; align-items: center; background: white; border-radius: 60px; padding: 8px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; border: 2px solid #e0d5b9; }
+    .search-box input { flex: 1; padding: 14px 12px; border: none; outline: none; font-size: 1rem; font-family: 'Tajawal'; background: transparent; }
+    .search-box button { background: #2c5e2e; border: none; color: white; padding: 10px 25px; border-radius: 50px; cursor: pointer; font-size: 0.9rem; font-weight: bold; }
+    .search-results { margin: 15px 0; padding: 15px; background: white; border-radius: 24px; display: none; }
+    .result-item { padding: 12px; border-bottom: 1px solid #e8dcc8; cursor: pointer; }
+    .result-item:hover { background: #fef3d6; border-radius: 16px; }
+    .result-title { font-weight: bold; color: #2c5e2e; font-size: 0.9rem; }
+    .result-type { font-size: 0.75rem; color: #8b6b3d; margin-right: 8px; }
+    .close-results { float: left; background: none; border: none; font-size: 24px; cursor: pointer; }
     
-    /* Subpage Navigation */
-    .subpage-nav {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 20px;
-      padding: 10px;
-      background: white;
-      border-radius: 50px;
-      border: 1px solid #e8dcc8;
-    }
-    .subpage-btn {
-      background: #e8dcc8;
-      color: #1e4a2a;
-      border: none;
-      padding: 8px 20px;
-      border-radius: 40px;
-      cursor: pointer;
-      font-family: 'Tajawal';
-      font-size: 0.85rem;
-      transition: 0.2s;
-      flex: 1;
-      text-align: center;
-    }
-    .subpage-btn.active {
-      background: #2c5e2e;
-      color: white;
-    }
-    .subpage-content {
-      display: none;
-    }
-    .subpage-content.active {
-      display: block;
-    }
+    /* Admin Toggle */
+    .admin-toggle { margin: 10px 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .admin-toggle label { background: #2c5e2e; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-size: 0.85rem; font-weight: bold; }
+    .sync-status { background: #4caf50; padding: 6px 12px; border-radius: 40px; font-size: 0.75rem; color: white; font-weight: bold; }
+    .sync-status.error { background: #f44336; }
+    .sync-status.admin { background: #2196f3; }
+    
+    /* Login Modal - Only appears when admin toggle clicked */
+    .login-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
+    .login-box { background: white; padding: 35px 30px; border-radius: 50px; width: 85%; max-width: 380px; text-align: center; }
+    .login-box h2 { color: #1e5629; margin-bottom: 20px; font-size: 1.4rem; }
+    .login-box input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #e0d5b9; border-radius: 60px; font-family: 'Tajawal'; font-size: 1rem; }
+    .login-box button { background: #2c5e2e; color: white; border: none; padding: 12px; border-radius: 60px; cursor: pointer; width: 100%; font-size: 1rem; font-weight: bold; }
+    .error-msg { color: #f44336; margin-top: 10px; font-size: 0.8rem; }
+    .close-modal { float: left; font-size: 28px; cursor: pointer; color: #aaa; }
     
     /* Cards Grid */
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-      gap: 12px;
-      margin-top: 15px;
-    }
-    .info-card {
-      background: white;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      border: 1px solid #e8dcc8;
-      transition: transform 0.2s;
-      position: relative;
-    }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-top: 15px; }
+    .info-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e8dcc8; transition: transform 0.2s; position: relative; }
     .info-card:active { transform: scale(0.98); }
-    .card-header {
-      background: linear-gradient(135deg, #2c5e2e, #1e4a2a);
-      color: #fef3d6;
-      padding: 10px 8px;
-      text-align: center;
-      font-size: 0.8rem;
-      font-weight: bold;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .card-header { background: linear-gradient(135deg, #2c5e2e, #1e4a2a); color: #fef3d6; padding: 10px 8px; text-align: center; font-size: 0.8rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .card-header.hadith-true { background: linear-gradient(135deg, #1e6e2a, #2c8e3e); }
     .card-header.hadith-weak { background: linear-gradient(135deg, #8e6e1e, #a8882e); }
-    .card-preview {
-      padding: 10px;
-      min-height: 80px;
-      font-size: 0.7rem;
-      line-height: 1.5;
-      background: #fffef8;
-    }
-    .card-preview p {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      margin: 0;
-    }
-    .more-btn {
-      background: #2c5e2e;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      margin: 8px;
-      border-radius: 30px;
-      cursor: pointer;
-      font-family: 'Tajawal';
-      font-size: 0.7rem;
-      width: calc(100% - 16px);
-    }
-    .delete-card-btn {
-      position: absolute;
-      top: 5px;
-      left: 5px;
-      background: #f44336;
-      color: white;
-      border: none;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-    }
+    .card-preview { padding: 10px; min-height: 80px; font-size: 0.7rem; line-height: 1.5; background: #fffef8; }
+    .card-preview p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0; }
+    .more-btn { background: #2c5e2e; color: white; border: none; padding: 6px 12px; margin: 8px; border-radius: 30px; cursor: pointer; font-size: 0.7rem; width: calc(100% - 16px); }
+    .delete-card-btn { position: absolute; top: 5px; left: 5px; background: #f44336; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 14px; }
     .info-card:hover .delete-card-btn { display: flex; }
-    
-    .add-card-btn {
-      background: linear-gradient(135deg, #2c5e2e, #1e4a2a);
-      color: white;
-      border: 1px dashed #d4a843;
-      padding: 12px;
-      border-radius: 20px;
-      cursor: pointer;
-      text-align: center;
-      margin-top: 15px;
-      font-size: 0.8rem;
-    }
+    .add-card-btn { background: linear-gradient(135deg, #2c5e2e, #1e4a2a); color: white; border: 1px dashed #d4a843; padding: 12px; border-radius: 20px; cursor: pointer; text-align: center; margin-top: 15px; font-size: 0.8rem; }
     
     /* Modal */
-    .content-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.95);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
-    .modal-content {
-      background: white;
-      border-radius: 32px;
-      width: 92%;
-      max-width: 650px;
-      max-height: 85vh;
-      overflow-y: auto;
-      padding: 20px;
-      position: relative;
-    }
-    .close-modal-btn {
-      position: absolute;
-      top: 12px;
-      left: 15px;
-      font-size: 28px;
-      cursor: pointer;
-      color: #999;
-    }
-    .modal-header {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #1e5629;
-      text-align: center;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid #2c5e2e;
-    }
-    .modal-body {
-      font-size: 0.95rem;
-      line-height: 1.7;
-      margin: 15px 0;
-      padding: 15px;
-      background: #fef9e6;
-      border-radius: 24px;
-    }
-    .modal-footer {
-      font-size: 0.8rem;
-      color: #8b6b3d;
-      text-align: center;
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid #e0d5b9;
-    }
-    [contenteditable="true"] {
-      background: #fff5e6;
-      border: 1px dashed #2c5e2e;
-      padding: 6px;
-      outline: none;
-      border-radius: 12px;
-    }
+    .content-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2000; }
+    .modal-content { background: white; border-radius: 32px; width: 92%; max-width: 650px; max-height: 85vh; overflow-y: auto; padding: 20px; position: relative; }
+    .close-modal-btn { position: absolute; top: 12px; left: 15px; font-size: 28px; cursor: pointer; color: #999; }
+    .modal-header { font-size: 1.2rem; font-weight: bold; color: #1e5629; text-align: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #2c5e2e; }
+    .modal-body { font-size: 0.95rem; line-height: 1.7; margin: 15px 0; padding: 15px; background: #fef9e6; border-radius: 24px; }
+    .modal-footer { font-size: 0.8rem; color: #8b6b3d; text-align: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid #e0d5b9; }
+    [contenteditable="true"] { background: #fff5e6; border: 1px dashed #2c5e2e; padding: 6px; outline: none; border-radius: 12px; }
     
     /* Add Form Modal */
-    .add-form-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.95);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2001;
-    }
-    .add-form-content {
-      background: white;
-      border-radius: 32px;
-      width: 90%;
-      max-width: 450px;
-      padding: 25px;
-    }
+    .add-form-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2001; }
+    .add-form-content { background: white; border-radius: 32px; width: 90%; max-width: 450px; padding: 25px; }
     .add-form-content h3 { color: #1e5629; margin-bottom: 15px; text-align: center; font-size: 1.1rem; }
-    .add-form-content input, .add-form-content textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 2px solid #e0d5b9;
-      border-radius: 24px;
-      font-family: 'Tajawal';
-    }
+    .add-form-content input, .add-form-content textarea { width: 100%; padding: 10px; margin: 8px 0; border: 2px solid #e0d5b9; border-radius: 24px; font-family: 'Tajawal'; }
     .add-form-content textarea { min-height: 80px; }
-    .add-form-content button {
-      background: #2c5e2e;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 40px;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 8px;
-    }
+    .add-form-content button { background: #2c5e2e; color: white; border: none; padding: 10px; border-radius: 40px; cursor: pointer; width: 100%; margin-top: 8px; }
     
-    .page { display: none; }
-    .page.active { display: block; }
-    .hero {
-      text-align: center;
-      padding: 20px 15px;
-      background: linear-gradient(115deg, #2c5e2e10, #fef2df);
-      border-radius: 30px;
-      margin-bottom: 20px;
-    }
-    .hero h2 { color: #1e5629; font-size: 1.2rem; }
+    /* Subpage Navigation */
+    .subpage-nav { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; padding: 10px; background: white; border-radius: 50px; border: 1px solid #e8dcc8; }
+    .subpage-btn { background: #e8dcc8; color: #1e4a2a; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; flex: 1; text-align: center; }
+    .subpage-btn.active { background: #2c5e2e; color: white; }
+    .subpage-content { display: none; }
+    .subpage-content.active { display: block; }
+    
+    /* Zakat Calculator - Bigger */
+    .calculator-box { background: white; border-radius: 28px; padding: 30px 25px; margin-top: 15px; text-align: center; }
+    .calculator-box h3 { font-size: 1.4rem; margin-bottom: 20px; color: #1e5629; }
+    .calculator-input { margin: 20px 0; }
+    .calculator-input label { display: block; margin-bottom: 10px; font-weight: bold; color: #1e5629; font-size: 1rem; }
+    .calculator-input input, .calculator-input select { width: 100%; max-width: 300px; padding: 14px; border: 2px solid #e0d5b9; border-radius: 60px; font-family: 'Tajawal'; font-size: 1.1rem; text-align: center; }
+    .calculator-result { background: linear-gradient(135deg, #2c5e2e15, #fef2df); padding: 25px; border-radius: 28px; margin-top: 20px; }
+    .zakat-amount { font-size: 2rem; font-weight: bold; color: #2c5e2e; margin: 15px 0; }
+    
+    /* Hijri Converter - Bigger */
+    .converter-box { display: flex; flex-direction: column; gap: 20px; align-items: center; }
+    .converter-input { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .converter-input input, .converter-input select { padding: 14px; border: 2px solid #e0d5b9; border-radius: 60px; font-family: 'Tajawal'; font-size: 1rem; min-width: 100px; }
+    .convert-btn { background: #2c5e2e; color: white; border: none; padding: 14px 35px; border-radius: 60px; cursor: pointer; font-size: 1.1rem; font-weight: bold; }
+    .converter-result { background: linear-gradient(135deg, #2c5e2e15, #fef2df); padding: 25px; border-radius: 28px; text-align: center; min-width: 250px; }
+    .converter-result h4 { font-size: 1.1rem; margin-bottom: 10px; }
+    .converter-result p { font-size: 1.2rem; font-weight: bold; color: #1e5629; }
     
     /* Calendar */
-    .calendar-container {
-      background: white;
-      border-radius: 24px;
-      padding: 15px;
-      margin-top: 15px;
-    }
-    .calendar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-      text-align: center;
-    }
-    .weekday {
-      font-weight: bold;
-      background: #d9e6c3;
-      padding: 6px;
-      border-radius: 30px;
-      font-size: 0.7rem;
-    }
-    .day-cell {
-      background: #fff7ec;
-      padding: 8px 4px;
-      border-radius: 20px;
-      cursor: pointer;
-      border: 1px solid #e9dfcc;
-      font-size: 0.75rem;
-      position: relative;
-    }
+    .calendar-container { background: white; border-radius: 24px; padding: 15px; margin-top: 15px; }
+    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+    .weekday { font-weight: bold; background: #d9e6c3; padding: 6px; border-radius: 30px; font-size: 0.7rem; }
+    .day-cell { background: #fff7ec; padding: 8px 4px; border-radius: 20px; cursor: pointer; border: 1px solid #e9dfcc; font-size: 0.75rem; position: relative; }
     .day-cell.has-event { background: #2c5e2ecc; color: white; }
     button { background: #2c5e2e; color: white; border: none; border-radius: 40px; padding: 6px 14px; cursor: pointer; font-size: 0.75rem; }
     
-    /* Map Styles */
+    /* Map */
     #map { height: 300px; border-radius: 24px; margin: 15px 0; border: 2px solid #e0d5b9; }
     .control-panel { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; justify-content: center; }
-    .control-panel button {
-      background: #2c5e2e;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 30px;
-      cursor: pointer;
-      font-family: 'Tajawal';
-      font-size: 0.7rem;
-    }
-    .drawing-instruction {
-      background: #fef3d6;
-      padding: 8px;
-      border-radius: 24px;
-      text-align: center;
-      margin: 8px 0;
-      display: none;
-      color: #1e5629;
-      font-weight: bold;
-      font-size: 0.75rem;
-    }
-    .stories-detail {
-      background: white;
-      border-radius: 24px;
-      padding: 15px;
-      margin-top: 15px;
-    }
+    .control-panel button { background: #2c5e2e; color: white; border: none; padding: 6px 12px; border-radius: 30px; cursor: pointer; font-size: 0.7rem; }
+    .drawing-instruction { background: #fef3d6; padding: 8px; border-radius: 24px; text-align: center; margin: 8px 0; display: none; color: #1e5629; font-weight: bold; font-size: 0.75rem; }
+    .stories-detail { background: white; border-radius: 24px; padding: 15px; margin-top: 15px; }
     .stories-detail h3 { font-size: 0.95rem; margin-bottom: 8px; }
     
     /* Homepage Grid */
-    .box-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
-      gap: 12px;
-      margin-top: 15px;
-    }
-    .content-box {
-      border-radius: 20px;
-      padding: 12px;
-      background: white;
-      border: 1px solid #e8dcc8;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+    .box-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-top: 15px; }
+    .content-box { border-radius: 20px; padding: 12px; background: white; border: 1px solid #e8dcc8; cursor: pointer; transition: 0.2s; }
     .content-box:active { transform: scale(0.98); }
-    .content-box h3 {
-      color: #1e5629;
-      border-right: 3px solid #2c9e3a;
-      padding-right: 8px;
-      margin-bottom: 6px;
-      font-size: 0.85rem;
-    }
+    .content-box h3 { color: #1e5629; border-right: 3px solid #2c9e3a; padding-right: 8px; margin-bottom: 6px; font-size: 0.85rem; }
     .content-box p { font-size: 0.7rem; }
+    
+    .page { display: none; }
+    .page.active { display: block; }
+    .hero { text-align: center; padding: 20px 15px; background: linear-gradient(115deg, #2c5e2e10, #fef2df); border-radius: 30px; margin-bottom: 20px; }
+    .hero h2 { color: #1e5629; font-size: 1.2rem; }
     
     @media (min-width: 768px) {
       body { padding: 20px; }
@@ -547,7 +214,8 @@
       .card-preview { font-size: 0.85rem; padding: 12px; }
       header h1 { font-size: 1.8rem; }
       #map { height: 450px; }
-      .hadith-text { font-size: 1.1rem; }
+      .hadith-text, .verse-panel-text { font-size: 1.1rem; }
+      .search-box input { font-size: 1.1rem; }
     }
   </style>
 </head>
@@ -575,7 +243,7 @@
     </div>
   </div>
 
-  <!-- Search Bar -->
+  <!-- Search Bar - Bigger, at top -->
   <div class="search-container">
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="🔍 ابحث في الأذكار والتفسير والأحاديث...">
@@ -585,7 +253,7 @@
 
   <div id="searchResults" class="search-results">
     <button class="close-results" id="closeResultsBtn">✕</button>
-    <h3 style="font-size:0.9rem;">نتائج البحث</h3>
+    <h3>نتائج البحث</h3>
     <div id="resultsList"></div>
   </div>
 
@@ -594,7 +262,7 @@
     <div class="sync-status" id="syncStatus">✅ متصل</div>
   </div>
 
-  <!-- Login Modal -->
+  <!-- Login Modal - ONLY appears when admin toggle is clicked -->
   <div class="login-modal" id="loginModal">
     <div class="login-box">
       <span class="close-modal" id="closeModal">&times;</span>
@@ -628,12 +296,10 @@
 
   <!-- HOME PAGE -->
   <div id="home" class="page active">
-    <div class="hero">
-      <h2>﴿ وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ ﴾</h2>
-      <div class="daily-verse" id="dailyVerse" style="margin:15px 0; padding:15px; background:linear-gradient(135deg, #2c5e2e15, #fef2df); border-radius:30px;">
-        <div class="verse-text" id="verseText">جاري تحميل آية اليوم...</div>
-        <div class="verse-reference" id="verseReference"></div>
-      </div>
+    <div class="hero"><h2>﴿ وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ ﴾</h2></div>
+    <div class="verse-panel">
+      <div class="verse-panel-text" id="verseText">جاري تحميل آية اليوم...</div>
+      <div class="verse-panel-ref" id="verseReference"></div>
     </div>
     <div class="box-grid">
       <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'athkar\']').click();"><h3>📿 الأذكار</h3><p>أذكار الصباح والمساء</p></div>
@@ -648,52 +314,47 @@
 
   <!-- ATHKAR PAGE -->
   <div id="athkar" class="page">
-    <div class="hero"><h2>📿 حصن المسلم</h2><p>اضغط "المزيد" لقراءة الذكر</p></div>
+    <div class="hero"><h2>📿 حصن المسلم</h2></div>
+    <div class="verse-panel">
+      <div class="verse-panel-text">﴿ يَا أَيُّهَا الَّذِينَ آمَنُوا اذْكُرُوا اللَّهَ ذِكْرًا كَثِيرًا ﴾</div>
+      <div class="verse-panel-ref">سورة الأحزاب - 41</div>
+    </div>
     <div class="cards-grid" id="athkarBoxes"></div>
     <div id="athkarAddBtn" class="add-card-btn" style="display: none;">➕ إضافة بطاقة أذكار جديدة</div>
   </div>
   
   <!-- TAFSIR PAGE -->
   <div id="tafsir" class="page">
-    <div class="hero"><h2>📖 كنوز التفسير</h2><p>اضغط "المزيد" لقراءة التفسير</p></div>
+    <div class="hero"><h2>📖 كنوز التفسير</h2></div>
+    <div class="verse-panel">
+      <div class="verse-panel-text">﴿ كِتَابٌ أَنزَلْنَاهُ إِلَيْكَ مُبَارَكٌ لِّيَدَّبَّرُوا آيَاتِهِ ﴾</div>
+      <div class="verse-panel-ref">سورة ص - 29</div>
+    </div>
     <div class="cards-grid" id="tafsirBoxes"></div>
     <div id="tafsirAddBtn" class="add-card-btn" style="display: none;">➕ إضافة بطاقة تفسير جديدة</div>
   </div>
 
   <!-- AHADEETH PAGE -->
   <div id="ahadeeth" class="page">
-    <div class="hero">
-      <h2>📜 موسوعة الأحاديث النبوية</h2>
-      <p>اختر القسم لعرض الأحاديث</p>
-    </div>
-    
-    <!-- Main Hadith Panel (Daily rotating hadith about importance of hadith) -->
+    <div class="hero"><h2>📜 موسوعة الأحاديث النبوية</h2></div>
     <div class="hadith-panel main-hadith" id="mainHadithPanel">
       <div class="hadith-text main" id="mainHadithText">جاري تحميل الحديث...</div>
       <div class="hadith-source" id="mainHadithSource"></div>
     </div>
-    
-    <!-- Subpage Navigation -->
     <div class="subpage-nav">
       <button class="subpage-btn active" data-subpage="true-hadith">📖 الأحاديث الصحيحة</button>
       <button class="subpage-btn" data-subpage="weak-hadith">⚠️ الأحاديث الضعيفة والبدع</button>
     </div>
-    
-    <!-- True Ahadith Subpage -->
     <div id="true-hadith" class="subpage-content active">
-      <!-- True Hadith Panel -->
-      <div class="hadith-panel true-hadith" id="trueHadithPanel">
+      <div class="hadith-panel true-hadith">
         <div class="hadith-text true" id="trueHadithText">جاري تحميل الحديث...</div>
         <div class="hadith-source" id="trueHadithSource"></div>
       </div>
       <div class="cards-grid" id="trueHadithBoxes"></div>
       <div id="trueHadithAddBtn" class="add-card-btn" style="display: none;">➕ إضافة حديث صحيح جديد</div>
     </div>
-    
-    <!-- Weak Ahadith & Bidaa Subpage -->
     <div id="weak-hadith" class="subpage-content">
-      <!-- Weak Hadith Panel (Rotating warning hadiths) -->
-      <div class="hadith-panel weak-hadith" id="weakHadithPanel">
+      <div class="hadith-panel weak-hadith">
         <div class="warning-badge">⚠️ تنبيه مهم ⚠️</div>
         <div class="hadith-text weak" id="weakHadithText">جاري تحميل الحديث...</div>
         <div class="hadith-source" id="weakHadithSource"></div>
@@ -704,9 +365,13 @@
     </div>
   </div>
 
-  <!-- ZAKAT CALCULATOR PAGE -->
+  <!-- ZAKAT PAGE - Bigger -->
   <div id="zakat" class="page">
     <div class="hero"><h2>💎 حاسبة الزكاة</h2></div>
+    <div class="verse-panel">
+      <div class="verse-panel-text" id="zakatVerseText">جاري تحميل آية عن الزكاة...</div>
+      <div class="verse-panel-ref" id="zakatVerseRef"></div>
+    </div>
     <div class="calculator-box">
       <h3>💰 احسب زكاتك</h3>
       <div class="calculator-input">
@@ -728,16 +393,20 @@
       </div>
       <button id="calculateZakatBtn" class="convert-btn">احسب الزكاة</button>
       <div class="calculator-result" id="zakatResult" style="display: none;">
-        <h4>🕌 مقدار الزكاة:</h4>
+        <h4>🕌 مقدار الزكاة المستحقة:</h4>
         <div class="zakat-amount" id="zakatAmount">0</div>
         <p>وجزاكم الله خيراً</p>
       </div>
     </div>
   </div>
 
-  <!-- HIJRI DATE CONVERTER PAGE -->
+  <!-- HIJRI CONVERTER PAGE - Bigger -->
   <div id="hijri" class="page">
-    <div class="hero"><h2>📅 محول التاريخ</h2></div>
+    <div class="hero"><h2>📅 محول التاريخ الهجري</h2></div>
+    <div class="verse-panel">
+      <div class="verse-panel-text" id="hijriVerseText">جاري تحميل آية عن الهجرة...</div>
+      <div class="verse-panel-ref" id="hijriVerseRef"></div>
+    </div>
     <div class="calculator-box">
       <h3>🔄 تحويل التاريخ</h3>
       <div class="converter-box">
@@ -768,6 +437,11 @@
   
   <!-- DAYS PAGE -->
   <div id="days" class="page">
+    <div class="hero"><h2>🌟 الأيام المباركة</h2></div>
+    <div class="verse-panel">
+      <div class="verse-panel-text">﴿ إِنَّ عِدَّةَ الشُّهُورِ عِندَ اللَّهِ اثْنَا عَشَرَ شَهْرًا ﴾</div>
+      <div class="verse-panel-ref">سورة التوبة - 36</div>
+    </div>
     <div class="calendar-container">
       <div class="calendar-header">
         <button id="prevMonth">‹ السابق</button>
@@ -780,6 +454,11 @@
 
   <!-- STORIES PAGE -->
   <div id="stories" class="page">
+    <div class="hero"><h2>🌍 قصص الأنبياء</h2></div>
+    <div class="verse-panel">
+      <div class="verse-panel-text">﴿ لَقَدْ كَانَ فِي قَصَصِهِمْ عِبْرَةٌ لِّأُولِي الْأَلْبَابِ ﴾</div>
+      <div class="verse-panel-ref">سورة يوسف - 111</div>
+    </div>
     <div class="control-panel">
       <button id="addPinBtn">📍 إضافة نقطة</button>
       <button id="addLabelBtn">🏷️ إضافة نص</button>
@@ -816,112 +495,66 @@
   let currentItemId = null;
   let currentType = null;
   let pendingAddType = null;
-  let currentSubpage = 'true-hadith';
   
-  // Map variables
   let map, mapInitialized = false;
-  let markers = {};
-  let labels = {};
-  let polylines = {};
-  let currentDrawMode = null;
-  let currentPathPoints = [];
-  let currentPolyline = null;
-  let deleteModeActive = false;
+  let markers = {}, labels = {}, polylines = {};
+  let currentDrawMode = null, currentPathPoints = [], currentPolyline = null, deleteModeActive = false;
   
-  let allAthkar = [];
-  let allTafsir = [];
-  let allTrueHadith = [];
-  let allWeakHadith = [];
+  let allAthkar = [], allTafsir = [], allTrueHadith = [], allWeakHadith = [];
 
-  // ============ HADITH DATABASES ============
-  
-  // Main Ahadeeth page - Hadiths about importance of hadith (rotates daily)
   const mainHadiths = [
     { text: "نَضَّرَ اللَّهُ امْرَأً سَمِعَ مِنَّا حَدِيثًا فَحَفِظَهُ حَتَّى يُبَلِّغَهُ", source: "رواه الترمذي - حديث صحيح" },
     { text: "بَلِّغُوا عَنِّي وَلَوْ آيَةً", source: "رواه البخاري" },
-    { text: "مَنْ حَفِظَ عَلَى أُمَّتِي أَرْبَعِينَ حَدِيثًا مِنْ أَمْرِ دِينِهَا بَعَثَهُ اللَّهُ يَوْمَ الْقِيَامَةِ فَقِيهًا", source: "رواه الدارمي" },
-    { text: "إِنَّ اللَّهَ يُذَكِّرُ بِالْحَدِيثِ الضَّعِيفِ", source: "حديث حسن" }
+    { text: "مَنْ حَفِظَ عَلَى أُمَّتِي أَرْبَعِينَ حَدِيثًا مِنْ أَمْرِ دِينِهَا بَعَثَهُ اللَّهُ يَوْمَ الْقِيَامَةِ فَقِيهًا", source: "رواه الدارمي" }
   ];
-  
-  // True Ahadith page - Hadiths about authentic knowledge
   const trueHadiths = [
     { text: "نَضَّرَ اللَّهُ امْرَأً سَمِعَ مِنَّا حَدِيثًا فَحَفِظَهُ حَتَّى يُبَلِّغَهُ", source: "رواه الترمذي - حديث صحيح" },
-    { text: "بَلِّغُوا عَنِّي وَلَوْ آيَةً", source: "رواه البخاري" },
-    { text: "لَا يُؤْمِنُ أَحَدُكُمْ حَتَّى يُحِبَّ لِأَخِيهِ مَا يُحِبُّ لِنَفْسِهِ", source: "رواه البخاري ومسلم" }
+    { text: "بَلِّغُوا عَنِّي وَلَوْ آيَةً", source: "رواه البخاري" }
   ];
-  
-  // Weak Ahadith page - Warning hadiths (rotates between the two you requested)
   const weakHadiths = [
     { text: "مَنْ كَذَبَ عَلَيَّ مُتَعَمِّدًا فَلْيَتَبَوَّأْ مَقْعَدَهُ مِنَ النَّارِ", source: "متفق عليه - البخاري ومسلم" },
     { text: "لَا تَكْذِبُوا عَلَيَّ فَإِنَّهُ مَنْ يَكْذِبْ عَلَيَّ يَلِجِ النَّارَ", source: "رواه مسلم" }
   ];
-
-  // Function to get daily rotating hadith
-  function getDailyHadith(hadithArray) {
-    const today = new Date();
-    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-    return hadithArray[dayOfYear % hadithArray.length];
-  }
-
-  function getWeakHadith() {
-    const today = new Date();
-    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-    return weakHadiths[dayOfYear % weakHadiths.length];
-  }
-
-  // Quran Verses
   const quranVerses = [
     { text: "إِنَّ اللَّهَ يَأْمُرُ بِالْعَدْلِ وَالْإِحْسَانِ وَإِيتَاءِ ذِي الْقُرْبَىٰ", ref: "سورة النحل - 90" },
     { text: "وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ", ref: "سورة الذاريات - 55" },
     { text: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", ref: "سورة الشرح - 6" }
   ];
+  const zakatVerses = [
+    { text: "وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ", ref: "سورة البقرة - 43" },
+    { text: "خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا", ref: "سورة التوبة - 103" }
+  ];
+  const hijriVerses = [
+    { text: "إِلَّا تَنصُرُوهُ فَقَدْ نَصَرَهُ اللَّهُ إِذْ أَخْرَجَهُ الَّذِينَ كَفَرُوا ثَانِيَ اثْنَيْنِ", ref: "سورة التوبة - 40" },
+    { text: "هُوَ الَّذِي جَعَلَ الشَّمْسَ ضِيَاءً وَالْقَمَرَ نُورًا", ref: "سورة يونس - 5" }
+  ];
 
-  function getDailyVerse(versesArray) {
-    const today = new Date();
-    const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-    return versesArray[dayOfYear % versesArray.length];
-  }
-
-  function getAccurateHijriDate() {
-    const today = new Date();
-    return new Intl.DateTimeFormat('ar-TN-u-ca-islamic', {
-      day: 'numeric', month: 'long', year: 'numeric'
-    }).format(today);
-  }
+  function getDailyVerse(arr) { const d = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000); return arr[d % arr.length]; }
+  function getDailyHadith(arr) { const d = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000); return arr[d % arr.length]; }
+  function getWeakHadith() { const d = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000); return weakHadiths[d % weakHadiths.length]; }
+  function getAccurateHijriDate() { return new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date()); }
 
   function calculateZakat() {
     const wealth = parseFloat(document.getElementById('wealthAmount').value);
     const currency = document.getElementById('currencySelect').value;
-    const currencySymbols = { 'SAR': '﷼', 'USD': '$', 'EUR': '€', 'EGP': 'ج.م', 'AED': 'د.إ', 'KWD': 'د.ك', 'GBP': '£', 'TRY': '₺' };
+    const symbols = { SAR: '﷼', USD: '$', EUR: '€', EGP: 'ج.م', AED: 'د.إ', KWD: 'د.ك', GBP: '£', TRY: '₺' };
     if (isNaN(wealth) || wealth <= 0) { alert('الرجاء إدخال مبلغ صحيح'); return; }
-    const zakat = wealth * 0.025;
-    document.getElementById('zakatAmount').innerHTML = `${zakat.toFixed(2)} ${currencySymbols[currency] || currency}`;
+    document.getElementById('zakatAmount').innerHTML = `${(wealth * 0.025).toFixed(2)} ${symbols[currency] || currency}`;
     document.getElementById('zakatResult').style.display = 'block';
   }
 
   function convertDate() {
-    const convertType = document.getElementById('convertType').value;
-    if (convertType === 'gregToHijri') {
-      const day = parseInt(document.getElementById('day').value);
-      const month = parseInt(document.getElementById('month').value);
-      const year = parseInt(document.getElementById('year').value);
-      if (isNaN(day) || isNaN(month) || isNaN(year)) { alert('الرجاء إدخال تاريخ صحيح'); return; }
-      const gregorianDate = new Date(year, month - 1, day);
-      const hijriDate = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { day: 'numeric', month: 'long', year: 'numeric' }).format(gregorianDate);
-      document.getElementById('convertedDate').innerHTML = hijriDate;
-    } else {
-      alert("جاري تطوير هذه الميزة قريباً");
-    }
+    const type = document.getElementById('convertType').value;
+    if (type === 'gregToHijri') {
+      const d = parseInt(document.getElementById('day').value), m = parseInt(document.getElementById('month').value), y = parseInt(document.getElementById('year').value);
+      if (isNaN(d) || isNaN(m) || isNaN(y)) { alert('الرجاء إدخال تاريخ صحيح'); return; }
+      document.getElementById('convertedDate').innerHTML = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(y, m-1, d));
+    } else { alert("جاري تطوير هذه الميزة قريباً"); }
   }
 
   document.getElementById('convertType').addEventListener('change', function() {
-    if (this.value === 'gregToHijri') {
-      document.getElementById('gregorianInput').style.display = 'flex';
-      document.getElementById('hijriInput').style.display = 'none';
-    } else {
-      document.getElementById('gregorianInput').style.display = 'none';
-      document.getElementById('hijriInput').style.display = 'flex';
-    }
+    document.getElementById('gregorianInput').style.display = this.value === 'gregToHijri' ? 'flex' : 'none';
+    document.getElementById('hijriInput').style.display = this.value === 'hijriToGreg' ? 'flex' : 'none';
   });
 
   const darkModeToggle = document.getElementById('darkModeToggle');
@@ -930,91 +563,40 @@
     darkModeToggle.innerHTML = document.body.classList.contains('dark-mode') ? '☀️ نهاري' : '🌙 ليلي';
     localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
   });
-  
-  if (localStorage.getItem('darkMode') === 'true') {
-    document.body.classList.add('dark-mode');
-    darkModeToggle.innerHTML = '☀️ نهاري';
-  }
+  if (localStorage.getItem('darkMode') === 'true') { document.body.classList.add('dark-mode'); darkModeToggle.innerHTML = '☀️ نهاري'; }
 
-  function updateHijriDate() {
-    document.getElementById('hijriDateDisplay').innerHTML = getAccurateHijriDate();
-  }
+  function updateHijriDate() { document.getElementById('hijriDateDisplay').innerHTML = getAccurateHijriDate(); }
 
-  // DOM Elements
-  const adminToggle = document.getElementById('adminToggle');
-  const loginModal = document.getElementById('loginModal');
-  const closeModal = document.getElementById('closeModal');
-  const loginBtn = document.getElementById('loginBtn');
-  const loginEmail = document.getElementById('loginEmail');
-  const loginPassword = document.getElementById('loginPassword');
-  const loginError = document.getElementById('loginError');
-  const syncStatus = document.getElementById('syncStatus');
-  const contentModal = document.getElementById('contentModal');
-  const closeModalBtn = document.getElementById('closeModalBtn');
-  const modalHeader = document.getElementById('modalHeader');
-  const modalBody = document.getElementById('modalBody');
-  const modalFooter = document.getElementById('modalFooter');
-  const addFormModal = document.getElementById('addFormModal');
-  const newCardTitle = document.getElementById('newCardTitle');
-  const newCardBody = document.getElementById('newCardBody');
-  const newCardFooter = document.getElementById('newCardFooter');
-  const saveNewCardBtn = document.getElementById('saveNewCardBtn');
-  const cancelAddBtn = document.getElementById('cancelAddBtn');
-  
-  const searchInput = document.getElementById('searchInput');
-  const searchBtn = document.getElementById('searchBtn');
-  const searchResults = document.getElementById('searchResults');
-  const resultsList = document.getElementById('resultsList');
-  const closeResultsBtn = document.getElementById('closeResultsBtn');
+  const adminToggle = document.getElementById('adminToggle'), loginModal = document.getElementById('loginModal'), closeModal = document.getElementById('closeModal');
+  const loginBtn = document.getElementById('loginBtn'), loginEmail = document.getElementById('loginEmail'), loginPassword = document.getElementById('loginPassword');
+  const loginError = document.getElementById('loginError'), syncStatus = document.getElementById('syncStatus');
+  const contentModal = document.getElementById('contentModal'), closeModalBtn = document.getElementById('closeModalBtn');
+  const modalHeader = document.getElementById('modalHeader'), modalBody = document.getElementById('modalBody'), modalFooter = document.getElementById('modalFooter');
+  const addFormModal = document.getElementById('addFormModal'), newCardTitle = document.getElementById('newCardTitle'), newCardBody = document.getElementById('newCardBody');
+  const newCardFooter = document.getElementById('newCardFooter'), saveNewCardBtn = document.getElementById('saveNewCardBtn'), cancelAddBtn = document.getElementById('cancelAddBtn');
+  const searchInput = document.getElementById('searchInput'), searchBtn = document.getElementById('searchBtn'), searchResults = document.getElementById('searchResults');
+  const resultsList = document.getElementById('resultsList'), closeResultsBtn = document.getElementById('closeResultsBtn');
 
   adminToggle.addEventListener('change', (e) => {
-    if (!isAdmin && e.target.checked) {
-      loginModal.style.display = 'flex';
-      adminToggle.checked = false;
-    } else if (isAdmin) {
-      enableAdminMode(e.target.checked);
-    }
+    if (!isAdmin && e.target.checked) { loginModal.style.display = 'flex'; adminToggle.checked = false; }
+    else if (isAdmin) { enableAdminMode(e.target.checked); }
   });
-
   closeModal.addEventListener('click', () => { loginModal.style.display = 'none'; });
   closeModalBtn.addEventListener('click', () => { contentModal.style.display = 'none'; });
   closeResultsBtn.addEventListener('click', () => { searchResults.style.display = 'none'; });
 
   loginBtn.addEventListener('click', async () => {
-    const email = loginEmail.value.trim();
-    const password = loginPassword.value;
     try {
-      await auth.signInWithEmailAndPassword(email, password);
-      isAdmin = true;
-      loginModal.style.display = 'none';
-      adminToggle.checked = true;
-      enableAdminMode(true);
-      syncStatus.innerHTML = '✅ مشرف متصل';
-      syncStatus.className = 'sync-status admin';
-      loadAllCards();
-      if (mapInitialized) loadMapData();
-    } catch (error) {
-      loginError.innerText = 'خطأ: ' + error.message;
-    }
+      await auth.signInWithEmailAndPassword(loginEmail.value.trim(), loginPassword.value);
+      isAdmin = true; loginModal.style.display = 'none'; adminToggle.checked = true; enableAdminMode(true);
+      syncStatus.innerHTML = '✅ مشرف متصل'; syncStatus.className = 'sync-status admin';
+      loadAllCards(); if (mapInitialized) loadMapData();
+    } catch (error) { loginError.innerText = 'خطأ: ' + error.message; }
   });
 
   auth.onAuthStateChanged((user) => {
-    if (user) {
-      isAdmin = true;
-      syncStatus.innerHTML = '✅ مشرف متصل';
-      syncStatus.className = 'sync-status admin';
-      enableAdminMode(true);
-      loadAllCards();
-      if (mapInitialized) loadMapData();
-    } else {
-      isAdmin = false;
-      adminToggle.checked = false;
-      enableAdminMode(false);
-      syncStatus.innerHTML = '✅ متصل';
-      syncStatus.className = 'sync-status';
-      loadAllCards();
-      if (mapInitialized) loadMapData();
-    }
+    if (user) { isAdmin = true; syncStatus.innerHTML = '✅ مشرف متصل'; syncStatus.className = 'sync-status admin'; enableAdminMode(true); loadAllCards(); if (mapInitialized) loadMapData(); }
+    else { isAdmin = false; adminToggle.checked = false; enableAdminMode(false); syncStatus.innerHTML = '✅ متصل'; syncStatus.className = 'sync-status'; loadAllCards(); if (mapInitialized) loadMapData(); }
   });
 
   function enableAdminMode(enabled) {
@@ -1023,8 +605,7 @@
     document.getElementById('tafsirAddBtn').style.display = adminMode ? 'flex' : 'none';
     document.getElementById('trueHadithAddBtn').style.display = adminMode ? 'flex' : 'none';
     document.getElementById('weakHadithAddBtn').style.display = adminMode ? 'flex' : 'none';
-    const mapButtons = document.querySelectorAll('#addPinBtn, #addLabelBtn, #addPathBtn, #deleteModeBtn');
-    mapButtons.forEach(btn => { if(btn) btn.style.display = adminMode ? 'inline-block' : 'none'; });
+    document.querySelectorAll('#addPinBtn, #addLabelBtn, #addPathBtn, #deleteModeBtn').forEach(btn => { if(btn) btn.style.display = adminMode ? 'inline-block' : 'none'; });
     if (contentModal.style.display === 'flex') {
       modalHeader.setAttribute('contenteditable', adminMode ? 'true' : 'false');
       modalBody.setAttribute('contenteditable', adminMode ? 'true' : 'false');
@@ -1032,52 +613,26 @@
     }
   }
 
-  // Search Function
   function performSearch() {
-    const query = searchInput.value.trim().toLowerCase();
-    if (query.length < 2) { alert('الرجاء إدخال حرفين على الأقل'); return; }
+    const q = searchInput.value.trim().toLowerCase();
+    if (q.length < 2) { alert('الرجاء إدخال حرفين على الأقل'); return; }
     const results = [];
-    
-    allAthkar.forEach(item => {
-      if (item.header.toLowerCase().includes(query) || item.body.toLowerCase().includes(query)) {
-        results.push({ type: 'athkar', typeName: '📿 ذكر', id: item.id, title: item.header, preview: item.body.substring(0, 80) + '...', fullBody: item.body, footer: item.footer });
-      }
+    [...allAthkar.map(i => ({ ...i, type: 'athkar', typeName: '📿 ذكر' })),
+     ...allTafsir.map(i => ({ ...i, type: 'tafsir', typeName: '📖 تفسير' })),
+     ...allTrueHadith.map(i => ({ ...i, type: 'trueHadith', typeName: '📜 حديث صحيح' })),
+     ...allWeakHadith.map(i => ({ ...i, type: 'weakHadith', typeName: '⚠️ حديث ضعيف' }))].forEach(item => {
+      if (item.header.toLowerCase().includes(q) || item.body.toLowerCase().includes(q))
+        results.push({ type: item.type, typeName: item.typeName, id: item.id, title: item.header, preview: item.body.substring(0, 80) + '...', fullBody: item.body, footer: item.footer });
     });
-    allTafsir.forEach(item => {
-      if (item.header.toLowerCase().includes(query) || item.body.toLowerCase().includes(query)) {
-        results.push({ type: 'tafsir', typeName: '📖 تفسير', id: item.id, title: item.header, preview: item.body.substring(0, 80) + '...', fullBody: item.body, footer: item.footer });
-      }
+    resultsList.innerHTML = results.length ? '' : '<div class="no-results">❌ لا توجد نتائج</div>';
+    results.forEach(r => {
+      const div = document.createElement('div'); div.className = 'result-item';
+      div.innerHTML = `<div><span class="result-title">${r.title}</span><span class="result-type">[${r.typeName}]</span></div><div class="result-preview">${r.preview}</div>`;
+      div.onclick = () => { openModal(r.type, r.id, r.title, r.fullBody, r.footer || ''); searchResults.style.display = 'none'; };
+      resultsList.appendChild(div);
     });
-    allTrueHadith.forEach(item => {
-      if (item.header.toLowerCase().includes(query) || item.body.toLowerCase().includes(query)) {
-        results.push({ type: 'trueHadith', typeName: '📜 حديث صحيح', id: item.id, title: item.header, preview: item.body.substring(0, 80) + '...', fullBody: item.body, footer: item.footer });
-      }
-    });
-    allWeakHadith.forEach(item => {
-      if (item.header.toLowerCase().includes(query) || item.body.toLowerCase().includes(query)) {
-        results.push({ type: 'weakHadith', typeName: '⚠️ حديث ضعيف', id: item.id, title: item.header, preview: item.body.substring(0, 80) + '...', fullBody: item.body, footer: item.footer });
-      }
-    });
-    
-    displayResults(results, query);
-  }
-  
-  function displayResults(results, query) {
-    resultsList.innerHTML = '';
-    if (results.length === 0) {
-      resultsList.innerHTML = `<div class="no-results">❌ لا توجد نتائج</div>`;
-    } else {
-      results.forEach(result => {
-        const resultDiv = document.createElement('div');
-        resultDiv.className = 'result-item';
-        resultDiv.innerHTML = `<div><span class="result-title">${result.title}</span><span class="result-type">[${result.typeName}]</span></div><div class="result-preview">${result.preview}</div>`;
-        resultDiv.onclick = () => { openModal(result.type, result.id, result.title, result.fullBody, result.footer || ''); searchResults.style.display = 'none'; };
-        resultsList.appendChild(resultDiv);
-      });
-    }
     searchResults.style.display = 'block';
   }
-  
   searchBtn.addEventListener('click', performSearch);
   searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(); });
 
@@ -1096,21 +651,18 @@
     const card = document.querySelector(`.info-card[data-id="${currentItemId}"]`);
     if (card) {
       card.querySelector('.card-header').innerHTML = modalHeader.innerHTML;
-      let short = modalBody.innerText.substring(0, 80);
-      if (modalBody.innerText.length > 80) short += '...';
+      let short = modalBody.innerText.substring(0, 80); if (modalBody.innerText.length > 80) short += '...';
       card.querySelector('.card-preview p').innerHTML = short;
     }
     loadAllCards();
   }
 
   async function addNewCard(type) {
-    const title = newCardTitle.value.trim();
-    const body = newCardBody.value.trim();
-    const footer = newCardFooter.value.trim();
+    const title = newCardTitle.value.trim(), body = newCardBody.value.trim(), footer = newCardFooter.value.trim();
     if (!title || !body) { alert('الرجاء إدخال العنوان والمحتوى'); return; }
     const newId = `${type}_${Date.now()}`;
-    await database.ref(`${type}_full/${newId}`).set({ header: title, body: body, footer: footer });
-    await database.ref(`${type}_list/${newId}`).set({ id: newId, order: Date.now() });
+    await database.ref(`${type}_full/${newId}`).set({ header: title, body, footer });
+    await database.ref(`${type}_list/${newId}`).set({ id: newId });
     newCardTitle.value = ''; newCardBody.value = ''; newCardFooter.value = '';
     addFormModal.style.display = 'none';
     loadCardsOfType(type);
@@ -1130,98 +682,37 @@
   }
 
   async function loadCardsOfType(type) {
-    let containerId, addBtnId;
-    if (type === 'athkar') { containerId = 'athkarBoxes'; addBtnId = 'athkarAddBtn'; }
-    else if (type === 'tafsir') { containerId = 'tafsirBoxes'; addBtnId = 'tafsirAddBtn'; }
-    else if (type === 'trueHadith') { containerId = 'trueHadithBoxes'; addBtnId = 'trueHadithAddBtn'; }
-    else if (type === 'weakHadith') { containerId = 'weakHadithBoxes'; addBtnId = 'weakHadithAddBtn'; }
-    else return;
+    const map = { athkar: 'athkarBoxes', tafsir: 'tafsirBoxes', trueHadith: 'trueHadithBoxes', weakHadith: 'weakHadithBoxes' };
+    const container = document.getElementById(map[type]);
+    const list = (await database.ref(`${type}_list`).once('value')).val() || {};
+    const ids = Object.keys(list);
     
-    const container = document.getElementById(containerId);
-    const listSnapshot = await database.ref(`${type}_list`).once('value');
-    const list = listSnapshot.val() || {};
-    const cardIds = Object.keys(list);
-    
-    // Default data for ahadeeth
-    if (cardIds.length === 0 && type === 'trueHadith') {
-      const defaultCards = [
-        { id: 'true1', header: '📖 حديث النية', body: 'عن عمر بن الخطاب رضي الله عنه قال: سمعت رسول الله ﷺ يقول: "إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى..."', footer: 'رواه البخاري ومسلم' },
-        { id: 'true2', header: '📖 حديث جبريل', body: 'عن عمر بن الخطاب رضي الله عنه قال: بينما نحن جلوس عند رسول الله ﷺ إذ طلع علينا رجل شديد بياض الثياب... فسأله عن الإسلام والإيمان والإحسان', footer: 'رواه مسلم' },
-        { id: 'true3', header: '📖 حديث الرحمة', body: 'عن أبي هريرة رضي الله عنه قال: سمعت رسول الله ﷺ يقول: "مَنْ لَا يَرْحَمْ لَا يُرْحَمْ"', footer: 'رواه البخاري' }
-      ];
-      for (const card of defaultCards) {
-        await database.ref(`${type}_full/${card.id}`).set({ header: card.header, body: card.body, footer: card.footer });
-        await database.ref(`${type}_list/${card.id}`).set({ id: card.id });
-      }
-      loadCardsOfType(type);
-      return;
+    if (ids.length === 0) {
+      const defaults = type === 'athkar' ? [{ id: 'm1', header: '🌅 أذكار الصباح', body: 'اللَّهُمَّ بِكَ أَصْبَحْنَا...', footer: '🤲 رَطِّبْ لِسَانَكَ' }] :
+                      type === 'tafsir' ? [{ id: 't1', header: '📖 تفسير الفاتحة', body: 'الفاتحة هي أم الكتاب...', footer: '💎 أم القرآن' }] :
+                      type === 'trueHadith' ? [{ id: 'h1', header: '📖 حديث النية', body: 'إنما الأعمال بالنيات...', footer: 'رواه البخاري' }] :
+                      [{ id: 'w1', header: '⚠️ تنبيه', body: 'هذا القسم للتنبيه من الأحاديث الضعيفة', footer: 'تنبيه' }];
+      for (const card of defaults) await database.ref(`${type}_full/${card.id}`).set(card);
+      for (const card of defaults) await database.ref(`${type}_list/${card.id}`).set({ id: card.id });
+      loadCardsOfType(type); return;
     }
     
-    if (cardIds.length === 0 && type === 'weakHadith') {
-      const defaultCards = [
-        { id: 'weak1', header: '⚠️ حديث الطيرة (موضوع)', body: 'عن ابن عباس رضي الله عنهما قال: قال رسول الله ﷺ: "لا عدوى ولا طيرة ولا هامة ولا صفر" (هذا حديث صحيح وليس ضعيفاً، هذا مثال توضيحي للقسم)', footer: 'رواه البخاري (هذا حديث صحيح، المثال للتوضيح)' },
-        { id: 'weak2', header: '⚠️ تنبيه', body: 'هذا القسم مخصص للأحاديث الضعيفة والموضوعة والبدع، لتنبيه المسلمين من الأحاديث غير الصحيحة المنتشرة. استشر العلماء دائماً.', footer: 'تنبيه: استشر العلماء الموثوقين' }
-      ];
-      for (const card of defaultCards) {
-        await database.ref(`${type}_full/${card.id}`).set({ header: card.header, body: card.body, footer: card.footer });
-        await database.ref(`${type}_list/${card.id}`).set({ id: card.id });
-      }
-      loadCardsOfType(type);
-      return;
-    }
-    
-    if (cardIds.length === 0 && type === 'athkar') {
-      const defaultCards = [
-        { id: 'morning', header: '🌅 أذكار الصباح', body: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ.', footer: '🤲 رَطِّبْ لِسَانَكَ' },
-        { id: 'evening', header: '🌙 أذكار المساء', body: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ.', footer: '🌙 احْفَظْ بِهَا نَفْسَكَ' },
-        { id: 'sleep', header: '😴 أذكار النوم', body: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا. اللَّهُمَّ قِنِي عَذَابَكَ.', footer: '💤 تَوَكَّلْ عَلَى اللَّهِ' }
-      ];
-      for (const card of defaultCards) {
-        await database.ref(`${type}_full/${card.id}`).set({ header: card.header, body: card.body, footer: card.footer });
-        await database.ref(`${type}_list/${card.id}`).set({ id: card.id });
-      }
-      loadCardsOfType(type);
-      return;
-    }
-    
-    if (cardIds.length === 0 && type === 'tafsir') {
-      const defaultCards = [
-        { id: 'fatiha', header: '📖 تفسير الفاتحة', body: 'الفاتحة هي أم الكتاب، سبع مثاني، وهي أعظم سورة في القرآن.', footer: '💎 أم القرآن' },
-        { id: 'kursi', header: '✨ آية الكرسي', body: 'آية الكرسي هي أعظم آية في القرآن الكريم. تتضمن توحيد الله، حياته، قيوميته.', footer: '🛡️ حصن من الشيطان' },
-        { id: 'ikhlas', header: '🤍 سورة الإخلاص', body: 'سورة الإخلاص تعدل ثلث القرآن. قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ.', footer: '🌟 ثلث القرآن' }
-      ];
-      for (const card of defaultCards) {
-        await database.ref(`${type}_full/${card.id}`).set({ header: card.header, body: card.body, footer: card.footer });
-        await database.ref(`${type}_list/${card.id}`).set({ id: card.id });
-      }
-      loadCardsOfType(type);
-      return;
-    }
-    
-    container.innerHTML = '';
-    const itemsArray = [];
-    for (const id of cardIds) {
-      const cardData = await database.ref(`${type}_full/${id}`).once('value');
-      const data = cardData.val();
+    container.innerHTML = ''; const items = [];
+    for (const id of ids) {
+      const data = (await database.ref(`${type}_full/${id}`).once('value')).val();
       if (data) {
-        itemsArray.push({ id, header: data.header, body: data.body, footer: data.footer });
-        const div = document.createElement('div');
-        div.className = 'info-card';
-        div.setAttribute('data-id', id);
-        let shortText = data.body.substring(0, 80);
-        if (data.body.length > 80) shortText += '...';
-        let headerClass = '';
-        if (type === 'trueHadith') headerClass = 'hadith-true';
-        if (type === 'weakHadith') headerClass = 'hadith-weak';
-        div.innerHTML = `<div class="card-header ${headerClass}">${data.header}</div><div class="card-preview"><p>${shortText}</p></div><button class="more-btn">📖 المزيد</button>${adminMode ? '<button class="delete-card-btn" onclick="deleteCard(\'' + type + '\', \'' + id + '\')">×</button>' : ''}`;
+        items.push({ id, header: data.header, body: data.body, footer: data.footer });
+        const div = document.createElement('div'); div.className = 'info-card'; div.setAttribute('data-id', id);
+        let short = data.body.substring(0, 80); if (data.body.length > 80) short += '...';
+        div.innerHTML = `<div class="card-header ${type === 'trueHadith' ? 'hadith-true' : type === 'weakHadith' ? 'hadith-weak' : ''}">${data.header}</div><div class="card-preview"><p>${short}</p></div><button class="more-btn">📖 المزيد</button>${adminMode ? '<button class="delete-card-btn" onclick="deleteCard(\'' + type + '\', \'' + id + '\')">×</button>' : ''}`;
         div.querySelector('.more-btn').onclick = () => openModal(type, id, data.header, data.body, data.footer);
         container.appendChild(div);
       }
     }
-    if (type === 'athkar') allAthkar = itemsArray;
-    else if (type === 'tafsir') allTafsir = itemsArray;
-    else if (type === 'trueHadith') allTrueHadith = itemsArray;
-    else if (type === 'weakHadith') allWeakHadith = itemsArray;
+    if (type === 'athkar') allAthkar = items;
+    else if (type === 'tafsir') allTafsir = items;
+    else if (type === 'trueHadith') allTrueHadith = items;
+    else allWeakHadith = items;
   }
 
   async function loadAllCards() {
@@ -1235,21 +726,15 @@
   document.getElementById('tafsirAddBtn').onclick = () => { pendingAddType = 'tafsir'; document.getElementById('addFormTitle').innerHTML = '➕ إضافة بطاقة تفسير جديدة'; addFormModal.style.display = 'flex'; };
   document.getElementById('trueHadithAddBtn').onclick = () => { pendingAddType = 'trueHadith'; document.getElementById('addFormTitle').innerHTML = '➕ إضافة حديث صحيح جديد'; addFormModal.style.display = 'flex'; };
   document.getElementById('weakHadithAddBtn').onclick = () => { pendingAddType = 'weakHadith'; document.getElementById('addFormTitle').innerHTML = '➕ إضافة حديث ضعيف أو بدعة جديدة'; addFormModal.style.display = 'flex'; };
-  
   saveNewCardBtn.onclick = async () => { if (pendingAddType) await addNewCard(pendingAddType); };
   cancelAddBtn.onclick = () => { addFormModal.style.display = 'none'; newCardTitle.value = ''; newCardBody.value = ''; newCardFooter.value = ''; };
-
   modalHeader.addEventListener('blur', () => saveContent());
   modalBody.addEventListener('blur', () => saveContent());
   modalFooter.addEventListener('blur', () => saveContent());
 
   // Calendar
   let currentDate = new Date(), currentYear = currentDate.getFullYear(), currentMonth = currentDate.getMonth(), events = {};
-  async function loadEvents() {
-    const snapshot = await database.ref('events').once('value');
-    events = snapshot.val() || {};
-    renderCalendar();
-  }
+  async function loadEvents() { events = (await database.ref('events').once('value')).val() || {}; renderCalendar(); }
   async function addEventToDay(dateKey) {
     if (!adminMode) { alert('❌ فقط المشرف يمكنه إضافة مناسبات'); return; }
     const desc = prompt('📝 وصف لهذا اليوم:', events[dateKey]?.description || '');
@@ -1261,17 +746,15 @@
   }
   function renderCalendar() {
     const firstDay = new Date(currentYear, currentMonth, 1), startDay = firstDay.getDay(), daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const grid = document.getElementById('calendarDays');
-    if (!grid) return;
+    const grid = document.getElementById('calendarDays'); if (!grid) return;
     grid.innerHTML = '';
-    const weekdays = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
-    weekdays.forEach(day => { const d = document.createElement('div'); d.className = 'weekday'; d.innerText = day; grid.appendChild(d); });
+    ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'].forEach(day => { const d = document.createElement('div'); d.className = 'weekday'; d.innerText = day; grid.appendChild(d); });
     for (let i = 0; i < startDay; i++) { const empty = document.createElement('div'); empty.className = 'day-cell'; grid.appendChild(empty); }
     for (let d = 1; d <= daysInMonth; d++) {
       const cell = document.createElement('div'); cell.className = 'day-cell'; cell.innerText = d;
-      const dateKey = `${currentYear}-${currentMonth+1}-${d}`;
-      if (events[dateKey]) cell.classList.add('has-event');
-      cell.onclick = () => addEventToDay(dateKey);
+      const key = `${currentYear}-${currentMonth+1}-${d}`;
+      if (events[key]) cell.classList.add('has-event');
+      cell.onclick = () => addEventToDay(key);
       grid.appendChild(cell);
     }
     document.getElementById('monthYear').innerHTML = `${currentYear}/${currentMonth+1}`;
@@ -1281,124 +764,91 @@
 
   // Map
   function createCustomLabel(lat, lng, text, color = '#1e5629') {
-    const icon = L.divIcon({ className: 'custom-label', html: `<div style="background: ${color}; color: white; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: bold;">${text}</div>`, iconSize: [null, null], popupAnchor: [0, -8] });
-    return L.marker([lat, lng], { icon: icon });
+    return L.marker([lat, lng], { icon: L.divIcon({ className: 'custom-label', html: `<div style="background:${color};color:white;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:bold;">${text}</div>`, iconSize: [null, null], popupAnchor: [0, -8] }) });
   }
-
   async function loadMapData() {
     if (!mapInitialized) return;
     Object.values(markers).forEach(m => map.removeLayer(m));
     Object.values(labels).forEach(l => map.removeLayer(l));
     Object.values(polylines).forEach(p => map.removeLayer(p));
     markers = {}; labels = {}; polylines = {};
-    
-    const pinsSnapshot = await database.ref('map_pins').once('value');
-    const pins = pinsSnapshot.val() || {};
+    const pins = (await database.ref('map_pins').once('value')).val() || {};
     for (let id in pins) {
       const pin = pins[id];
       const marker = L.marker([pin.lat, pin.lng]).addTo(map);
-      marker.bindPopup(`<b>📍 ${pin.title}</b><br><p>${pin.description || ''}</p>${adminMode ? '<br><button onclick="editPin(\'' + id + '\')" style="background:#2c5e2e; color:white; border:none; padding:3px 8px; border-radius:15px;">✏️</button><button onclick="deletePin(\'' + id + '\')" style="background:#f44336; color:white; border:none; padding:3px 8px; border-radius:15px;">🗑️</button>' : ''}`);
-      marker.on('click', () => { document.getElementById('storyContent').innerHTML = `<strong>📍 ${pin.title}</strong><br><p>${pin.description || ''}</p>`; });
+      marker.bindPopup(`<b>📍 ${pin.title}</b><br><p>${pin.description || ''}</p>${adminMode ? '<br><button onclick="editPin(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;">✏️</button><button onclick="deletePin(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;">🗑️</button>' : ''}`);
+      marker.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>📍 ${pin.title}</strong><br><p>${pin.description || ''}</p>`);
       markers[id] = marker;
     }
-    
-    const labelsSnapshot = await database.ref('map_labels').once('value');
-    const mapLabels = labelsSnapshot.val() || {};
+    const mapLabels = (await database.ref('map_labels').once('value')).val() || {};
     for (let id in mapLabels) {
       const label = mapLabels[id];
       const labelMarker = createCustomLabel(label.lat, label.lng, label.text);
       labelMarker.addTo(map);
-      labelMarker.bindPopup(`<b>🏷️ ${label.text}</b><br><p>${label.description || ''}</p>${adminMode ? '<br><button onclick="editLabel(\'' + id + '\')" style="background:#2c5e2e; color:white; border:none; padding:3px 8px; border-radius:15px;">✏️</button><button onclick="deleteLabel(\'' + id + '\')" style="background:#f44336; color:white; border:none; padding:3px 8px; border-radius:15px;">🗑️</button>' : ''}`);
-      labelMarker.on('click', () => { document.getElementById('storyContent').innerHTML = `<strong>🏷️ ${label.text}</strong><br><p>${label.description || ''}</p>`; });
+      labelMarker.bindPopup(`<b>🏷️ ${label.text}</b><br><p>${label.description || ''}</p>${adminMode ? '<br><button onclick="editLabel(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;">✏️</button><button onclick="deleteLabel(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;">🗑️</button>' : ''}`);
+      labelMarker.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>🏷️ ${label.text}</strong><br><p>${label.description || ''}</p>`);
       labels[id] = labelMarker;
     }
   }
-  
-  window.editPin = async function(id) { if (!adminMode) return; const newTitle = prompt('الاسم الجديد:'); if (!newTitle) return; const newDesc = prompt('الوصف الجديد:'); const pinData = (await database.ref(`map_pins/${id}`).once('value')).val(); if (pinData) { await database.ref(`map_pins/${id}`).set({ ...pinData, title: newTitle, description: newDesc || '' }); loadMapData(); } };
+  window.editPin = async function(id) { if (!adminMode) return; const newTitle = prompt('الاسم الجديد:'); if (!newTitle) return; const newDesc = prompt('الوصف الجديد:'); const data = (await database.ref(`map_pins/${id}`).once('value')).val(); if (data) { await database.ref(`map_pins/${id}`).set({ ...data, title: newTitle, description: newDesc || '' }); loadMapData(); } };
   window.deletePin = async function(id) { if (!adminMode) return; if (confirm('حذف؟')) { await database.ref(`map_pins/${id}`).remove(); loadMapData(); } };
-  window.editLabel = async function(id) { if (!adminMode) return; const newText = prompt('النص الجديد:'); if (!newText) return; const newDesc = prompt('الوصف الجديد:'); const labelData = (await database.ref(`map_labels/${id}`).once('value')).val(); if (labelData) { await database.ref(`map_labels/${id}`).set({ ...labelData, text: newText, description: newDesc || '' }); loadMapData(); } };
+  window.editLabel = async function(id) { if (!adminMode) return; const newText = prompt('النص الجديد:'); if (!newText) return; const newDesc = prompt('الوصف الجديد:'); const data = (await database.ref(`map_labels/${id}`).once('value')).val(); if (data) { await database.ref(`map_labels/${id}`).set({ ...data, text: newText, description: newDesc || '' }); loadMapData(); } };
   window.deleteLabel = async function(id) { if (!adminMode) return; if (confirm('حذف؟')) { await database.ref(`map_labels/${id}`).remove(); loadMapData(); } };
-  
   function initMap() {
     if (mapInitialized) return;
     map = L.map('map').setView([27.0, 30.0], 4);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '© OSM' }).addTo(map);
     mapInitialized = true;
     loadMapData();
-    
     map.on('click', async (e) => {
       if (!adminMode) return;
       if (currentDrawMode === 'pin') {
-        const title = prompt('📍 اسم النقطة:'); if (title) { const desc = prompt('📝 الوصف:'); const newId = `pin_${Date.now()}`; await database.ref(`map_pins/${newId}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, title: title, description: desc || '' }); loadMapData(); }
+        const title = prompt('📍 اسم النقطة:'); if (title) { const desc = prompt('📝 الوصف:'); await database.ref(`map_pins/pin_${Date.now()}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, title, description: desc || '' }); loadMapData(); }
         currentDrawMode = null; document.getElementById('drawingInstruction').style.display = 'none'; document.getElementById('addPinBtn').classList.remove('active');
       } else if (currentDrawMode === 'label') {
-        const text = prompt('🏷️ النص:'); if (text) { const desc = prompt('📝 الوصف:'); const newId = `label_${Date.now()}`; await database.ref(`map_labels/${newId}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, text: text, description: desc || '' }); loadMapData(); }
+        const text = prompt('🏷️ النص:'); if (text) { const desc = prompt('📝 الوصف:'); await database.ref(`map_labels/label_${Date.now()}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, text, description: desc || '' }); loadMapData(); }
         currentDrawMode = null; document.getElementById('drawingInstruction').style.display = 'none'; document.getElementById('addLabelBtn').classList.remove('active');
       }
     });
   }
-  
   document.getElementById('addPinBtn').onclick = () => { if (!adminMode) { alert('❌ للمشرف فقط'); return; } currentDrawMode = 'pin'; document.getElementById('drawingInstruction').innerHTML = '📍 انقر على الخريطة لإضافة نقطة'; document.getElementById('drawingInstruction').style.display = 'block'; document.getElementById('addPinBtn').classList.add('active'); };
   document.getElementById('addLabelBtn').onclick = () => { if (!adminMode) { alert('❌ للمشرف فقط'); return; } currentDrawMode = 'label'; document.getElementById('drawingInstruction').innerHTML = '🏷️ انقر على الخريطة لإضافة نص'; document.getElementById('drawingInstruction').style.display = 'block'; document.getElementById('addLabelBtn').classList.add('active'); };
   document.getElementById('cancelDrawBtn').onclick = () => { currentDrawMode = null; document.getElementById('drawingInstruction').style.display = 'none'; document.getElementById('addPinBtn').classList.remove('active'); document.getElementById('addLabelBtn').classList.remove('active'); };
   document.getElementById('deleteModeBtn').onclick = () => { if (!adminMode) return; deleteModeActive = !deleteModeActive; document.getElementById('deleteModeBtn').style.background = deleteModeActive ? '#d32f2f' : '#f44336'; document.getElementById('deleteModeBtn').innerHTML = deleteModeActive ? '🚫 خروج' : '🗑️ حذف'; if (deleteModeActive) alert('وضع الحذف مفعل'); };
 
-  // Subpage navigation for Ahadeeth
   document.querySelectorAll('.subpage-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.subpage-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      const subpage = btn.getAttribute('data-subpage');
-      document.querySelectorAll('.subpage-content').forEach(content => content.classList.remove('active'));
-      document.getElementById(subpage).classList.add('active');
-      currentSubpage = subpage;
+      document.querySelectorAll('.subpage-content').forEach(c => c.classList.remove('active'));
+      document.getElementById(btn.getAttribute('data-subpage')).classList.add('active');
     });
   });
 
-  // Main Navigation
   document.querySelectorAll('.nav-link').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(btn.getAttribute('data-page')).classList.add('active');
       if (btn.getAttribute('data-page') === 'stories') initMap();
       if (btn.getAttribute('data-page') === 'days') loadEvents();
-      searchResults.style.display = 'none';
-      searchInput.value = '';
+      searchResults.style.display = 'none'; searchInput.value = '';
     });
   });
 
   function initializeFeatures() {
-    updateHijriDate();
-    setInterval(updateHijriDate, 60000);
-    
-    // Daily Quran Verse
-    const dailyVerse = getDailyVerse(quranVerses);
-    document.getElementById('verseText').innerHTML = `﴿ ${dailyVerse.text} ﴾`;
-    document.getElementById('verseReference').innerHTML = dailyVerse.ref;
-    
-    // Main Ahadeeth Page - Daily Hadith
-    const mainHadith = getDailyHadith(mainHadiths);
-    document.getElementById('mainHadithText').innerHTML = `﴿ ${mainHadith.text} ﴾`;
-    document.getElementById('mainHadithSource').innerHTML = mainHadith.source;
-    
-    // True Ahadith Page - Daily Hadith
-    const trueHadith = getDailyHadith(trueHadiths);
-    document.getElementById('trueHadithText').innerHTML = `﴿ ${trueHadith.text} ﴾`;
-    document.getElementById('trueHadithSource').innerHTML = trueHadith.source;
-    
-    // Weak Ahadith Page - Rotating Warning Hadith (alternates between the two)
-    const weakHadith = getWeakHadith();
-    document.getElementById('weakHadithText').innerHTML = `﴿ ${weakHadith.text} ﴾`;
-    document.getElementById('weakHadithSource').innerHTML = weakHadith.source;
+    updateHijriDate(); setInterval(updateHijriDate, 60000);
+    const v = getDailyVerse(quranVerses); document.getElementById('verseText').innerHTML = `﴿ ${v.text} ﴾`; document.getElementById('verseReference').innerHTML = v.ref;
+    const z = getDailyVerse(zakatVerses); document.getElementById('zakatVerseText').innerHTML = `﴿ ${z.text} ﴾`; document.getElementById('zakatVerseRef').innerHTML = z.ref;
+    const h = getDailyVerse(hijriVerses); document.getElementById('hijriVerseText').innerHTML = `﴿ ${h.text} ﴾`; document.getElementById('hijriVerseRef').innerHTML = h.ref;
+    const mh = getDailyHadith(mainHadiths); document.getElementById('mainHadithText').innerHTML = `﴿ ${mh.text} ﴾`; document.getElementById('mainHadithSource').innerHTML = mh.source;
+    const th = getDailyHadith(trueHadiths); document.getElementById('trueHadithText').innerHTML = `﴿ ${th.text} ﴾`; document.getElementById('trueHadithSource').innerHTML = th.source;
+    const wh = getWeakHadith(); document.getElementById('weakHadithText').innerHTML = `﴿ ${wh.text} ﴾`; document.getElementById('weakHadithSource').innerHTML = wh.source;
   }
-  
+
   document.getElementById('calculateZakatBtn').addEventListener('click', calculateZakat);
   document.getElementById('convertBtn').addEventListener('click', convertDate);
-  
-  initializeFeatures();
-  loadEvents();
-  renderCalendar();
-  console.log('✅ Platform ready with full Ahadeeth section and rotating hadith panels!');
+  initializeFeatures(); loadEvents(); renderCalendar();
+  console.log('✅ Platform ready with all features!');
 </script>
 </body>
 </html>
