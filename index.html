@@ -451,6 +451,19 @@
       transition: 0.2s;
     }
     .prayer-refresh-btn:hover { background: var(--green-deep); }
+    .madhhab-toggle-btn {
+      background: #d4a843;
+      color: #1e4a2a;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 0.76rem;
+      font-family: 'Tajawal';
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .madhhab-toggle-btn:hover { opacity: 0.85; }
 
     .prayer-countdown-box {
       background: linear-gradient(135deg, #1e4a2a, #2c5e2e);
@@ -691,7 +704,10 @@
         <div class="prayer-location-text" id="prayerLocationText">📍 جارٍ تحديد الموقع...</div>
         <div class="prayer-date-text" id="prayerDateText"></div>
       </div>
-      <button class="prayer-refresh-btn" id="prayerRefreshBtn">🔄 تحديث</button>
+      <div style="display: flex; gap: 8px;">
+        <button class="prayer-refresh-btn" id="prayerRefreshBtn">🔄 تحديث</button>
+        <button class="madhhab-toggle-btn" id="madhhabToggleBtn">🕌 شافعي</button>
+      </div>
     </div>
     <div class="prayer-loading" id="prayerLoading">
       <div class="spinner"></div>
@@ -907,6 +923,7 @@ let currentDrawMode = null, currentPathPoints = [], currentPolyline = null, dele
 let allAthkar = [], allTafsir = [], allTrueHadith = [], allWeakHadith = [];
 let prayerTimings = null, countdownInterval = null, prayerData = null;
 let prayerLoaded = false;
+let currentMadhhab = 'shafii'; // 'shafii' or 'hanafi'
 
 // Static Data
 const prayerVerses = [
@@ -1001,17 +1018,19 @@ darkToggle.addEventListener('click', () => {
 });
 if (localStorage.getItem('darkMode') === 'true') { document.body.classList.add('dark-mode'); darkToggle.innerHTML = '☀️ نهاري'; }
 
-// PRAYER TIMES - FIXED VERSION
+// PRAYER TIMES WITH MADHHAB TOGGLE
 async function fetchPrayerTimes(lat, lng, fallbackName) {
   try {
     const now = new Date();
     const dateStr = `${now.getDate()}-${now.getMonth()+1}-${now.getFullYear()}`;
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     
-    // madhab=1 = Shafi'i (standard Asr - earlier like 4:26)
-    // madhab=0 = Hanafi (later Asr like 5:30)
-    const url = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lng}&method=3&madhab=1&timezone=${timezone}`;
+    // madhab=1 = Shafi'i (standard Asr - earlier)
+    // madhab=0 = Hanafi (later Asr)
+    const madhabValue = currentMadhhab === 'shafii' ? 1 : 0;
+    const url = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${lat}&longitude=${lng}&method=3&madhab=${madhabValue}&timezone=${timezone}`;
     console.log("Fetching prayer times from:", url);
+    console.log("Current Madhhab:", currentMadhhab, "madhab value:", madhabValue);
     
     const res = await fetch(url);
     const data = await res.json();
@@ -1043,6 +1062,9 @@ async function fetchPrayerTimes(lat, lng, fallbackName) {
       document.getElementById('prayerLoading').style.display = 'none';
       document.getElementById('prayerContent').style.display = 'block';
       startPrayerCountdown();
+      
+      // Update the toggle button text
+      updateMadhhabButton();
     } else {
       throw new Error('Invalid response from API');
     }
@@ -1051,6 +1073,145 @@ async function fetchPrayerTimes(lat, lng, fallbackName) {
     document.getElementById('prayerLoading').innerHTML = '<p>❌ تعذر تحميل المواقيت. تأكد من الاتصال بالإنترنت.</p>';
   }
 }
+
+function updateMadhhabButton() {
+  const btn = document.getElementById('madhhabToggleBtn');
+  if (btn) {
+    if (currentMadhhab === 'shafii') {
+      btn.innerHTML = '🕌 شافعي';
+      btn.style.background = '#d4a843';
+    } else {
+      btn.innerHTML = '🕌 حنفي';
+      btn.style.background = '#8b6b3d';
+    }
+  }
+}
+
+function initPrayerTimes() {
+  if (prayerLoaded && prayerTimings) { renderPrayerTimes(); return; }
+  
+  const pv = getDailyItem(prayerVerses);
+  document.getElementById('prayerVerseText').innerHTML = pv.text;
+  document.getElementById('prayerVerseRef').innerHTML = `<span>${pv.ref}</span>`;
+
+  document.getElementById('prayerLoading').style.display = 'block';
+  document.getElementById('prayerContent').style.display = 'none';
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => fetchPrayerTimes(pos.coords.latitude, pos.coords.longitude, null),
+      () => fetchPrayerTimes(21.4225, 39.8262, 'مكة المكرمة'),
+      { timeout: 10000, enableHighAccuracy: true }
+    );
+  } else {
+    fetchPrayerTimes(21.4225, 39.8262, 'مكة المكرمة');
+  }
+}
+
+function renderPrayerTimes() {
+  const grid = document.getElementById('prayerNamesGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const nextKey = getNextPrayer();
+  prayerOrder.forEach(key => {
+    const meta = prayerMeta[key];
+    const isNext = key === nextKey;
+    const div = document.createElement('div');
+    div.className = 'prayer-item' + (isNext ? ' active-prayer' : '');
+    div.id = 'pitem-' + key;
+    div.innerHTML = `
+      <div class="prayer-item-icon">${meta.icon}</div>
+      <div class="prayer-item-name">${meta.ar}</div>
+      <div class="prayer-item-time">${prayerTimings[key] || '--:--'}</div>
+      ${isNext ? '<div class="prayer-item-badge">القادمة</div>' : ''}
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function getNextPrayer() {
+  const now = new Date();
+  for (const key of prayerOrder) {
+    if (!prayerTimings[key]) continue;
+    const [h, m] = prayerTimings[key].split(':').map(Number);
+    const t = new Date(); 
+    t.setHours(h, m, 0, 0);
+    if (t > now) return key;
+  }
+  return 'Fajr';
+}
+
+function startPrayerCountdown() {
+  if (countdownInterval) clearInterval(countdownInterval);
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+function updateCountdown() {
+  if (!prayerTimings) return;
+  const now = new Date();
+  let nextKey = null, nextTime = null;
+
+  for (const key of prayerOrder) {
+    if (!prayerTimings[key]) continue;
+    const [h, m] = prayerTimings[key].split(':').map(Number);
+    const t = new Date(); 
+    t.setHours(h, m, 0, 0);
+    if (t > now) { nextKey = key; nextTime = t; break; }
+  }
+  
+  if (!nextKey) {
+    const [h, m] = prayerTimings['Fajr'].split(':').map(Number);
+    nextTime = new Date(); 
+    nextTime.setDate(nextTime.getDate() + 1); 
+    nextTime.setHours(h, m, 0, 0);
+    nextKey = 'Fajr';
+  }
+
+  const diff = nextTime - now;
+  const hrs = Math.floor(diff / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+  const secs = Math.floor((diff % 60000) / 1000);
+
+  document.getElementById('nextPrayerName').textContent = prayerMeta[nextKey]?.ar || nextKey;
+  document.getElementById('countdownTimer').textContent =
+    String(hrs).padStart(2,'0') + ':' + String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
+
+  // Update active card
+  document.querySelectorAll('.prayer-item').forEach(el => {
+    el.classList.remove('active-prayer');
+    const badge = el.querySelector('.prayer-item-badge');
+    if (badge) badge.remove();
+  });
+  const activeEl = document.getElementById('pitem-' + nextKey);
+  if (activeEl) {
+    activeEl.classList.add('active-prayer');
+    if (!activeEl.querySelector('.prayer-item-badge')) {
+      const badge = document.createElement('div');
+      badge.className = 'prayer-item-badge';
+      badge.textContent = 'القادمة';
+      activeEl.appendChild(badge);
+    }
+  }
+}
+
+// Refresh button
+document.getElementById('prayerRefreshBtn').addEventListener('click', () => {
+  prayerLoaded = false; prayerTimings = null; prayerData = null;
+  if (countdownInterval) clearInterval(countdownInterval);
+  initPrayerTimes();
+});
+
+// Madhhab Toggle Button - Switch between Shafi'i and Hanafi
+document.getElementById('madhhabToggleBtn').addEventListener('click', () => {
+  // Toggle between shafii and hanafi
+  currentMadhhab = currentMadhhab === 'shafii' ? 'hanafi' : 'shafii';
+  // Reload prayer times with new madhhab
+  prayerLoaded = false; prayerTimings = null; prayerData = null;
+  if (countdownInterval) clearInterval(countdownInterval);
+  initPrayerTimes();
+});
+
 // SEARCH
 function performSearch() {
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
