@@ -4,218 +4,598 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>ذكرى - المنصة الإسلامية</title>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-  
   <style>
+    :root {
+      --green-deep: #1e4a2a;
+      --green-main: #2c5e2e;
+      --green-light: #4a8c4e;
+      --gold: #d4a843;
+      --gold-light: #f0c96a;
+      --cream: #fef9e6;
+      --cream-dark: #fef3d6;
+      --text-main: #2c3e2f;
+      --text-soft: #8b6b3d;
+      --border: #e0d5b9;
+      --card-bg: #fffef8;
+      --shadow: 0 4px 20px rgba(44,94,46,0.10);
+      --radius-lg: 28px;
+      --radius-md: 20px;
+      --radius-sm: 12px;
+      --radius-pill: 60px;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Amiri', 'Tajawal', serif;
-      background: linear-gradient(145deg, #f7f3e8 0%, #fef9e6 100%);
-      color: #2c3e2f;
+      font-family: 'Tajawal', 'Amiri', serif;
+      background: linear-gradient(160deg, #f0ede0 0%, #fef9e6 60%, #e8f0e8 100%);
+      color: var(--text-main);
       direction: rtl;
       padding: 12px;
-      transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
+      transition: background 0.4s, color 0.4s;
     }
+    /* ── DARK MODE ── */
     body.dark-mode {
-      background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
-      color: #eee;
+      --green-deep: #a8d5ac;
+      --green-main: #4a8c4e;
+      --gold: #f0c96a;
+      --cream: #1a1a2e;
+      --cream-dark: #16213e;
+      --text-main: #e8e8d8;
+      --text-soft: #b0a080;
+      --border: #2c4e30;
+      --card-bg: #1e2a20;
+      --shadow: 0 4px 20px rgba(0,0,0,0.3);
+      background: linear-gradient(160deg, #0f1a10 0%, #1a1a2e 60%, #0f1a10 100%);
+      color: var(--text-main);
     }
-    body.dark-mode .container {
-      background: rgba(30, 30, 50, 0.95);
+    body.dark-mode .container { background: rgba(20, 28, 20, 0.97); }
+    body.dark-mode .info-card,
+    body.dark-mode .content-box,
+    body.dark-mode .calendar-container,
+    body.dark-mode .calculator-box,
+    body.dark-mode .subpage-nav,
+    body.dark-mode .stories-detail,
+    body.dark-mode .search-results,
+    body.dark-mode .prayer-card { background: var(--card-bg); border-color: var(--border); color: var(--text-main); }
+    body.dark-mode .card-preview,
+    body.dark-mode .modal-body,
+    body.dark-mode .calculator-result,
+    body.dark-mode .converter-result,
+    body.dark-mode .prayer-time-row { background: #1e2a20; color: var(--text-main); }
+    body.dark-mode .hero { background: linear-gradient(115deg, rgba(44,94,46,0.15), rgba(26,26,46,0.8)); }
+    body.dark-mode .verse-panel { background: linear-gradient(135deg, rgba(44,94,46,0.1), rgba(26,26,46,0.9)); }
+    body.dark-mode .day-cell { background: #1e2a20; color: var(--text-main); }
+    body.dark-mode .search-box { background: var(--card-bg); border-color: var(--border); }
+    body.dark-mode .search-box input { color: var(--text-main); background: transparent; }
+    body.dark-mode .subpage-btn { background: #1e3a20; color: #c8e6c9; }
+    body.dark-mode .subpage-btn.active { background: var(--green-main); color: white; }
+    body.dark-mode .login-box,
+    body.dark-mode .modal-content,
+    body.dark-mode .add-form-content { background: #1a2e1a; color: var(--text-main); }
+    body.dark-mode .modal-body a { color: var(--gold); }
+    body.dark-mode .nav-link { background: #1e3a20; color: #c8e6c9; }
+    body.dark-mode .nav-link:hover { background: #2c5e2e; }
+    body.dark-mode .weekday { background: #1e3a20; color: #c8e6c9; }
+    body.dark-mode .next-prayer-row { background: linear-gradient(90deg, rgba(212,168,67,0.25), rgba(212,168,67,0.1)) !important; }
+    body.dark-mode .prayer-countdown-box { background: linear-gradient(135deg, #1e3a20, #1a2e3a); }
+    body.dark-mode .prayer-names-grid .prayer-item { background: #1e2a20; }
+    body.dark-mode .prayer-item.active-prayer { background: linear-gradient(135deg, rgba(212,168,67,0.3), rgba(44,94,46,0.3)); }
+    body.dark-mode .add-form-content input,
+    body.dark-mode .add-form-content textarea { background: #1e3a20; color: var(--text-main); border-color: var(--border); }
+    body.dark-mode .login-box input { background: #1e3a20; color: var(--text-main); border-color: var(--border); }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      background: rgba(255, 252, 244, 0.97);
+      border-radius: 32px;
+      padding: 15px;
+      transition: background 0.4s;
+      box-shadow: 0 8px 40px rgba(44,94,46,0.08);
     }
-    body.dark-mode .content-box, body.dark-mode .info-card, body.dark-mode .calendar-container,
-    body.dark-mode .stories-detail, body.dark-mode .search-results, body.dark-mode .calculator-box,
-    body.dark-mode .subpage-nav, body.dark-mode .hadith-panel, body.dark-mode .verse-panel {
-      background: #1e1e3a;
-      border-color: #2c5e2e;
-      color: #eee;
-    }
-    body.dark-mode .card-preview, body.dark-mode .modal-body, body.dark-mode .calculator-result,
-    body.dark-mode .converter-result {
-      background: #25254a;
-      color: #ddd;
-    }
-    body.dark-mode .hero, body.dark-mode .verse-panel { background: linear-gradient(115deg, #2c5e2e20, #1a1a3e); }
-    body.dark-mode .day-cell { background: #25254a; color: #ddd; }
-    body.dark-mode .search-box { background: #1e1e3a; border-color: #2c5e2e; }
-    body.dark-mode .search-box input { color: #eee; background: transparent; }
-    body.dark-mode .subpage-btn { background: #2c5e2e; color: #fef3d6; }
-    body.dark-mode .subpage-btn.active { background: #ff9800; color: white; }
-    body.dark-mode .modal-body a, body.dark-mode .leaflet-popup-content a { color: #d4a843; }
-    
-    .modal-body a, .leaflet-popup-content a {
-      color: #2c5e2e;
-      text-decoration: underline;
-      word-break: break-all;
-    }
-    .leaflet-popup-content { font-family: 'Amiri', 'Tajawal', serif; font-size: 14px; line-height: 1.6; }
-    .leaflet-popup-content a { color: #2c5e2e; text-decoration: underline; }
-    
-    .container { max-width: 1300px; margin: 0 auto; background: rgba(255, 250, 240, 0.95); border-radius: 24px; padding: 15px; transition: background 0.3s; }
-    
+
+    /* ── HEADER ── */
     header {
-      background: linear-gradient(135deg, #1e4a2a, #2c5e2e);
+      background: linear-gradient(135deg, #1e4a2a 0%, #2c5e2e 50%, #1e4a2a 100%);
       color: #fff9e8;
-      padding: 12px 16px;
+      padding: 14px 20px;
       border-radius: 50px;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 10px;
+      position: relative;
+      overflow: hidden;
     }
-    .header-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    header h1 { font-size: 1.5rem; }
-    .hijri-date { font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 40px; font-family: 'Tajawal'; }
-    .dark-mode-toggle { background: #fef3d6; color: #1e4a2a; border: none; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-size: 0.75rem; }
-    
-    .nav-wrapper { margin-bottom: 20px; overflow-x: auto; overflow-y: hidden; white-space: nowrap; scrollbar-width: thin; -webkit-overflow-scrolling: touch; padding-bottom: 5px; }
+    header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -10%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(212,168,67,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; position: relative; z-index: 1; }
+    header h1 { font-size: 1.6rem; font-family: 'Amiri'; letter-spacing: 1px; }
+    .hijri-date {
+      font-size: 0.72rem;
+      background: rgba(212,168,67,0.25);
+      border: 1px solid rgba(212,168,67,0.4);
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-family: 'Tajawal';
+      color: #fde8a0;
+    }
+    .header-right { display: flex; gap: 8px; align-items: center; position: relative; z-index: 1; }
+    .dark-mode-toggle {
+      background: rgba(255,243,214,0.15);
+      border: 1px solid rgba(255,243,214,0.3);
+      color: #fde8a0;
+      padding: 6px 14px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-family: 'Tajawal';
+      transition: 0.2s;
+    }
+    .dark-mode-toggle:hover { background: rgba(255,243,214,0.25); }
+
+    /* ── NAV ── */
+    .nav-wrapper {
+      margin-bottom: 18px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: nowrap;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 5px;
+    }
     .nav-wrapper::-webkit-scrollbar { height: 3px; }
-    .nav-links { display: inline-flex; gap: 8px; padding: 0 5px; }
-    .nav-link { background: #fef3d6; color: #1e4a2a; padding: 8px 16px; border-radius: 40px; cursor: pointer; border: none; font-size: 0.8rem; transition: 0.2s; white-space: nowrap; display: inline-block; }
-    .nav-link:hover { background: #ffe2a4; transform: translateY(-2px); }
-    
-    .verse-panel { text-align: center; margin: 15px 0 20px; padding: 15px; border-radius: 30px; background: linear-gradient(135deg, #2c5e2e15, #fef2df); border-right: 4px solid #d4a843; }
-    .verse-panel-text { font-size: 1rem; line-height: 1.8; font-weight: 500; color: #1e5629; }
-    body.dark-mode .verse-panel-text { color: #d4a843; }
-    .verse-panel-ref { font-size: 0.75rem; margin-top: 8px; opacity: 0.8; color: #8b6b3d; }
-    
-    .hadith-panel { text-align: center; margin: 15px 0 20px; padding: 15px; border-radius: 30px; }
-    .hadith-panel.true-hadith { background: linear-gradient(135deg, #2c5e2e15, #c8e6d9); border-right: 4px solid #2c5e2e; }
-    .hadith-panel.weak-hadith { background: linear-gradient(135deg, #f4433615, #ffcdd2); border-right: 4px solid #f44336; }
-    .hadith-panel.main-hadith { background: linear-gradient(135deg, #d4a84315, #fef2df); border-right: 4px solid #d4a843; }
-    .hadith-text { font-size: 1rem; line-height: 1.8; font-weight: 500; }
+    .nav-wrapper::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    .nav-links { display: inline-flex; gap: 8px; padding: 0 4px; }
+    .nav-link {
+      background: var(--cream-dark);
+      color: var(--green-deep);
+      padding: 9px 18px;
+      border-radius: 40px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      font-size: 0.82rem;
+      font-family: 'Tajawal';
+      font-weight: 500;
+      transition: 0.2s;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    .nav-link:hover { background: #ffe2a4; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(44,94,46,0.15); }
+    .nav-link.active-nav { background: var(--green-main); color: white; border-color: var(--green-main); }
+
+    /* ── VERSE PANEL ── */
+    .verse-panel {
+      text-align: center;
+      margin: 12px 0 18px;
+      padding: 18px 20px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(44,94,46,0.06), rgba(254,242,223,0.9));
+      border-right: 4px solid var(--gold);
+      border-left: 1px solid rgba(212,168,67,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .verse-panel::before {
+      content: '❝';
+      position: absolute;
+      top: -5px;
+      right: 15px;
+      font-size: 4rem;
+      color: rgba(212,168,67,0.08);
+      font-family: Georgia;
+      pointer-events: none;
+    }
+    .verse-panel-text {
+      font-size: 1.05rem;
+      line-height: 2;
+      font-weight: 700;
+      color: #1e5629;
+      font-family: 'Amiri';
+      position: relative;
+    }
+    body.dark-mode .verse-panel-text { color: var(--gold-light); }
+    .verse-panel-ref {
+      font-size: 0.78rem;
+      margin-top: 8px;
+      color: var(--text-soft);
+      font-family: 'Tajawal';
+    }
+    .verse-panel-ref span {
+      background: rgba(212,168,67,0.15);
+      padding: 3px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(212,168,67,0.3);
+    }
+
+    /* ── HADITH PANEL ── */
+    .hadith-panel { text-align: center; margin: 12px 0 18px; padding: 16px 20px; border-radius: 30px; }
+    .hadith-panel.true-hadith { background: linear-gradient(135deg, rgba(44,94,46,0.07), #c8e6d960); border-right: 4px solid #2c5e2e; }
+    .hadith-panel.weak-hadith { background: linear-gradient(135deg, rgba(244,67,54,0.06), #ffcdd260); border-right: 4px solid #f44336; }
+    .hadith-panel.main-hadith { background: linear-gradient(135deg, rgba(212,168,67,0.07), rgba(254,242,223,0.9)); border-right: 4px solid var(--gold); }
+    .hadith-text { font-size: 1rem; line-height: 1.9; font-weight: 600; font-family: 'Amiri'; }
     .hadith-text.true { color: #1e5629; }
     .hadith-text.weak { color: #c62828; }
-    .hadith-text.main { color: #8b6b3d; }
-    .hadith-source { font-size: 0.75rem; margin-top: 8px; opacity: 0.8; }
-    .warning-badge { display: inline-block; background: #f44336; color: white; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; margin-bottom: 8px; }
-    
-    .search-container { margin: 15px 0 20px; display: flex; justify-content: center; }
-    .search-box { display: flex; align-items: center; background: white; border-radius: 60px; padding: 8px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; border: 2px solid #e0d5b9; }
-    .search-box input { flex: 1; padding: 14px 12px; border: none; outline: none; font-size: 1rem; font-family: 'Tajawal'; background: transparent; }
-    .search-box button { background: #2c5e2e; border: none; color: white; padding: 10px 25px; border-radius: 50px; cursor: pointer; font-size: 0.9rem; font-weight: bold; }
-    .search-results { margin: 15px 0; padding: 15px; background: white; border-radius: 24px; display: none; }
-    .result-item { padding: 12px; border-bottom: 1px solid #e8dcc8; cursor: pointer; }
-    .result-item:hover { background: #fef3d6; border-radius: 16px; }
-    .result-title { font-weight: bold; color: #2c5e2e; font-size: 0.9rem; }
-    .result-type { font-size: 0.75rem; color: #8b6b3d; margin-right: 8px; }
-    .close-results { float: left; background: none; border: none; font-size: 24px; cursor: pointer; }
-    
-    .admin-toggle { margin: 10px 0 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .admin-toggle label { background: #2c5e2e; color: white; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-size: 0.85rem; font-weight: bold; }
-    .sync-status { background: #4caf50; padding: 6px 12px; border-radius: 40px; font-size: 0.75rem; color: white; font-weight: bold; }
+    .hadith-text.main { color: var(--text-soft); }
+    body.dark-mode .hadith-text.true { color: #81c784; }
+    body.dark-mode .hadith-text.main { color: var(--gold-light); }
+    .hadith-source { font-size: 0.76rem; margin-top: 8px; opacity: 0.8; font-family: 'Tajawal'; }
+    .warning-badge { display: inline-block; background: #f44336; color: white; padding: 3px 12px; border-radius: 20px; font-size: 0.7rem; margin-bottom: 8px; font-family: 'Tajawal'; }
+
+    /* ── SEARCH ── */
+    .search-container { margin: 12px 0 18px; display: flex; justify-content: center; }
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 60px;
+      padding: 6px 6px 6px 20px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 520px;
+      border: 2px solid var(--border);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-box:focus-within { border-color: var(--green-main); box-shadow: 0 4px 20px rgba(44,94,46,0.15); }
+    .search-box input { flex: 1; padding: 12px 10px; border: none; outline: none; font-size: 1rem; font-family: 'Tajawal'; background: transparent; color: var(--text-main); }
+    .search-box button { background: var(--green-main); border: none; color: white; padding: 10px 22px; border-radius: 50px; cursor: pointer; font-size: 0.9rem; font-weight: bold; font-family: 'Tajawal'; transition: 0.2s; }
+    .search-box button:hover { background: var(--green-deep); }
+    .search-results { margin: 12px 0; padding: 18px; background: white; border-radius: var(--radius-lg); display: none; box-shadow: var(--shadow); border: 1px solid var(--border); }
+    .result-item { padding: 12px; border-bottom: 1px solid var(--border); cursor: pointer; border-radius: var(--radius-sm); transition: 0.15s; }
+    .result-item:hover { background: var(--cream-dark); }
+    .result-title { font-weight: bold; color: var(--green-main); font-size: 0.92rem; }
+    .result-type { font-size: 0.75rem; color: var(--text-soft); margin-right: 8px; }
+    .close-results { float: left; background: none; border: none; font-size: 22px; cursor: pointer; color: #aaa; }
+
+    /* ── ADMIN ── */
+    .admin-toggle { margin: 8px 0 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .admin-toggle label { background: var(--green-main); color: white; padding: 7px 18px; border-radius: 40px; cursor: pointer; font-size: 0.82rem; font-weight: bold; font-family: 'Tajawal'; }
+    .sync-status { padding: 6px 14px; border-radius: 40px; font-size: 0.75rem; color: white; font-weight: bold; font-family: 'Tajawal'; }
+    .sync-status.ok { background: #4caf50; }
     .sync-status.error { background: #f44336; }
     .sync-status.admin { background: #2196f3; }
-    
-    .login-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
-    .login-box { background: white; padding: 35px 30px; border-radius: 50px; width: 85%; max-width: 380px; text-align: center; }
-    .login-box h2 { color: #1e5629; margin-bottom: 20px; font-size: 1.4rem; }
-    .login-box input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid #e0d5b9; border-radius: 60px; font-family: 'Tajawal'; font-size: 1rem; }
-    .login-box button { background: #2c5e2e; color: white; border: none; padding: 12px; border-radius: 60px; cursor: pointer; width: 100%; font-size: 1rem; font-weight: bold; }
-    .error-msg { color: #f44336; margin-top: 10px; font-size: 0.8rem; }
-    .close-modal { float: left; font-size: 28px; cursor: pointer; color: #aaa; }
-    
-    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-top: 15px; }
-    .info-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e8dcc8; transition: transform 0.2s; position: relative; }
-    .info-card:active { transform: scale(0.98); }
-    .card-header { background: linear-gradient(135deg, #2c5e2e, #1e4a2a); color: #fef3d6; padding: 10px 8px; text-align: center; font-size: 0.8rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .card-header.hadith-true { background: linear-gradient(135deg, #1e6e2a, #2c8e3e); }
-    .card-header.hadith-weak { background: linear-gradient(135deg, #8e6e1e, #a8882e); }
-    .card-preview { padding: 10px; min-height: 80px; font-size: 0.7rem; line-height: 1.5; background: #fffef8; }
-    .card-preview p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0; }
-    .more-btn { background: #2c5e2e; color: white; border: none; padding: 6px 12px; margin: 8px; border-radius: 30px; cursor: pointer; font-size: 0.7rem; width: calc(100% - 16px); }
-    .delete-card-btn { position: absolute; top: 5px; left: 5px; background: #f44336; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 14px; }
-    .info-card:hover .delete-card-btn { display: flex; }
-    .add-card-btn { background: linear-gradient(135deg, #2c5e2e, #1e4a2a); color: white; border: 1px dashed #d4a843; padding: 12px; border-radius: 20px; cursor: pointer; text-align: center; margin-top: 15px; font-size: 0.8rem; }
-    
+
+    /* ── MODALS ── */
+    .login-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.88); display: none; justify-content: center; align-items: center; z-index: 1000; }
+    .login-box { background: white; padding: 35px 30px; border-radius: 50px; width: 88%; max-width: 380px; text-align: center; }
+    .login-box h2 { color: #1e5629; margin-bottom: 20px; font-size: 1.4rem; font-family: 'Amiri'; }
+    .login-box input { width: 100%; padding: 12px 16px; margin: 8px 0; border: 2px solid var(--border); border-radius: 60px; font-family: 'Tajawal'; font-size: 1rem; outline: none; transition: border-color 0.2s; }
+    .login-box input:focus { border-color: var(--green-main); }
+    .login-box button { background: var(--green-main); color: white; border: none; padding: 13px; border-radius: 60px; cursor: pointer; width: 100%; font-size: 1rem; font-weight: bold; font-family: 'Tajawal'; margin-top: 8px; }
+    .error-msg { color: #f44336; margin-top: 10px; font-size: 0.82rem; font-family: 'Tajawal'; }
+    .close-modal { float: left; font-size: 28px; cursor: pointer; color: #aaa; background: none; border: none; }
     .content-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2000; }
-    .modal-content { background: white; border-radius: 32px; width: 92%; max-width: 750px; max-height: 85vh; overflow-y: auto; padding: 25px; position: relative; }
-    .close-modal-btn { position: absolute; top: 12px; left: 15px; font-size: 28px; cursor: pointer; color: #999; }
-    .modal-header { font-size: 1.3rem; font-weight: bold; color: #1e5629; text-align: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #2c5e2e; }
-    .modal-body { font-size: 1rem; line-height: 1.8; margin: 15px 0; padding: 20px; background: #fef9e6; border-radius: 24px; }
-    .modal-body a { color: #2c5e2e; text-decoration: underline; word-break: break-all; }
-    .modal-footer { font-size: 0.85rem; color: #8b6b3d; text-align: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid #e0d5b9; }
-    [contenteditable="true"] { background: #fff5e6; border: 1px dashed #2c5e2e; padding: 6px; outline: none; border-radius: 12px; }
-    
+    .modal-content { background: white; border-radius: 32px; width: 92%; max-width: 750px; max-height: 88vh; overflow-y: auto; padding: 28px; position: relative; }
+    .close-modal-btn { position: absolute; top: 14px; left: 18px; font-size: 28px; cursor: pointer; color: #bbb; background: none; border: none; }
+    .modal-header { font-size: 1.3rem; font-weight: bold; color: #1e5629; text-align: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--green-main); font-family: 'Amiri'; }
+    .modal-body { font-size: 1rem; line-height: 1.9; margin: 16px 0; padding: 20px; background: var(--cream); border-radius: var(--radius-lg); font-family: 'Amiri'; }
+    .modal-body a { color: var(--green-main); text-decoration: underline; word-break: break-all; }
+    .modal-footer { font-size: 0.85rem; color: var(--text-soft); text-align: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); font-family: 'Tajawal'; }
+    [contenteditable="true"] { background: #fff5e6; border: 1px dashed var(--green-main); padding: 6px; outline: none; border-radius: 12px; }
     .add-form-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; justify-content: center; align-items: center; z-index: 2001; }
-    .add-form-content { background: white; border-radius: 32px; width: 90%; max-width: 450px; padding: 25px; }
-    .add-form-content h3 { color: #1e5629; margin-bottom: 15px; text-align: center; font-size: 1.1rem; }
-    .add-form-content input, .add-form-content textarea { width: 100%; padding: 10px; margin: 8px 0; border: 2px solid #e0d5b9; border-radius: 24px; font-family: 'Tajawal'; }
-    .add-form-content textarea { min-height: 100px; }
-    .add-form-content button { background: #2c5e2e; color: white; border: none; padding: 10px; border-radius: 40px; cursor: pointer; width: 100%; margin-top: 8px; }
-    
-    .subpage-nav { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; padding: 10px; background: white; border-radius: 50px; border: 1px solid #e8dcc8; }
-    .subpage-btn { background: #e8dcc8; color: #1e4a2a; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; flex: 1; text-align: center; }
-    .subpage-btn.active { background: #2c5e2e; color: white; }
+    .add-form-content { background: white; border-radius: 32px; width: 90%; max-width: 450px; padding: 28px; }
+    .add-form-content h3 { color: #1e5629; margin-bottom: 16px; text-align: center; font-size: 1.1rem; font-family: 'Tajawal'; }
+    .add-form-content input, .add-form-content textarea { width: 100%; padding: 11px 16px; margin: 7px 0; border: 2px solid var(--border); border-radius: 24px; font-family: 'Tajawal'; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+    .add-form-content input:focus, .add-form-content textarea:focus { border-color: var(--green-main); }
+    .add-form-content textarea { min-height: 110px; border-radius: 18px; resize: vertical; }
+    .add-form-content button { background: var(--green-main); color: white; border: none; padding: 11px; border-radius: 40px; cursor: pointer; width: 100%; margin-top: 8px; font-family: 'Tajawal'; font-size: 0.95rem; font-weight: 600; }
+
+    /* ── SUBPAGE NAV ── */
+    .subpage-nav { display: flex; gap: 8px; justify-content: center; margin-bottom: 18px; padding: 8px; background: var(--cream-dark); border-radius: 50px; border: 1px solid var(--border); }
+    .subpage-btn { background: transparent; color: var(--green-deep); border: none; padding: 9px 20px; border-radius: 40px; cursor: pointer; font-size: 0.85rem; font-family: 'Tajawal'; font-weight: 500; transition: 0.2s; flex: 1; text-align: center; }
+    .subpage-btn.active { background: var(--green-main); color: white; box-shadow: 0 4px 12px rgba(44,94,46,0.25); }
     .subpage-content { display: none; }
     .subpage-content.active { display: block; }
-    
-    .calculator-box { background: white; border-radius: 28px; padding: 30px 25px; margin-top: 15px; text-align: center; }
-    .calculator-box h3 { font-size: 1.4rem; margin-bottom: 20px; color: #1e5629; }
-    .calculator-input { margin: 20px 0; }
-    .calculator-input label { display: block; margin-bottom: 10px; font-weight: bold; color: #1e5629; font-size: 1rem; }
-    .calculator-input input, .calculator-input select { width: 100%; max-width: 300px; padding: 14px; border: 2px solid #e0d5b9; border-radius: 60px; font-family: 'Tajawal'; font-size: 1.1rem; text-align: center; }
-    .calculator-result { background: linear-gradient(135deg, #2c5e2e15, #fef2df); padding: 25px; border-radius: 28px; margin-top: 20px; }
-    .zakat-amount { font-size: 2rem; font-weight: bold; color: #2c5e2e; margin: 15px 0; }
-    
-    .converter-box { display: flex; flex-direction: column; gap: 20px; align-items: center; }
-    .converter-input { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-    .converter-input input, .converter-input select { padding: 14px; border: 2px solid #e0d5b9; border-radius: 60px; font-family: 'Tajawal'; font-size: 1rem; min-width: 100px; }
-    .convert-btn { background: #2c5e2e; color: white; border: none; padding: 14px 35px; border-radius: 60px; cursor: pointer; font-size: 1.1rem; font-weight: bold; }
-    .converter-result { background: linear-gradient(135deg, #2c5e2e15, #fef2df); padding: 25px; border-radius: 28px; text-align: center; min-width: 250px; }
-    .converter-result h4 { font-size: 1.1rem; margin-bottom: 10px; }
-    .converter-result p { font-size: 1.2rem; font-weight: bold; color: #1e5629; }
-    
-    .calendar-container { background: white; border-radius: 24px; padding: 15px; margin-top: 15px; }
-    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+
+    /* ── CARDS ── */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 14px; margin-top: 15px; }
+    .info-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .info-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(44,94,46,0.14); }
+    .card-header {
+      background: linear-gradient(135deg, var(--green-main), var(--green-deep));
+      color: #fef3d6;
+      padding: 11px 10px;
+      text-align: center;
+      font-size: 0.82rem;
+      font-weight: bold;
+      font-family: 'Tajawal';
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-header.hadith-true { background: linear-gradient(135deg, #1e6e2a, #2c8e3e); }
+    .card-header.hadith-weak { background: linear-gradient(135deg, #8e3a1e, #c05a2e); }
+    .card-preview { padding: 11px; min-height: 80px; font-size: 0.72rem; line-height: 1.6; background: var(--card-bg); font-family: 'Amiri'; }
+    .card-preview p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 0; }
+    .more-btn {
+      background: var(--green-main);
+      color: white;
+      border: none;
+      padding: 7px 12px;
+      margin: 8px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 0.72rem;
+      width: calc(100% - 16px);
+      font-family: 'Tajawal';
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .more-btn:hover { background: var(--green-deep); }
+    .delete-card-btn { position: absolute; top: 6px; left: 6px; background: #f44336; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 14px; z-index: 10; }
+    .info-card:hover .delete-card-btn { display: flex; }
+    .add-card-btn {
+      background: linear-gradient(135deg, rgba(44,94,46,0.08), rgba(254,243,214,0.9));
+      color: var(--green-main);
+      border: 2px dashed var(--gold);
+      padding: 14px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.85rem;
+      font-family: 'Tajawal';
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .add-card-btn:hover { background: linear-gradient(135deg, rgba(44,94,46,0.12), rgba(254,243,214,1)); }
+
+    /* ── CALCULATOR / CONVERTER ── */
+    .calculator-box { background: white; border-radius: var(--radius-lg); padding: 28px 22px; margin-top: 15px; text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .calculator-box h3 { font-size: 1.3rem; margin-bottom: 20px; color: #1e5629; font-family: 'Amiri'; }
+    .calculator-input { margin: 18px 0; }
+    .calculator-input label { display: block; margin-bottom: 10px; font-weight: bold; color: #1e5629; font-size: 0.95rem; font-family: 'Tajawal'; }
+    .calculator-input input, .calculator-input select { width: 100%; max-width: 300px; padding: 13px 16px; border: 2px solid var(--border); border-radius: 60px; font-family: 'Tajawal'; font-size: 1rem; text-align: center; outline: none; transition: border-color 0.2s; }
+    .calculator-input input:focus, .calculator-input select:focus { border-color: var(--green-main); }
+    .calculator-result { background: linear-gradient(135deg, rgba(44,94,46,0.06), rgba(254,242,223,0.9)); padding: 24px; border-radius: var(--radius-lg); margin-top: 20px; border: 1px solid rgba(212,168,67,0.3); }
+    .zakat-amount { font-size: 2.2rem; font-weight: bold; color: var(--green-main); margin: 12px 0; font-family: 'Amiri'; }
+    .converter-box { display: flex; flex-direction: column; gap: 18px; align-items: center; }
+    .converter-input { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .converter-input input, .converter-input select { padding: 13px 16px; border: 2px solid var(--border); border-radius: 60px; font-family: 'Tajawal'; font-size: 1rem; min-width: 100px; outline: none; transition: border-color 0.2s; }
+    .converter-input input:focus, .converter-input select:focus { border-color: var(--green-main); }
+    .convert-btn { background: var(--green-main); color: white; border: none; padding: 13px 32px; border-radius: 60px; cursor: pointer; font-size: 1rem; font-weight: bold; font-family: 'Tajawal'; transition: 0.2s; }
+    .convert-btn:hover { background: var(--green-deep); }
+    .converter-result { background: linear-gradient(135deg, rgba(44,94,46,0.06), rgba(254,242,223,0.9)); padding: 24px; border-radius: var(--radius-lg); text-align: center; min-width: 240px; border: 1px solid rgba(212,168,67,0.3); }
+    .converter-result h4 { font-size: 1rem; margin-bottom: 10px; font-family: 'Tajawal'; }
+    .converter-result p { font-size: 1.2rem; font-weight: bold; color: #1e5629; font-family: 'Amiri'; }
+
+    /* ── CALENDAR ── */
+    .calendar-container { background: white; border-radius: var(--radius-lg); padding: 16px; margin-top: 15px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .calendar-header span { font-weight: bold; font-size: 1rem; font-family: 'Tajawal'; color: var(--green-deep); }
     .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
-    .weekday { font-weight: bold; background: #d9e6c3; padding: 6px; border-radius: 30px; font-size: 0.7rem; }
-    .day-cell { background: #fff7ec; padding: 8px 4px; border-radius: 20px; cursor: pointer; border: 1px solid #e9dfcc; font-size: 0.75rem; position: relative; }
-    .day-cell.has-event { background: #2c5e2ecc; color: white; }
-    .day-event-preview { font-size: 0.65rem; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-    .delete-event-btn { position: absolute; top: 2px; left: 2px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; cursor: pointer; display: none; align-items: center; justify-content: center; }
+    .weekday { font-weight: bold; background: rgba(44,94,46,0.1); padding: 7px 3px; border-radius: 30px; font-size: 0.7rem; color: var(--green-deep); font-family: 'Tajawal'; }
+    .day-cell { background: var(--cream); padding: 8px 3px; border-radius: 18px; cursor: pointer; border: 1px solid var(--border); font-size: 0.75rem; position: relative; transition: 0.15s; font-family: 'Tajawal'; }
+    .day-cell:hover { background: var(--cream-dark); border-color: var(--gold); }
+    .day-cell.has-event { background: linear-gradient(135deg, var(--green-main), var(--green-deep)); color: white; border-color: var(--green-deep); }
+    .day-event-preview { font-size: 0.6rem; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; opacity: 0.9; }
+    .delete-event-btn { position: absolute; top: 2px; left: 2px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; cursor: pointer; display: none; align-items: center; justify-content: center; }
     .day-cell:hover .delete-event-btn { display: flex; }
-    button { background: #2c5e2e; color: white; border: none; border-radius: 40px; padding: 6px 14px; cursor: pointer; font-size: 0.75rem; }
-    
-    #map { height: 450px; border-radius: 24px; margin: 15px 0; border: 2px solid #e0d5b9; z-index: 1; }
+
+    /* ── MAP ── */
+    #map { height: 460px; border-radius: var(--radius-lg); margin: 15px 0; border: 2px solid var(--border); z-index: 1; }
     .control-panel { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; justify-content: center; }
-    .control-panel button { background: #2c5e2e; color: white; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 0.75rem; transition: 0.2s; }
-    .control-panel button.active { background: #ff9800; box-shadow: 0 0 5px rgba(255,152,0,0.5); }
-    .drawing-instruction { background: #fef3d6; padding: 10px; border-radius: 24px; text-align: center; margin: 8px 0; display: none; color: #1e5629; font-weight: bold; font-size: 0.8rem; }
-    .stories-detail { background: white; border-radius: 24px; padding: 15px; margin-top: 15px; }
-    .stories-detail h3 { font-size: 0.95rem; margin-bottom: 8px; }
-    
-    .box-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; margin-top: 15px; }
-    .content-box { border-radius: 20px; padding: 12px; background: white; border: 1px solid #e8dcc8; cursor: pointer; transition: 0.2s; }
-    .content-box:active { transform: scale(0.98); }
-    .content-box h3 { color: #1e5629; border-right: 3px solid #2c9e3a; padding-right: 8px; margin-bottom: 6px; font-size: 0.85rem; }
-    .content-box p { font-size: 0.7rem; }
-    
+    .control-panel button { background: var(--green-main); color: white; border: none; padding: 8px 16px; border-radius: 30px; cursor: pointer; font-size: 0.76rem; font-family: 'Tajawal'; font-weight: 500; transition: 0.2s; }
+    .control-panel button:hover { background: var(--green-deep); }
+    .control-panel button.active { background: #ff9800; box-shadow: 0 0 8px rgba(255,152,0,0.4); }
+    .drawing-instruction { background: rgba(212,168,67,0.15); border: 1px solid rgba(212,168,67,0.4); padding: 10px 16px; border-radius: 24px; text-align: center; margin: 8px 0; display: none; color: var(--green-deep); font-weight: bold; font-size: 0.82rem; font-family: 'Tajawal'; }
+    .stories-detail { background: white; border-radius: var(--radius-lg); padding: 16px; margin-top: 15px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+    .stories-detail h3 { font-size: 0.95rem; margin-bottom: 8px; font-family: 'Tajawal'; color: var(--green-deep); }
+
+    /* ── HOME GRID ── */
+    .box-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 14px; margin-top: 15px; }
+    .content-box {
+      border-radius: var(--radius-md);
+      padding: 16px 14px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: var(--shadow);
+    }
+    .content-box:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(44,94,46,0.14); }
+    .content-box h3 { color: #1e5629; border-right: 3px solid var(--green-light); padding-right: 9px; margin-bottom: 6px; font-size: 0.88rem; font-family: 'Tajawal'; font-weight: 700; }
+    body.dark-mode .content-box h3 { color: #81c784; }
+    .content-box p { font-size: 0.72rem; color: var(--text-soft); font-family: 'Tajawal'; }
+
+    /* ── PAGES ── */
     .page { display: none; }
-    .page.active { display: block; }
-    .hero { text-align: center; padding: 20px 15px; background: linear-gradient(115deg, #2c5e2e10, #fef2df); border-radius: 30px; margin-bottom: 20px; }
-    .hero h2 { color: #1e5629; font-size: 1.2rem; }
-    
+    .page.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .hero {
+      text-align: center;
+      padding: 22px 18px;
+      background: linear-gradient(135deg, rgba(44,94,46,0.07), rgba(254,242,223,0.9));
+      border-radius: 28px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(212,168,67,0.2);
+    }
+    .hero h2 { color: #1e5629; font-size: 1.25rem; font-family: 'Amiri'; }
+    body.dark-mode .hero h2 { color: #81c784; }
+
+    /* ── PRAYER TIMES PAGE ── */
+    .prayer-location-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, rgba(44,94,46,0.06), rgba(254,242,223,0.9));
+      border: 1px solid rgba(212,168,67,0.3);
+      border-radius: 50px;
+      padding: 10px 20px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .prayer-location-text { font-size: 0.85rem; font-family: 'Tajawal'; color: var(--green-deep); font-weight: 600; }
+    body.dark-mode .prayer-location-text { color: #81c784; }
+    .prayer-date-text { font-size: 0.78rem; font-family: 'Tajawal'; color: var(--text-soft); }
+    .prayer-refresh-btn {
+      background: var(--green-main);
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 0.76rem;
+      font-family: 'Tajawal';
+      font-weight: 600;
+      transition: 0.2s;
+    }
+    .prayer-refresh-btn:hover { background: var(--green-deep); }
+
+    .prayer-countdown-box {
+      background: linear-gradient(135deg, #1e4a2a, #2c5e2e);
+      border-radius: var(--radius-lg);
+      padding: 22px 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(44,94,46,0.25);
+    }
+    .prayer-countdown-box::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(212,168,67,0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .next-prayer-label { font-size: 0.82rem; color: rgba(253,232,160,0.8); font-family: 'Tajawal'; margin-bottom: 4px; }
+    .next-prayer-name { font-size: 1.8rem; font-family: 'Amiri'; color: var(--gold-light); font-weight: 700; margin-bottom: 6px; }
+    .countdown-timer {
+      font-size: 2.4rem;
+      font-family: 'Tajawal';
+      font-weight: 700;
+      color: white;
+      letter-spacing: 3px;
+      margin-bottom: 4px;
+      direction: ltr;
+    }
+    .countdown-sub { font-size: 0.78rem; color: rgba(253,232,160,0.7); font-family: 'Tajawal'; }
+
+    .prayer-names-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media (min-width: 600px) { .prayer-names-grid { grid-template-columns: repeat(6, 1fr); } }
+    .prayer-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 8px;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: var(--shadow);
+      cursor: default;
+    }
+    .prayer-item:hover { transform: translateY(-2px); }
+    .prayer-item.active-prayer {
+      background: linear-gradient(135deg, rgba(212,168,67,0.15), rgba(254,242,223,0.9));
+      border-color: var(--gold);
+      box-shadow: 0 4px 20px rgba(212,168,67,0.2);
+      transform: translateY(-2px);
+    }
+    .prayer-item-icon { font-size: 1.6rem; margin-bottom: 4px; }
+    .prayer-item-name { font-size: 0.88rem; font-family: 'Tajawal'; font-weight: 700; color: var(--green-deep); margin-bottom: 5px; }
+    body.dark-mode .prayer-item-name { color: #81c784; }
+    .prayer-item.active-prayer .prayer-item-name { color: #8b6b3d; }
+    body.dark-mode .prayer-item.active-prayer .prayer-item-name { color: var(--gold-light); }
+    .prayer-item-time { font-size: 1.05rem; font-family: 'Tajawal'; font-weight: 700; color: var(--text-main); direction: ltr; }
+    .prayer-item.active-prayer .prayer-item-time { color: var(--gold); }
+    .prayer-item-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: white;
+      font-size: 0.6rem;
+      padding: 2px 7px;
+      border-radius: 20px;
+      margin-top: 4px;
+      font-family: 'Tajawal';
+    }
+
+    .prayer-extra-info {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .prayer-extra-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 14px;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+    .prayer-extra-card h4 { font-size: 0.82rem; color: var(--text-soft); font-family: 'Tajawal'; margin-bottom: 6px; }
+    .prayer-extra-card p { font-size: 1.05rem; font-weight: 700; color: var(--green-main); font-family: 'Tajawal'; direction: ltr; }
+    body.dark-mode .prayer-extra-card p { color: #81c784; }
+
+    .prayer-loading {
+      text-align: center;
+      padding: 40px 20px;
+      font-family: 'Tajawal';
+      color: var(--text-soft);
+    }
+    .prayer-loading .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--green-main);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .leaflet-popup-content { font-family: 'Tajawal', serif; font-size: 14px; line-height: 1.7; }
+    .leaflet-popup-content a { color: var(--green-main); text-decoration: underline; }
+    .modal-body a { color: var(--green-main); text-decoration: underline; word-break: break-all; }
+    body.dark-mode .leaflet-popup-content a { color: var(--gold); }
+
     @media (min-width: 768px) {
       body { padding: 20px; }
-      .container { padding: 20px 25px; border-radius: 32px; }
-      .cards-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-      .box-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-      .card-header { font-size: 1rem; padding: 12px; }
-      .card-preview { font-size: 0.85rem; padding: 12px; }
-      header h1 { font-size: 1.8rem; }
-      #map { height: 500px; }
-      .hadith-text, .verse-panel-text { font-size: 1.1rem; }
-      .search-box input { font-size: 1.1rem; }
-      .day-event-preview { font-size: 0.7rem; }
+      .container { padding: 22px 28px; }
+      .cards-grid, .box-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+      .card-header { font-size: 0.95rem; padding: 13px; }
+      .card-preview { font-size: 0.85rem; padding: 13px; }
+      header h1 { font-size: 2rem; }
+      #map { height: 520px; }
+      .hadith-text, .verse-panel-text { font-size: 1.15rem; }
+      .search-box input { font-size: 1.05rem; }
     }
+
+    button { font-family: 'Tajawal'; }
   </style>
 </head>
 <body>
@@ -224,6 +604,8 @@
     <div class="header-left">
       <h1>📿 ذكرى</h1>
       <div class="hijri-date" id="hijriDateDisplay">جاري التحميل...</div>
+    </div>
+    <div class="header-right">
       <button class="dark-mode-toggle" id="darkModeToggle">🌙 ليلي</button>
     </div>
   </header>
@@ -231,6 +613,7 @@
   <div class="nav-wrapper">
     <div class="nav-links">
       <button class="nav-link" data-page="home">🏠 الرئيسية</button>
+      <button class="nav-link" data-page="prayer">🕌 مواقيت الصلاة</button>
       <button class="nav-link" data-page="athkar">📿 الأذكار</button>
       <button class="nav-link" data-page="tafsir">📖 التفسير</button>
       <button class="nav-link" data-page="ahadeeth">📜 الأحاديث</button>
@@ -250,18 +633,19 @@
 
   <div id="searchResults" class="search-results">
     <button class="close-results" id="closeResultsBtn">✕</button>
-    <h3>نتائج البحث</h3>
+    <h3 style="font-family:'Tajawal';">نتائج البحث</h3>
     <div id="resultsList"></div>
   </div>
 
   <div class="admin-toggle">
     <label><input type="checkbox" id="adminToggle"> ✏️ وضع الإدارة</label>
-    <div class="sync-status" id="syncStatus">✅ متصل</div>
+    <div class="sync-status ok" id="syncStatus">✅ متصل</div>
   </div>
 
+  <!-- Login Modal -->
   <div class="login-modal" id="loginModal">
     <div class="login-box">
-      <span class="close-modal" id="closeModal">&times;</span>
+      <button class="close-modal" id="closeModal">&times;</button>
       <h2>🔐 تسجيل دخول المشرف</h2>
       <input type="email" id="loginEmail" placeholder="البريد الإلكتروني">
       <input type="password" id="loginPassword" placeholder="كلمة المرور">
@@ -270,27 +654,29 @@
     </div>
   </div>
 
+  <!-- Content Modal -->
   <div class="content-modal" id="contentModal">
     <div class="modal-content">
-      <span class="close-modal-btn" id="closeModalBtn">&times;</span>
+      <button class="close-modal-btn" id="closeModalBtn">&times;</button>
       <div class="modal-header" id="modalHeader"></div>
       <div class="modal-body" id="modalBody"></div>
       <div class="modal-footer" id="modalFooter"></div>
     </div>
   </div>
 
+  <!-- Add Form Modal -->
   <div class="add-form-modal" id="addFormModal">
     <div class="add-form-content">
       <h3 id="addFormTitle">➕ إضافة بطاقة جديدة</h3>
       <input type="text" id="newCardTitle" placeholder="العنوان">
-      <textarea id="newCardBody" placeholder="المحتوى الكامل... (يمكنك إضافة روابط عادية أو روابط يوتيوب)"></textarea>
+      <textarea id="newCardBody" placeholder="المحتوى الكامل..."></textarea>
       <input type="text" id="newCardFooter" placeholder="المصدر / الراوي">
       <button id="saveNewCardBtn">💾 حفظ</button>
-      <button id="cancelAddBtn" style="background:#999;">إلغاء</button>
+      <button id="cancelAddBtn" style="background:#9e9e9e;">إلغاء</button>
     </div>
   </div>
 
-  <!-- HOME PAGE -->
+  <!-- ══════════════ HOME PAGE ══════════════ -->
   <div id="home" class="page active">
     <div class="hero"><h2>﴿ وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ ﴾</h2></div>
     <div class="verse-panel">
@@ -298,39 +684,94 @@
       <div class="verse-panel-ref" id="verseReference"></div>
     </div>
     <div class="box-grid">
-      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'athkar\']').click();"><h3>📿 الأذكار</h3><p>أذكار الصباح والمساء</p></div>
-      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'tafsir\']').click();"><h3>📖 التفسير</h3><p>تفسير آيات القرآن</p></div>
-      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'ahadeeth\']').click();"><h3>📜 الأحاديث</h3><p>صحيح وضعيف الأحاديث</p></div>
-      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'zakat\']').click();"><h3>💎 الزكاة</h3><p>احسب زكاتك</p></div>
-      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'hijri\']').click();"><h3>📅 محول التاريخ</h3><p>ميلادي - هجري</p></div>
-      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'days\']').click();"><h3>🌟 الأيام المباركة</h3><p>تقويم إسلامي</p></div>
-      <div class="content-box" onclick="document.querySelector('.nav-link[data-page=\'stories\']').click();"><h3>🗺️ قصص الأنبياء</h3><p>خريطة تفاعلية</p></div>
+      <div class="content-box" onclick="navTo('prayer')"><h3>🕌 مواقيت الصلاة</h3><p>أوقات الصلاة حسب موقعك</p></div>
+      <div class="content-box" onclick="navTo('athkar')"><h3>📿 الأذكار</h3><p>أذكار الصباح والمساء</p></div>
+      <div class="content-box" onclick="navTo('tafsir')"><h3>📖 التفسير</h3><p>تفسير آيات القرآن</p></div>
+      <div class="content-box" onclick="navTo('ahadeeth')"><h3>📜 الأحاديث</h3><p>صحيح وضعيف الأحاديث</p></div>
+      <div class="content-box" onclick="navTo('zakat')"><h3>💎 الزكاة</h3><p>احسب زكاتك</p></div>
+      <div class="content-box" onclick="navTo('hijri')"><h3>📅 محول التاريخ</h3><p>ميلادي ↔ هجري</p></div>
+      <div class="content-box" onclick="navTo('days')"><h3>🌟 الأيام المباركة</h3><p>تقويم إسلامي</p></div>
+      <div class="content-box" onclick="navTo('stories')"><h3>🗺️ قصص الأنبياء</h3><p>خريطة تفاعلية</p></div>
     </div>
   </div>
 
-  <!-- ATHKAR PAGE -->
+  <!-- ══════════════ PRAYER TIMES PAGE ══════════════ -->
+  <div id="prayer" class="page">
+    <div class="hero"><h2>🕌 مواقيت الصلاة</h2></div>
+
+    <!-- Verse about Salah -->
+    <div class="verse-panel">
+      <div class="verse-panel-text" id="prayerVerseText"></div>
+      <div class="verse-panel-ref" id="prayerVerseRef"></div>
+    </div>
+
+    <!-- Location bar -->
+    <div class="prayer-location-bar">
+      <div>
+        <div class="prayer-location-text" id="prayerLocationText">📍 جارٍ تحديد الموقع...</div>
+        <div class="prayer-date-text" id="prayerDateText"></div>
+      </div>
+      <button class="prayer-refresh-btn" id="prayerRefreshBtn">🔄 تحديث</button>
+    </div>
+
+    <!-- Loading -->
+    <div class="prayer-loading" id="prayerLoading">
+      <div class="spinner"></div>
+      <p>جارٍ تحميل مواقيت الصلاة...</p>
+    </div>
+
+    <!-- Prayer content (hidden until loaded) -->
+    <div id="prayerContent" style="display:none;">
+      <!-- Countdown -->
+      <div class="prayer-countdown-box">
+        <div class="next-prayer-label">الصلاة القادمة</div>
+        <div class="next-prayer-name" id="nextPrayerName">-</div>
+        <div class="countdown-timer" id="countdownTimer">--:--:--</div>
+        <div class="countdown-sub">ساعة : دقيقة : ثانية</div>
+      </div>
+
+      <!-- Prayer cards grid -->
+      <div class="prayer-names-grid" id="prayerNamesGrid">
+        <!-- Filled by JS -->
+      </div>
+
+      <!-- Extra info -->
+      <div class="prayer-extra-info">
+        <div class="prayer-extra-card">
+          <h4>🌅 الإمساك</h4>
+          <p id="imsak">--:--</p>
+        </div>
+        <div class="prayer-extra-card">
+          <h4>🌙 منتصف الليل</h4>
+          <p id="midnight">--:--</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ ATHKAR PAGE ══════════════ -->
   <div id="athkar" class="page">
     <div class="hero"><h2>📿 حصن المسلم</h2></div>
     <div class="verse-panel">
       <div class="verse-panel-text">﴿ يَا أَيُّهَا الَّذِينَ آمَنُوا اذْكُرُوا اللَّهَ ذِكْرًا كَثِيرًا ﴾</div>
-      <div class="verse-panel-ref">سورة الأحزاب - 41</div>
+      <div class="verse-panel-ref"><span>سورة الأحزاب - الآية 41</span></div>
     </div>
     <div class="cards-grid" id="athkarBoxes"></div>
-    <div id="athkarAddBtn" class="add-card-btn" style="display: none;">➕ إضافة بطاقة أذكار جديدة</div>
+    <div id="athkarAddBtn" class="add-card-btn" style="display:none;">➕ إضافة بطاقة أذكار جديدة</div>
   </div>
-  
-  <!-- TAFSIR PAGE -->
+
+  <!-- ══════════════ TAFSIR PAGE ══════════════ -->
   <div id="tafsir" class="page">
     <div class="hero"><h2>📖 كنوز التفسير</h2></div>
     <div class="verse-panel">
       <div class="verse-panel-text">﴿ كِتَابٌ أَنزَلْنَاهُ إِلَيْكَ مُبَارَكٌ لِّيَدَّبَّرُوا آيَاتِهِ ﴾</div>
-      <div class="verse-panel-ref">سورة ص - 29</div>
+      <div class="verse-panel-ref"><span>سورة ص - الآية 29</span></div>
     </div>
     <div class="cards-grid" id="tafsirBoxes"></div>
-    <div id="tafsirAddBtn" class="add-card-btn" style="display: none;">➕ إضافة بطاقة تفسير جديدة</div>
+    <div id="tafsirAddBtn" class="add-card-btn" style="display:none;">➕ إضافة بطاقة تفسير جديدة</div>
   </div>
 
-  <!-- AHADEETH PAGE -->
+  <!-- ══════════════ AHADEETH PAGE ══════════════ -->
   <div id="ahadeeth" class="page">
     <div class="hero"><h2>📜 موسوعة الأحاديث النبوية</h2></div>
     <div class="hadith-panel main-hadith" id="mainHadithPanel">
@@ -339,7 +780,7 @@
     </div>
     <div class="subpage-nav">
       <button class="subpage-btn active" data-subpage="true-hadith">📖 الأحاديث الصحيحة</button>
-      <button class="subpage-btn" data-subpage="weak-hadith">⚠️ الأحاديث الضعيفة والبدع</button>
+      <button class="subpage-btn" data-subpage="weak-hadith">⚠️ الضعيفة والبدع</button>
     </div>
     <div id="true-hadith" class="subpage-content active">
       <div class="hadith-panel true-hadith">
@@ -347,25 +788,25 @@
         <div class="hadith-source" id="trueHadithSource"></div>
       </div>
       <div class="cards-grid" id="trueHadithBoxes"></div>
-      <div id="trueHadithAddBtn" class="add-card-btn" style="display: none;">➕ إضافة حديث صحيح جديد</div>
+      <div id="trueHadithAddBtn" class="add-card-btn" style="display:none;">➕ إضافة حديث صحيح جديد</div>
     </div>
     <div id="weak-hadith" class="subpage-content">
       <div class="hadith-panel weak-hadith">
-        <div class="warning-badge">⚠️ تنبيه مهم ⚠️</div>
+        <div class="warning-badge">⚠️ تنبيه مهم</div>
         <div class="hadith-text weak" id="weakHadithText">جاري تحميل الحديث...</div>
         <div class="hadith-source" id="weakHadithSource"></div>
-        <p style="font-size:0.7rem; margin-top:10px;">هذا القسم يهدف إلى تنبيه المسلمين من الأحاديث الضعيفة والموضوعة والبدع المنتشرة</p>
+        <p style="font-size:0.72rem;margin-top:10px;font-family:'Tajawal';">هذا القسم يهدف إلى تنبيه المسلمين من الأحاديث الضعيفة والموضوعة</p>
       </div>
       <div class="cards-grid" id="weakHadithBoxes"></div>
-      <div id="weakHadithAddBtn" class="add-card-btn" style="display: none;">➕ إضافة حديث ضعيف أو بدعة جديدة</div>
+      <div id="weakHadithAddBtn" class="add-card-btn" style="display:none;">➕ إضافة حديث ضعيف أو بدعة</div>
     </div>
   </div>
 
-  <!-- ZAKAT PAGE -->
+  <!-- ══════════════ ZAKAT PAGE ══════════════ -->
   <div id="zakat" class="page">
     <div class="hero"><h2>💎 حاسبة الزكاة</h2></div>
     <div class="verse-panel">
-      <div class="verse-panel-text" id="zakatVerseText">جاري تحميل آية عن الزكاة...</div>
+      <div class="verse-panel-text" id="zakatVerseText"></div>
       <div class="verse-panel-ref" id="zakatVerseRef"></div>
     </div>
     <div class="calculator-box">
@@ -381,6 +822,7 @@
           <option value="KWD">🇰🇼 دينار كويتي</option>
           <option value="GBP">🇬🇧 جنيه إسترليني</option>
           <option value="TRY">🇹🇷 ليرة تركية</option>
+          <option value="LBP">🇱🇧 ليرة لبنانية</option>
         </select>
       </div>
       <div class="calculator-input">
@@ -388,19 +830,19 @@
         <input type="number" id="wealthAmount" placeholder="أدخل المبلغ...">
       </div>
       <button id="calculateZakatBtn" class="convert-btn">احسب الزكاة</button>
-      <div class="calculator-result" id="zakatResult" style="display: none;">
-        <h4>🕌 مقدار الزكاة المستحقة:</h4>
+      <div class="calculator-result" id="zakatResult" style="display:none;">
+        <h4 style="font-family:'Tajawal';">🕌 مقدار الزكاة المستحقة:</h4>
         <div class="zakat-amount" id="zakatAmount">0</div>
-        <p>وجزاكم الله خيراً</p>
+        <p style="font-family:'Tajawal';">وجزاكم الله خيراً على إخراج الزكاة</p>
       </div>
     </div>
   </div>
 
-  <!-- HIJRI CONVERTER PAGE -->
+  <!-- ══════════════ HIJRI PAGE ══════════════ -->
   <div id="hijri" class="page">
     <div class="hero"><h2>📅 محول التاريخ الهجري</h2></div>
     <div class="verse-panel">
-      <div class="verse-panel-text" id="hijriVerseText">جاري تحميل آية عن الهجرة...</div>
+      <div class="verse-panel-text" id="hijriVerseText"></div>
       <div class="verse-panel-ref" id="hijriVerseRef"></div>
     </div>
     <div class="calculator-box">
@@ -408,8 +850,8 @@
       <div class="converter-box">
         <div class="converter-input">
           <select id="convertType">
-            <option value="gregToHijri">ميلادي → هجري</option>
-            <option value="hijriToGreg">هجري → ميلادي</option>
+            <option value="gregToHijri">ميلادي ← هجري</option>
+            <option value="hijriToGreg">هجري ← ميلادي</option>
           </select>
         </div>
         <div class="converter-input" id="gregorianInput">
@@ -417,7 +859,7 @@
           <input type="number" id="month" placeholder="الشهر" min="1" max="12">
           <input type="number" id="year" placeholder="السنة" min="1">
         </div>
-        <div class="converter-input" id="hijriInput" style="display: none;">
+        <div class="converter-input" id="hijriInput" style="display:none;">
           <input type="number" id="hDay" placeholder="اليوم" min="1" max="30">
           <input type="number" id="hMonth" placeholder="الشهر" min="1" max="12">
           <input type="number" id="hYear" placeholder="السنة" min="1">
@@ -430,13 +872,13 @@
       </div>
     </div>
   </div>
-  
-  <!-- DAYS PAGE - UPDATED with fixed calendar -->
+
+  <!-- ══════════════ DAYS PAGE ══════════════ -->
   <div id="days" class="page">
     <div class="hero"><h2>🌟 الأيام المباركة</h2></div>
     <div class="verse-panel">
       <div class="verse-panel-text">﴿ إِنَّ عِدَّةَ الشُّهُورِ عِندَ اللَّهِ اثْنَا عَشَرَ شَهْرًا ﴾</div>
-      <div class="verse-panel-ref">سورة التوبة - 36</div>
+      <div class="verse-panel-ref"><span>سورة التوبة - الآية 36</span></div>
     </div>
     <div class="calendar-container">
       <div class="calendar-header">
@@ -448,675 +890,733 @@
     </div>
   </div>
 
-  <!-- STORIES PAGE -->
+  <!-- ══════════════ STORIES PAGE ══════════════ -->
   <div id="stories" class="page">
     <div class="hero"><h2>🌍 قصص الأنبياء</h2></div>
     <div class="verse-panel">
       <div class="verse-panel-text">﴿ لَقَدْ كَانَ فِي قَصَصِهِمْ عِبْرَةٌ لِّأُولِي الْأَلْبَابِ ﴾</div>
-      <div class="verse-panel-ref">سورة يوسف - 111</div>
+      <div class="verse-panel-ref"><span>سورة يوسف - الآية 111</span></div>
     </div>
     <div class="control-panel">
-      <button id="addPinBtn">📍 إضافة نقطة</button>
-      <button id="addLabelBtn">🏷️ إضافة نص</button>
-      <button id="addPathBtn">✏️ رسم مسار</button>
-      <button id="finishPathBtn" style="background:#ff9800; display:none;">✅ إنهاء المسار</button>
+      <button id="addPinBtn" style="display:none;">📍 إضافة نقطة</button>
+      <button id="addLabelBtn" style="display:none;">🏷️ إضافة نص</button>
+      <button id="addPathBtn" style="display:none;">✏️ رسم مسار</button>
+      <button id="finishPathBtn" style="background:#ff9800;display:none;">✅ إنهاء المسار</button>
       <button id="cancelDrawBtn">❌ إلغاء</button>
-      <button id="deleteModeBtn" style="background:#f44336;">🗑️ حذف</button>
+      <button id="deleteModeBtn" style="background:#f44336;display:none;">🗑️ حذف</button>
     </div>
     <div id="drawingInstruction" class="drawing-instruction"></div>
     <div id="map"></div>
     <div class="stories-detail">
       <h3>📖 التفاصيل</h3>
-      <div id="storyContent">🌟 اختر نقطة أو مسار على الخريطة</div>
+      <div id="storyContent">🌟 اختر نقطة أو مسار على الخريطة لعرض تفاصيله</div>
     </div>
   </div>
-</div>
+</div><!-- end .container -->
 
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAZbj5qwH-SxYoq2nP4jwoGgzj1GhoAQmw",
-    authDomain: "zikra-e5c2a.firebaseapp.com",
-    projectId: "zikra-e5c2a",
-    storageBucket: "zikra-e5c2a.firebasestorage.app",
-    messagingSenderId: "93622067047",
-    appId: "1:93622067047:web:997f6a2932833dc94299c2",
-    databaseURL: "https://zikra-e5c2a-default-rtdb.firebaseio.com/"
-  };
+// ════════════════════════════════════════════════
+// FIREBASE
+// ════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyAZbj5qwH-SxYoq2nP4jwoGgzj1GhoAQmw",
+  authDomain: "zikra-e5c2a.firebaseapp.com",
+  projectId: "zikra-e5c2a",
+  storageBucket: "zikra-e5c2a.firebasestorage.app",
+  messagingSenderId: "93622067047",
+  appId: "1:93622067047:web:997f6a2932833dc94299c2",
+  databaseURL: "https://zikra-e5c2a-default-rtdb.firebaseio.com/"
+};
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+const auth = firebase.auth();
 
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
-  const auth = firebase.auth();
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+let isAdmin = false, adminMode = false;
+let currentItemId = null, currentType = null, pendingAddType = null;
+let map, mapInitialized = false;
+let markers = {}, labels = {}, polylines = {};
+let currentDrawMode = null, currentPathPoints = [], currentPolyline = null, deleteModeActive = false;
+let allAthkar = [], allTafsir = [], allTrueHadith = [], allWeakHadith = [];
+let prayerTimings = null, countdownInterval = null, prayerData = null;
+let prayerLoaded = false;
 
-  let isAdmin = false;
-  let adminMode = false;
-  let currentItemId = null;
-  let currentType = null;
-  let pendingAddType = null;
-  
-  let map, mapInitialized = false;
-  let markers = {};
-  let labels = {};
-  let polylines = {};
-  let currentDrawMode = null;
-  let currentPathPoints = [];
-  let currentPolyline = null;
-  let deleteModeActive = false;
-  
-  let allAthkar = [], allTafsir = [], allTrueHadith = [], allWeakHadith = [];
+// ════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════
+const prayerVerses = [
+  { text: "﴿ إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا ﴾", ref: "سورة النساء - الآية 103", detail: "سورة النساء، الآية 103" },
+  { text: "﴿ وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ وَارْكَعُوا مَعَ الرَّاكِعِينَ ﴾", ref: "سورة البقرة - الآية 43", detail: "سورة البقرة، الآية 43" },
+  { text: "﴿ حَافِظُوا عَلَى الصَّلَوَاتِ وَالصَّلَاةِ الْوُسْطَىٰ وَقُومُوا لِلَّهِ قَانِتِينَ ﴾", ref: "سورة البقرة - الآية 238", detail: "سورة البقرة، الآية 238" },
+  { text: "﴿ وَأَقِمِ الصَّلَاةَ إِنَّ الصَّلَاةَ تَنْهَىٰ عَنِ الْفَحْشَاءِ وَالْمُنكَرِ ﴾", ref: "سورة العنكبوت - الآية 45", detail: "سورة العنكبوت، الآية 45" }
+];
+const mainHadiths = [
+  { text: "نَضَّرَ اللَّهُ امْرَأً سَمِعَ مِنَّا حَدِيثًا فَحَفِظَهُ حَتَّى يُبَلِّغَهُ", source: "رواه الترمذي - حديث صحيح" },
+  { text: "بَلِّغُوا عَنِّي وَلَوْ آيَةً", source: "رواه البخاري" }
+];
+const trueHadiths = [
+  { text: "نَضَّرَ اللَّهُ امْرَأً سَمِعَ مِنَّا حَدِيثًا فَحَفِظَهُ حَتَّى يُبَلِّغَهُ", source: "رواه الترمذي" },
+  { text: "بَلِّغُوا عَنِّي وَلَوْ آيَةً", source: "رواه البخاري" }
+];
+const weakHadiths = [
+  { text: "مَنْ كَذَبَ عَلَيَّ مُتَعَمِّدًا فَلْيَتَبَوَّأْ مَقْعَدَهُ مِنَ النَّارِ", source: "متفق عليه" },
+  { text: "لَا تَكْذِبُوا عَلَيَّ فَإِنَّهُ مَنْ يَكْذِبْ عَلَيَّ يَلِجِ النَّارَ", source: "رواه مسلم" }
+];
+const quranVerses = [
+  { text: "﴿ إِنَّ اللَّهَ يَأْمُرُ بِالْعَدْلِ وَالْإِحْسَانِ ﴾", ref: "<span>سورة النحل - الآية 90</span>" },
+  { text: "﴿ وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ ﴾", ref: "<span>سورة الذاريات - الآية 55</span>" }
+];
+const zakatVerses = [
+  { text: "﴿ وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ ﴾", ref: "<span>سورة البقرة - الآية 43</span>" },
+  { text: "﴿ خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا ﴾", ref: "<span>سورة التوبة - الآية 103</span>" }
+];
+const hijriVerses = [
+  { text: "﴿ إِلَّا تَنصُرُوهُ فَقَدْ نَصَرَهُ اللَّهُ ﴾", ref: "<span>سورة التوبة - الآية 40</span>" }
+];
 
-  // Helper function: Convert URLs to clickable links (NO embedded videos)
-  function convertUrlsToHtml(text) {
-    if (!text) return '';
-    let converted = text.replace(/(https?:\/\/[^\s<]+)/g, function(url) {
-      let displayUrl = url;
-      if (url.includes('youtube.com/watch?v=')) {
-        const videoId = url.match(/v=([^&]+)/)?.[1];
-        if (videoId) displayUrl = `🎬 رابط يوتيوب: ${videoId}`;
-      } else if (url.includes('youtu.be/')) {
-        const videoId = url.match(/youtu\.be\/([^?]+)/)?.[1];
-        if (videoId) displayUrl = `🎬 رابط يوتيوب: ${videoId}`;
-      } else if (url.length > 50) {
-        displayUrl = url.substring(0, 40) + '...';
+const prayerMeta = {
+  Fajr:    { ar: 'الفجر',   icon: '🌙' },
+  Sunrise: { ar: 'الشروق',  icon: '🌅' },
+  Dhuhr:   { ar: 'الظهر',   icon: '☀️' },
+  Asr:     { ar: 'العصر',   icon: '🌤️' },
+  Maghrib: { ar: 'المغرب',  icon: '🌇' },
+  Isha:    { ar: 'العشاء',  icon: '🌃' }
+};
+const prayerOrder = ['Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
+
+// ════════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════════
+function getDailyItem(arr) { const d = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000); return arr[d % arr.length]; }
+function getHijriDate() { return new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date()); }
+
+function convertUrlsToHtml(text) {
+  if (!text) return '';
+  return text.replace(/(https?:\/\/[^\s<]+)/g, url => {
+    let display = url.includes('youtube.com') || url.includes('youtu.be') ? '🎬 رابط يوتيوب' : url.length > 45 ? url.substring(0, 35) + '...' : url;
+    return `<a href="${url}" target="_blank" rel="noopener noreferrer">${display}</a>`;
+  });
+}
+
+function navTo(page) {
+  document.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active-nav'));
+  const btn = document.querySelector(`.nav-link[data-page="${page}"]`);
+  if (btn) btn.classList.add('active-nav');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(page).classList.add('active');
+  if (page === 'stories') initMap();
+  if (page === 'days') loadEvents();
+  if (page === 'prayer') initPrayerTimes();
+  document.getElementById('searchResults').style.display = 'none';
+  document.getElementById('searchInput').value = '';
+}
+
+// ════════════════════════════════════════════════
+// DARK MODE
+// ════════════════════════════════════════════════
+const darkToggle = document.getElementById('darkModeToggle');
+darkToggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  darkToggle.innerHTML = document.body.classList.contains('dark-mode') ? '☀️ نهاري' : '🌙 ليلي';
+  localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+});
+if (localStorage.getItem('darkMode') === 'true') { document.body.classList.add('dark-mode'); darkToggle.innerHTML = '☀️ نهاري'; }
+
+// ════════════════════════════════════════════════
+// PRAYER TIMES
+// ════════════════════════════════════════════════
+function initPrayerTimes() {
+  if (prayerLoaded && prayerTimings) { renderPrayerTimes(); return; }
+  // Set verse
+  const pv = getDailyItem(prayerVerses);
+  document.getElementById('prayerVerseText').innerHTML = pv.text;
+  document.getElementById('prayerVerseRef').innerHTML = `<span>${pv.ref.replace('سورة','').trim().includes('-') ? pv.ref : pv.ref}</span>`;
+
+  document.getElementById('prayerLoading').style.display = 'block';
+  document.getElementById('prayerContent').style.display = 'none';
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      pos => fetchPrayerTimes(pos.coords.latitude, pos.coords.longitude, null),
+      () => fetchPrayerTimes(33.5571, 35.3729, 'بيروت، لبنان'),
+      { timeout: 8000 }
+    );
+  } else {
+    fetchPrayerTimes(33.5571, 35.3729, 'بيروت، لبنان');
+  }
+}
+
+async function fetchPrayerTimes(lat, lng, fallbackName) {
+  try {
+    const res = await fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lng}&method=2`);
+    const data = await res.json();
+    if (data.code === 200) {
+      prayerData = data.data;
+      prayerTimings = data.data.timings;
+      prayerLoaded = true;
+
+      // Location name
+      let locName = fallbackName;
+      if (!locName) {
+        try {
+          const geo = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=ar`);
+          const gd = await geo.json();
+          locName = gd.address?.city || gd.address?.town || gd.address?.village || gd.address?.county || 'موقعك الحالي';
+        } catch { locName = 'موقعك الحالي'; }
       }
-      return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #2c5e2e; text-decoration: underline; word-break: break-all;">${displayUrl}</a>`;
-    });
-    return converted;
+
+      document.getElementById('prayerLocationText').innerHTML = `📍 ${locName}`;
+      const hDate = data.data.date.hijri;
+      const gDate = data.data.date.gregorian;
+      document.getElementById('prayerDateText').innerHTML =
+        `${gDate.date} | ${hDate.day} ${hDate.month.ar} ${hDate.year} هـ`;
+
+      if (prayerData.timings.Imsak) document.getElementById('imsak').textContent = prayerData.timings.Imsak;
+      if (prayerData.timings.Midnight) document.getElementById('midnight').textContent = prayerData.timings.Midnight;
+
+      renderPrayerTimes();
+      document.getElementById('prayerLoading').style.display = 'none';
+      document.getElementById('prayerContent').style.display = 'block';
+      startPrayerCountdown();
+    }
+  } catch (e) {
+    document.getElementById('prayerLoading').innerHTML = '<p>❌ تعذر تحميل المواقيت. تأكد من الاتصال بالإنترنت.</p>';
+  }
+}
+
+function renderPrayerTimes() {
+  const grid = document.getElementById('prayerNamesGrid');
+  grid.innerHTML = '';
+  const nextKey = getNextPrayer();
+  prayerOrder.forEach(key => {
+    const meta = prayerMeta[key];
+    const isNext = key === nextKey;
+    const div = document.createElement('div');
+    div.className = 'prayer-item' + (isNext ? ' active-prayer' : '');
+    div.id = 'pitem-' + key;
+    div.innerHTML = `
+      <div class="prayer-item-icon">${meta.icon}</div>
+      <div class="prayer-item-name">${meta.ar}</div>
+      <div class="prayer-item-time">${prayerTimings[key]}</div>
+      ${isNext ? '<div class="prayer-item-badge">القادمة</div>' : ''}
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function getNextPrayer() {
+  const now = new Date();
+  for (const key of prayerOrder) {
+    const [h, m] = prayerTimings[key].split(':').map(Number);
+    const t = new Date(); t.setHours(h, m, 0, 0);
+    if (t > now) return key;
+  }
+  return 'Fajr';
+}
+
+function startPrayerCountdown() {
+  if (countdownInterval) clearInterval(countdownInterval);
+  updateCountdown();
+  countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+function updateCountdown() {
+  if (!prayerTimings) return;
+  const now = new Date();
+  let nextKey = null, nextTime = null;
+
+  for (const key of prayerOrder) {
+    const [h, m] = prayerTimings[key].split(':').map(Number);
+    const t = new Date(); t.setHours(h, m, 0, 0);
+    if (t > now) { nextKey = key; nextTime = t; break; }
+  }
+  if (!nextKey) {
+    const [h, m] = prayerTimings['Fajr'].split(':').map(Number);
+    nextTime = new Date(); nextTime.setDate(nextTime.getDate() + 1); nextTime.setHours(h, m, 0, 0);
+    nextKey = 'Fajr';
   }
 
-  const mainHadiths = [
-    { text: "نَضَّرَ اللَّهُ امْرَأً سَمِعَ مِنَّا حَدِيثًا فَحَفِظَهُ حَتَّى يُبَلِّغَهُ", source: "رواه الترمذي - حديث صحيح" },
-    { text: "بَلِّغُوا عَنِّي وَلَوْ آيَةً", source: "رواه البخاري" }
-  ];
-  const trueHadiths = [
-    { text: "نَضَّرَ اللَّهُ امْرَأً سَمِعَ مِنَّا حَدِيثًا فَحَفِظَهُ حَتَّى يُبَلِّغَهُ", source: "رواه الترمذي" },
-    { text: "بَلِّغُوا عَنِّي وَلَوْ آيَةً", source: "رواه البخاري" }
-  ];
-  const weakHadiths = [
-    { text: "مَنْ كَذَبَ عَلَيَّ مُتَعَمِّدًا فَلْيَتَبَوَّأْ مَقْعَدَهُ مِنَ النَّارِ", source: "متفق عليه" },
-    { text: "لَا تَكْذِبُوا عَلَيَّ فَإِنَّهُ مَنْ يَكْذِبْ عَلَيَّ يَلِجِ النَّارَ", source: "رواه مسلم" }
-  ];
-  const quranVerses = [
-    { text: "إِنَّ اللَّهَ يَأْمُرُ بِالْعَدْلِ وَالْإِحْسَانِ", ref: "سورة النحل - 90" },
-    { text: "وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ", ref: "سورة الذاريات - 55" }
-  ];
-  const zakatVerses = [
-    { text: "وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ", ref: "سورة البقرة - 43" },
-    { text: "خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً", ref: "سورة التوبة - 103" }
-  ];
-  const hijriVerses = [
-    { text: "إِلَّا تَنصُرُوهُ فَقَدْ نَصَرَهُ اللَّهُ", ref: "سورة التوبة - 40" }
-  ];
+  const diff = nextTime - now;
+  const hrs = Math.floor(diff / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+  const secs = Math.floor((diff % 60000) / 1000);
 
-  function getDailyVerse(arr) { const d = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000); return arr[d % arr.length]; }
-  function getDailyHadith(arr) { const d = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000); return arr[d % arr.length]; }
-  function getWeakHadith() { const d = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000); return weakHadiths[d % weakHadiths.length]; }
-  function getAccurateHijriDate() { return new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date()); }
+  document.getElementById('nextPrayerName').textContent = prayerMeta[nextKey].ar;
+  document.getElementById('countdownTimer').textContent =
+    String(hrs).padStart(2,'0') + ':' + String(mins).padStart(2,'0') + ':' + String(secs).padStart(2,'0');
 
-  function calculateZakat() {
-    const wealth = parseFloat(document.getElementById('wealthAmount').value);
-    const currency = document.getElementById('currencySelect').value;
-    const symbols = { SAR: '﷼', USD: '$', EUR: '€', EGP: 'ج.م', AED: 'د.إ', KWD: 'د.ك', GBP: '£', TRY: '₺' };
-    if (isNaN(wealth) || wealth <= 0) { alert('الرجاء إدخال مبلغ صحيح'); return; }
-    document.getElementById('zakatAmount').innerHTML = `${(wealth * 0.025).toFixed(2)} ${symbols[currency] || currency}`;
-    document.getElementById('zakatResult').style.display = 'block';
-  }
-
-  function convertDate() {
-    const type = document.getElementById('convertType').value;
-    if (type === 'gregToHijri') {
-      const d = parseInt(document.getElementById('day').value), m = parseInt(document.getElementById('month').value), y = parseInt(document.getElementById('year').value);
-      if (isNaN(d) || isNaN(m) || isNaN(y)) { alert('الرجاء إدخال تاريخ صحيح'); return; }
-      document.getElementById('convertedDate').innerHTML = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(y, m-1, d));
-    } else { alert("جاري تطوير هذه الميزة قريباً"); }
-  }
-
-  document.getElementById('convertType').addEventListener('change', function() {
-    document.getElementById('gregorianInput').style.display = this.value === 'gregToHijri' ? 'flex' : 'none';
-    document.getElementById('hijriInput').style.display = this.value === 'hijriToGreg' ? 'flex' : 'none';
+  // Update active card
+  document.querySelectorAll('.prayer-item').forEach(el => {
+    el.classList.remove('active-prayer');
+    el.querySelector('.prayer-item-badge')?.remove();
   });
-
-  const darkModeToggle = document.getElementById('darkModeToggle');
-  darkModeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    darkModeToggle.innerHTML = document.body.classList.contains('dark-mode') ? '☀️ نهاري' : '🌙 ليلي';
-    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-  });
-  if (localStorage.getItem('darkMode') === 'true') { document.body.classList.add('dark-mode'); darkModeToggle.innerHTML = '☀️ نهاري'; }
-
-  function updateHijriDate() { document.getElementById('hijriDateDisplay').innerHTML = getAccurateHijriDate(); }
-
-  const adminToggle = document.getElementById('adminToggle'), loginModal = document.getElementById('loginModal'), closeModal = document.getElementById('closeModal');
-  const loginBtn = document.getElementById('loginBtn'), loginEmail = document.getElementById('loginEmail'), loginPassword = document.getElementById('loginPassword');
-  const loginError = document.getElementById('loginError'), syncStatus = document.getElementById('syncStatus');
-  const contentModal = document.getElementById('contentModal'), closeModalBtn = document.getElementById('closeModalBtn');
-  const modalHeader = document.getElementById('modalHeader'), modalBody = document.getElementById('modalBody'), modalFooter = document.getElementById('modalFooter');
-  const addFormModal = document.getElementById('addFormModal'), newCardTitle = document.getElementById('newCardTitle'), newCardBody = document.getElementById('newCardBody');
-  const newCardFooter = document.getElementById('newCardFooter'), saveNewCardBtn = document.getElementById('saveNewCardBtn'), cancelAddBtn = document.getElementById('cancelAddBtn');
-  const searchInput = document.getElementById('searchInput'), searchBtn = document.getElementById('searchBtn'), searchResults = document.getElementById('searchResults');
-  const resultsList = document.getElementById('resultsList'), closeResultsBtn = document.getElementById('closeResultsBtn');
-
-  adminToggle.addEventListener('change', (e) => {
-    if (!isAdmin && e.target.checked) { loginModal.style.display = 'flex'; adminToggle.checked = false; }
-    else if (isAdmin) { enableAdminMode(e.target.checked); }
-  });
-  closeModal.addEventListener('click', () => { loginModal.style.display = 'none'; });
-  closeModalBtn.addEventListener('click', () => { contentModal.style.display = 'none'; });
-  closeResultsBtn.addEventListener('click', () => { searchResults.style.display = 'none'; });
-
-  loginBtn.addEventListener('click', async () => {
-    try {
-      await auth.signInWithEmailAndPassword(loginEmail.value.trim(), loginPassword.value);
-      isAdmin = true; loginModal.style.display = 'none'; adminToggle.checked = true; enableAdminMode(true);
-      syncStatus.innerHTML = '✅ مشرف متصل'; syncStatus.className = 'sync-status admin';
-      loadAllCards(); if (mapInitialized) loadMapData();
-    } catch (error) { loginError.innerText = 'خطأ: ' + error.message; }
-  });
-
-  auth.onAuthStateChanged((user) => {
-    if (user) { isAdmin = true; syncStatus.innerHTML = '✅ مشرف متصل'; syncStatus.className = 'sync-status admin'; enableAdminMode(true); loadAllCards(); if (mapInitialized) loadMapData(); }
-    else { isAdmin = false; adminToggle.checked = false; enableAdminMode(false); syncStatus.innerHTML = '✅ متصل'; syncStatus.className = 'sync-status'; loadAllCards(); if (mapInitialized) loadMapData(); }
-  });
-
-  function enableAdminMode(enabled) {
-    adminMode = enabled && isAdmin;
-    document.getElementById('athkarAddBtn').style.display = adminMode ? 'flex' : 'none';
-    document.getElementById('tafsirAddBtn').style.display = adminMode ? 'flex' : 'none';
-    document.getElementById('trueHadithAddBtn').style.display = adminMode ? 'flex' : 'none';
-    document.getElementById('weakHadithAddBtn').style.display = adminMode ? 'flex' : 'none';
-    document.querySelectorAll('#addPinBtn, #addLabelBtn, #addPathBtn, #deleteModeBtn').forEach(btn => { if(btn) btn.style.display = adminMode ? 'inline-block' : 'none'; });
-    if (contentModal.style.display === 'flex') {
-      modalHeader.setAttribute('contenteditable', adminMode ? 'true' : 'false');
-      modalBody.setAttribute('contenteditable', adminMode ? 'true' : 'false');
-      modalFooter.setAttribute('contenteditable', adminMode ? 'true' : 'false');
+  const activeEl = document.getElementById('pitem-' + nextKey);
+  if (activeEl) {
+    activeEl.classList.add('active-prayer');
+    if (!activeEl.querySelector('.prayer-item-badge')) {
+      const badge = document.createElement('div');
+      badge.className = 'prayer-item-badge';
+      badge.textContent = 'القادمة';
+      activeEl.appendChild(badge);
     }
   }
+}
 
-  function performSearch() {
-    const q = searchInput.value.trim().toLowerCase();
-    if (q.length < 2) { alert('الرجاء إدخال حرفين على الأقل'); return; }
-    const results = [];
-    [...allAthkar.map(i => ({ ...i, type: 'athkar', typeName: '📿 ذكر' })),
-     ...allTafsir.map(i => ({ ...i, type: 'tafsir', typeName: '📖 تفسير' })),
-     ...allTrueHadith.map(i => ({ ...i, type: 'trueHadith', typeName: '📜 حديث صحيح' })),
-     ...allWeakHadith.map(i => ({ ...i, type: 'weakHadith', typeName: '⚠️ حديث ضعيف' }))].forEach(item => {
-      if (item.header.toLowerCase().includes(q) || item.body.toLowerCase().includes(q))
-        results.push({ type: item.type, typeName: item.typeName, id: item.id, title: item.header, preview: item.body.substring(0, 80) + '...', fullBody: item.body, footer: item.footer });
-    });
-    resultsList.innerHTML = results.length ? '' : '<div class="no-results">❌ لا توجد نتائج</div>';
-    results.forEach(r => {
-      const div = document.createElement('div'); div.className = 'result-item';
-      div.innerHTML = `<div><span class="result-title">${r.title}</span><span class="result-type">[${r.typeName}]</span></div><div class="result-preview">${r.preview}</div>`;
-      div.onclick = () => { openModal(r.type, r.id, r.title, r.fullBody, r.footer || ''); searchResults.style.display = 'none'; };
-      resultsList.appendChild(div);
-    });
-    searchResults.style.display = 'block';
-  }
-  searchBtn.addEventListener('click', performSearch);
-  searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') performSearch(); });
+document.getElementById('prayerRefreshBtn').addEventListener('click', () => {
+  prayerLoaded = false; prayerTimings = null; prayerData = null;
+  if (countdownInterval) clearInterval(countdownInterval);
+  initPrayerTimes();
+});
 
-  window.deleteCard = async function(type, id) {
-    if (!adminMode) return;
-    if (confirm('هل تريد حذف هذه البطاقة؟')) {
-      await database.ref(`${type}_full/${id}`).remove();
-      await database.ref(`${type}_list/${id}`).remove();
-      loadCardsOfType(type);
-    }
-  };
+// ════════════════════════════════════════════════
+// SEARCH
+// ════════════════════════════════════════════════
+function performSearch() {
+  const q = document.getElementById('searchInput').value.trim().toLowerCase();
+  if (q.length < 2) { alert('الرجاء إدخال حرفين على الأقل'); return; }
+  const all = [
+    ...allAthkar.map(i => ({ ...i, type: 'athkar', typeName: '📿 ذكر' })),
+    ...allTafsir.map(i => ({ ...i, type: 'tafsir', typeName: '📖 تفسير' })),
+    ...allTrueHadith.map(i => ({ ...i, type: 'trueHadith', typeName: '📜 حديث صحيح' })),
+    ...allWeakHadith.map(i => ({ ...i, type: 'weakHadith', typeName: '⚠️ حديث ضعيف' }))
+  ];
+  const results = all.filter(i => i.header.toLowerCase().includes(q) || i.body.toLowerCase().includes(q));
+  const list = document.getElementById('resultsList');
+  list.innerHTML = results.length ? '' : '<div style="padding:10px;font-family:Tajawal;">❌ لا توجد نتائج</div>';
+  results.forEach(r => {
+    const div = document.createElement('div'); div.className = 'result-item';
+    div.innerHTML = `<div><span class="result-title">${r.header}</span><span class="result-type">[${r.typeName}]</span></div><div style="font-size:0.75rem;color:#999;font-family:Tajawal;">${r.body.substring(0,80)}...</div>`;
+    div.onclick = () => { openModal(r.type, r.id, r.header, r.body, r.footer || ''); document.getElementById('searchResults').style.display = 'none'; };
+    list.appendChild(div);
+  });
+  document.getElementById('searchResults').style.display = 'block';
+}
+document.getElementById('searchBtn').addEventListener('click', performSearch);
+document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });
+document.getElementById('closeResultsBtn').addEventListener('click', () => { document.getElementById('searchResults').style.display = 'none'; });
 
-  async function saveContent() {
-    if (!adminMode || !currentItemId || !currentType) return;
-    await database.ref(`${currentType}_full/${currentItemId}`).set({ header: modalHeader.innerHTML, body: modalBody.innerHTML, footer: modalFooter.innerHTML });
-    const card = document.querySelector(`.info-card[data-id="${currentItemId}"]`);
-    if (card) {
-      card.querySelector('.card-header').innerHTML = modalHeader.innerHTML;
-      let short = modalBody.innerText.substring(0, 80); if (modalBody.innerText.length > 80) short += '...';
-      card.querySelector('.card-preview p').innerHTML = short;
-    }
+// ════════════════════════════════════════════════
+// ADMIN / AUTH
+// ════════════════════════════════════════════════
+const adminToggle = document.getElementById('adminToggle');
+adminToggle.addEventListener('change', e => {
+  if (!isAdmin && e.target.checked) { document.getElementById('loginModal').style.display = 'flex'; adminToggle.checked = false; }
+  else if (isAdmin) enableAdminMode(e.target.checked);
+});
+document.getElementById('closeModal').addEventListener('click', () => { document.getElementById('loginModal').style.display = 'none'; });
+document.getElementById('closeModalBtn').addEventListener('click', () => { document.getElementById('contentModal').style.display = 'none'; });
+
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  try {
+    await auth.signInWithEmailAndPassword(document.getElementById('loginEmail').value.trim(), document.getElementById('loginPassword').value);
+    isAdmin = true;
+    document.getElementById('loginModal').style.display = 'none';
+    adminToggle.checked = true;
+    enableAdminMode(true);
+    document.getElementById('syncStatus').innerHTML = '✅ مشرف متصل';
+    document.getElementById('syncStatus').className = 'sync-status admin';
     loadAllCards();
-  }
+    if (mapInitialized) loadMapData();
+  } catch (e) { document.getElementById('loginError').innerText = 'خطأ: ' + e.message; }
+});
 
-  async function addNewCard(type) {
-    const title = newCardTitle.value.trim(), body = newCardBody.value.trim(), footer = newCardFooter.value.trim();
-    if (!title || !body) { alert('الرجاء إدخال العنوان والمحتوى'); return; }
-    const newId = `${type}_${Date.now()}`;
-    await database.ref(`${type}_full/${newId}`).set({ header: title, body, footer });
-    await database.ref(`${type}_list/${newId}`).set({ id: newId });
-    newCardTitle.value = ''; newCardBody.value = ''; newCardFooter.value = '';
-    addFormModal.style.display = 'none';
+auth.onAuthStateChanged(user => {
+  if (user) { isAdmin = true; document.getElementById('syncStatus').innerHTML = '✅ مشرف'; document.getElementById('syncStatus').className = 'sync-status admin'; enableAdminMode(true); }
+  else { isAdmin = false; adminToggle.checked = false; enableAdminMode(false); document.getElementById('syncStatus').innerHTML = '✅ متصل'; document.getElementById('syncStatus').className = 'sync-status ok'; }
+  loadAllCards();
+  if (mapInitialized) loadMapData();
+});
+
+function enableAdminMode(enabled) {
+  adminMode = enabled && isAdmin;
+  ['athkarAddBtn','tafsirAddBtn','trueHadithAddBtn','weakHadithAddBtn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = adminMode ? 'block' : 'none';
+  });
+  ['addPinBtn','addLabelBtn','addPathBtn','deleteModeBtn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = adminMode ? 'inline-block' : 'none';
+  });
+  const modal = document.getElementById('contentModal');
+  if (modal.style.display === 'flex') {
+    ['modalHeader','modalBody','modalFooter'].forEach(id => document.getElementById(id).setAttribute('contenteditable', adminMode ? 'true' : 'false'));
+  }
+}
+
+// ════════════════════════════════════════════════
+// CARDS
+// ════════════════════════════════════════════════
+window.deleteCard = async function(type, id) {
+  if (!adminMode) return;
+  if (confirm('هل تريد حذف هذه البطاقة؟')) {
+    await database.ref(`${type}_full/${id}`).remove();
+    await database.ref(`${type}_list/${id}`).remove();
     loadCardsOfType(type);
   }
+};
 
-  async function openModal(type, id, defaultHeader, defaultBody, defaultFooter) {
-    currentType = type; currentItemId = id;
-    const saved = await database.ref(`${type}_full/${id}`).once('value');
-    const data = saved.val();
-    const header = data?.header || defaultHeader;
-    const body = data?.body || defaultBody;
-    const footer = data?.footer || defaultFooter;
-    
-    modalHeader.innerHTML = header;
-    modalBody.innerHTML = convertUrlsToHtml(body);
-    modalFooter.innerHTML = footer;
-    
-    modalHeader.setAttribute('contenteditable', adminMode ? 'true' : 'false');
-    modalBody.setAttribute('contenteditable', adminMode ? 'true' : 'false');
-    modalFooter.setAttribute('contenteditable', adminMode ? 'true' : 'false');
-    contentModal.style.display = 'flex';
-  }
+async function saveContent() {
+  if (!adminMode || !currentItemId || !currentType) return;
+  const mh = document.getElementById('modalHeader'), mb = document.getElementById('modalBody'), mf = document.getElementById('modalFooter');
+  await database.ref(`${currentType}_full/${currentItemId}`).set({ header: mh.innerHTML, body: mb.innerHTML, footer: mf.innerHTML });
+  loadAllCards();
+}
 
-  async function loadCardsOfType(type) {
-    const containerMap = { 
-      athkar: 'athkarBoxes', 
-      tafsir: 'tafsirBoxes', 
-      trueHadith: 'trueHadithBoxes', 
-      weakHadith: 'weakHadithBoxes' 
-    };
-    const container = document.getElementById(containerMap[type]);
-    if (!container) return;
-    
-    try {
-      let listSnapshot = await database.ref(`${type}_list`).once('value');
-      let list = listSnapshot.val() || {};
-      let cardIds = Object.keys(list);
-      
-      if (cardIds.length === 0) {
-        let defaultCards = [];
-        
-        if (type === 'athkar') {
-          defaultCards = [
-            { id: 'athkar_morning', header: '🌅 أذكار الصباح', body: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ.<br><br>أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ.', footer: '🤲 رَطِّبْ لِسَانَكَ' },
-            { id: 'athkar_evening', header: '🌙 أذكار المساء', body: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ.', footer: '🌙 احْفَظْ بِهَا نَفْسَكَ' },
-            { id: 'athkar_sleep', header: '😴 أذكار النوم', body: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا.<br><br>اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ.', footer: '💤 تَوَكَّلْ عَلَى اللَّهِ' }
-          ];
-        } else if (type === 'tafsir') {
-          defaultCards = [
-            { id: 'tafsir_fatiha', header: '📖 تفسير سورة الفاتحة', body: 'الفاتحة هي أم الكتاب، سبع مثاني، وهي أعظم سورة في القرآن. تشتمل على الثناء على الله وطلب الهداية إلى الصراط المستقيم.', footer: '💎 أم القرآن' },
-            { id: 'tafsir_kursi', header: '✨ تفسير آية الكرسي', body: 'آية الكرسي هي أعظم آية في القرآن الكريم. تتضمن توحيد الله، حياته، قيوميته، وسع كرسيه السماوات والأرض.', footer: '🛡️ حصن من الشيطان' },
-            { id: 'tafsir_ikhlas', header: '🤍 تفسير سورة الإخلاص', body: 'سورة الإخلاص تعدل ثلث القرآن. وهي خلاصة التوحيد: قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ.', footer: '🌟 ثلث القرآن' }
-          ];
-        } else if (type === 'trueHadith') {
-          defaultCards = [
-            { id: 'hadith_niyah', header: '📖 حديث النية', body: 'عن عمر بن الخطاب رضي الله عنه قال: سمعت رسول الله ﷺ يقول: "إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى..."', footer: 'رواه البخاري ومسلم' },
-            { id: 'hadith_jibreel', header: '📖 حديث جبريل', body: 'عن عمر بن الخطاب رضي الله عنه قال: بينما نحن جلوس عند رسول الله ﷺ إذ طلع علينا رجل شديد بياض الثياب... فسأله عن الإسلام والإيمان والإحسان', footer: 'رواه مسلم' }
-          ];
-        } else if (type === 'weakHadith') {
-          defaultCards = [
-            { id: 'weak_warning', header: '⚠️ تنبيه', body: 'هذا القسم مخصص للأحاديث الضعيفة والموضوعة والبدع، لتنبيه المسلمين من الأحاديث غير الصحيحة المنتشرة.', footer: 'تنبيه: استشر العلماء الموثوقين' }
-          ];
-        }
-        
-        for (const card of defaultCards) {
-          await database.ref(`${type}_full/${card.id}`).set({ header: card.header, body: card.body, footer: card.footer });
-          await database.ref(`${type}_list/${card.id}`).set({ id: card.id, order: Date.now() });
-        }
-        
-        await loadCardsOfType(type);
-        return;
+async function openModal(type, id, defaultHeader, defaultBody, defaultFooter) {
+  currentType = type; currentItemId = id;
+  const snap = await database.ref(`${type}_full/${id}`).once('value');
+  const data = snap.val();
+  const mh = document.getElementById('modalHeader'), mb = document.getElementById('modalBody'), mf = document.getElementById('modalFooter');
+  mh.innerHTML = data?.header || defaultHeader;
+  mb.innerHTML = convertUrlsToHtml(data?.body || defaultBody);
+  mf.innerHTML = data?.footer || defaultFooter;
+  mh.setAttribute('contenteditable', adminMode ? 'true' : 'false');
+  mb.setAttribute('contenteditable', adminMode ? 'true' : 'false');
+  mf.setAttribute('contenteditable', adminMode ? 'true' : 'false');
+  document.getElementById('contentModal').style.display = 'flex';
+}
+
+async function addNewCard(type) {
+  const title = document.getElementById('newCardTitle').value.trim();
+  const body = document.getElementById('newCardBody').value.trim();
+  const footer = document.getElementById('newCardFooter').value.trim();
+  if (!title || !body) { alert('الرجاء إدخال العنوان والمحتوى'); return; }
+  const newId = `${type}_${Date.now()}`;
+  await database.ref(`${type}_full/${newId}`).set({ header: title, body, footer });
+  await database.ref(`${type}_list/${newId}`).set({ id: newId });
+  document.getElementById('newCardTitle').value = '';
+  document.getElementById('newCardBody').value = '';
+  document.getElementById('newCardFooter').value = '';
+  document.getElementById('addFormModal').style.display = 'none';
+  loadCardsOfType(type);
+}
+
+const defaultCards = {
+  athkar: [
+    { id: 'athkar_morning', header: '🌅 أذكار الصباح', body: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ.\n\nأَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ.', footer: '🤲 رَطِّبْ لِسَانَكَ' },
+    { id: 'athkar_evening', header: '🌙 أذكار المساء', body: 'أَمْسَيْنا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لا إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لا شَرِيكَ لَهُ.', footer: '🌙 احْفَظْ بِهَا نَفْسَكَ' },
+    { id: 'athkar_sleep', header: '😴 أذكار النوم', body: 'بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا.\n\nاللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ.', footer: '💤 تَوَكَّلْ عَلَى اللَّهِ' }
+  ],
+  tafsir: [
+    { id: 'tafsir_fatiha', header: '📖 تفسير سورة الفاتحة', body: 'الفاتحة هي أم الكتاب، سبع مثاني، وهي أعظم سورة في القرآن. تشتمل على الثناء على الله وطلب الهداية إلى الصراط المستقيم.', footer: '💎 أم القرآن' },
+    { id: 'tafsir_kursi', header: '✨ تفسير آية الكرسي', body: 'آية الكرسي هي أعظم آية في القرآن الكريم. تتضمن توحيد الله، حياته، قيوميته، وسع كرسيه السماوات والأرض.', footer: '🛡️ حصن من الشيطان' },
+    { id: 'tafsir_ikhlas', header: '🤍 تفسير سورة الإخلاص', body: 'سورة الإخلاص تعدل ثلث القرآن. وهي خلاصة التوحيد: قُلْ هُوَ اللَّهُ أَحَدٌ، اللَّهُ الصَّمَدُ.', footer: '🌟 ثلث القرآن' }
+  ],
+  trueHadith: [
+    { id: 'hadith_niyah', header: '📖 حديث النية', body: 'عن عمر بن الخطاب رضي الله عنه قال: سمعت رسول الله ﷺ يقول: "إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى..."', footer: 'رواه البخاري ومسلم' },
+    { id: 'hadith_jibreel', header: '📖 حديث جبريل', body: 'عن عمر بن الخطاب رضي الله عنه قال: بينما نحن جلوس عند رسول الله ﷺ إذ طلع علينا رجل شديد بياض الثياب... فسأله عن الإسلام والإيمان والإحسان', footer: 'رواه مسلم' }
+  ],
+  weakHadith: [
+    { id: 'weak_warning', header: '⚠️ تنبيه عام', body: 'هذا القسم مخصص للأحاديث الضعيفة والموضوعة والبدع، لتنبيه المسلمين من الأحاديث غير الصحيحة المنتشرة.', footer: 'استشر العلماء الموثوقين دائماً' }
+  ]
+};
+
+async function loadCardsOfType(type) {
+  const containerMap = { athkar: 'athkarBoxes', tafsir: 'tafsirBoxes', trueHadith: 'trueHadithBoxes', weakHadith: 'weakHadithBoxes' };
+  const container = document.getElementById(containerMap[type]);
+  if (!container) return;
+  try {
+    const listSnap = await database.ref(`${type}_list`).once('value');
+    let cardIds = Object.keys(listSnap.val() || {});
+    if (cardIds.length === 0) {
+      for (const card of (defaultCards[type] || [])) {
+        await database.ref(`${type}_full/${card.id}`).set({ header: card.header, body: card.body, footer: card.footer });
+        await database.ref(`${type}_list/${card.id}`).set({ id: card.id });
       }
-      
-      container.innerHTML = '';
-      const itemsArray = [];
-      
-      for (const id of cardIds) {
-        const cardData = await database.ref(`${type}_full/${id}`).once('value');
-        const data = cardData.val();
-        if (data) {
-          itemsArray.push({ id, header: data.header, body: data.body, footer: data.footer });
-          
-          const div = document.createElement('div');
-          div.className = 'info-card';
-          div.setAttribute('data-id', id);
-          
-          let shortText = data.body.substring(0, 80);
-          if (data.body.length > 80) shortText += '...';
-          
-          let headerClass = '';
-          if (type === 'trueHadith') headerClass = 'hadith-true';
-          if (type === 'weakHadith') headerClass = 'hadith-weak';
-          
-          div.innerHTML = `
-            <div class="card-header ${headerClass}">${data.header}</div>
-            <div class="card-preview"><p>${shortText}</p></div>
-            <button class="more-btn">📖 المزيد</button>
-            ${adminMode ? '<button class="delete-card-btn" onclick="deleteCard(\'' + type + '\', \'' + id + '\')">×</button>' : ''}
-          `;
-          
-          const moreBtn = div.querySelector('.more-btn');
-          if (moreBtn) {
-            moreBtn.onclick = () => openModal(type, id, data.header, data.body, data.footer);
-          }
-          
-          container.appendChild(div);
-        }
-      }
-      
-      if (type === 'athkar') allAthkar = itemsArray;
-      else if (type === 'tafsir') allTafsir = itemsArray;
-      else if (type === 'trueHadith') allTrueHadith = itemsArray;
-      else if (type === 'weakHadith') allWeakHadith = itemsArray;
-      
-    } catch (error) {
-      console.error(`Error loading ${type}:`, error);
+      await loadCardsOfType(type); return;
     }
-  }
+    container.innerHTML = '';
+    const items = [];
+    for (const id of cardIds) {
+      const snap = await database.ref(`${type}_full/${id}`).once('value');
+      const data = snap.val();
+      if (!data) continue;
+      items.push({ id, header: data.header, body: data.body, footer: data.footer });
+      let headerClass = type === 'trueHadith' ? 'hadith-true' : type === 'weakHadith' ? 'hadith-weak' : '';
+      const div = document.createElement('div');
+      div.className = 'info-card'; div.setAttribute('data-id', id);
+      div.innerHTML = `
+        <div class="card-header ${headerClass}">${data.header}</div>
+        <div class="card-preview"><p>${data.body.substring(0,85)}${data.body.length>85?'...':''}</p></div>
+        <button class="more-btn">📖 المزيد</button>
+        ${adminMode ? `<button class="delete-card-btn" onclick="deleteCard('${type}','${id}')">×</button>` : ''}
+      `;
+      div.querySelector('.more-btn').onclick = () => openModal(type, id, data.header, data.body, data.footer);
+      container.appendChild(div);
+    }
+    if (type === 'athkar') allAthkar = items;
+    else if (type === 'tafsir') allTafsir = items;
+    else if (type === 'trueHadith') allTrueHadith = items;
+    else if (type === 'weakHadith') allWeakHadith = items;
+  } catch (e) { console.error(`Error loading ${type}:`, e); }
+}
 
-  async function loadAllCards() {
-    await loadCardsOfType('athkar');
-    await loadCardsOfType('tafsir');
-    await loadCardsOfType('trueHadith');
-    await loadCardsOfType('weakHadith');
-  }
+async function loadAllCards() {
+  await Promise.all(['athkar','tafsir','trueHadith','weakHadith'].map(t => loadCardsOfType(t)));
+}
 
-  document.getElementById('athkarAddBtn').onclick = () => { pendingAddType = 'athkar'; document.getElementById('addFormTitle').innerHTML = '➕ إضافة بطاقة أذكار جديدة'; addFormModal.style.display = 'flex'; };
-  document.getElementById('tafsirAddBtn').onclick = () => { pendingAddType = 'tafsir'; document.getElementById('addFormTitle').innerHTML = '➕ إضافة بطاقة تفسير جديدة'; addFormModal.style.display = 'flex'; };
-  document.getElementById('trueHadithAddBtn').onclick = () => { pendingAddType = 'trueHadith'; document.getElementById('addFormTitle').innerHTML = '➕ إضافة حديث صحيح جديد'; addFormModal.style.display = 'flex'; };
-  document.getElementById('weakHadithAddBtn').onclick = () => { pendingAddType = 'weakHadith'; document.getElementById('addFormTitle').innerHTML = '➕ إضافة حديث ضعيف أو بدعة جديدة'; addFormModal.style.display = 'flex'; };
-  saveNewCardBtn.onclick = async () => { if (pendingAddType) await addNewCard(pendingAddType); };
-  cancelAddBtn.onclick = () => { addFormModal.style.display = 'none'; newCardTitle.value = ''; newCardBody.value = ''; newCardFooter.value = ''; };
-  modalHeader.addEventListener('blur', () => saveContent());
-  modalBody.addEventListener('blur', () => saveContent());
-  modalFooter.addEventListener('blur', () => saveContent());
-
-  // ============ CALENDAR FUNCTIONS - FIXED ============
-  // Everyone can SEE events, only admin can ADD/EDIT/DELETE
-  
-  let currentDate = new Date(), currentYear = currentDate.getFullYear(), currentMonth = currentDate.getMonth(), events = {};
-  
-  async function loadEvents() { 
-    events = (await database.ref('events').once('value')).val() || {}; 
-    renderCalendar(); 
-  }
-  
-  // Delete event function (admin only)
-  async function deleteEventFromDay(dateKey) {
-    if (!adminMode) return;
-    if (confirm('هل تريد حذف هذا الحدث؟')) {
-      delete events[dateKey];
-      await database.ref(`events/${dateKey}`).remove();
-      renderCalendar();
-      alert('✅ تم حذف الحدث بنجاح');
-    }
-  }
-  
-  // Add/View event function - Everyone can VIEW, only admin can ADD/EDIT
-  async function addEventToDay(dateKey) {
-    // If there's already an event, show it to everyone
-    if (events[dateKey] && events[dateKey].description) {
-      alert(`📅 حدث هذا اليوم:\n\n${events[dateKey].description}`);
-      return;
-    }
-    
-    // If no event exists, only admin can add one
-    if (!adminMode) {
-      alert('❌ لا توجد مناسبة في هذا اليوم. فقط المشرف يمكنه إضافة مناسبات جديدة.');
-      return;
-    }
-    
-    const desc = prompt('📝 أضف وصفاً لهذا اليوم:');
-    if (desc && desc.trim()) {
-      events[dateKey] = { description: desc };
-      await database.ref(`events/${dateKey}`).set({ description: desc });
-      renderCalendar();
-      alert('✅ تم إضافة المناسبة بنجاح');
-    }
-  }
-  
-  function renderCalendar() {
-    const firstDay = new Date(currentYear, currentMonth, 1), startDay = firstDay.getDay(), daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    const grid = document.getElementById('calendarDays');
-    if (!grid) return;
-    grid.innerHTML = '';
-    const weekdays = ['أحد', 'إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت'];
-    weekdays.forEach(day => { const d = document.createElement('div'); d.className = 'weekday'; d.innerText = day; grid.appendChild(d); });
-    for (let i = 0; i < startDay; i++) { const empty = document.createElement('div'); empty.className = 'day-cell'; grid.appendChild(empty); }
-    for (let d = 1; d <= daysInMonth; d++) {
-      const cell = document.createElement('div'); cell.className = 'day-cell'; cell.innerText = d;
-      const dateKey = `${currentYear}-${currentMonth+1}-${d}`;
-      
-      if (events[dateKey] && events[dateKey].description) {
-        cell.classList.add('has-event');
-        
-        // Show preview of event text
-        const preview = document.createElement('div');
-        preview.className = 'day-event-preview';
-        let shortDesc = events[dateKey].description.substring(0, 15);
-        if (events[dateKey].description.length > 15) shortDesc += '...';
-        preview.innerText = shortDesc;
-        cell.appendChild(preview);
-        
-        // Add delete button for admin only
-        if (adminMode) {
-          const deleteBtn = document.createElement('button');
-          deleteBtn.className = 'delete-event-btn';
-          deleteBtn.innerHTML = '×';
-          deleteBtn.onclick = (e) => {
-            e.stopPropagation();
-            deleteEventFromDay(dateKey);
-          };
-          cell.appendChild(deleteBtn);
-        }
-      }
-      
-      cell.onclick = () => addEventToDay(dateKey);
-      grid.appendChild(cell);
-    }
-    document.getElementById('monthYear').innerHTML = `${currentYear}/${currentMonth+1}`;
-  }
-  
-  document.getElementById('prevMonth')?.addEventListener('click', () => { currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); });
-  document.getElementById('nextMonth')?.addEventListener('click', () => { currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(); });
-
-  // ============ MAP FUNCTIONS ============
-  function createCustomLabel(lat, lng, text, color = '#1e5629') {
-    return L.marker([lat, lng], { icon: L.divIcon({ className: 'custom-label', html: `<div style="background:${color};color:white;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:bold;">${text}</div>`, iconSize: [null, null], popupAnchor: [0, -8] }) });
-  }
-
-  async function loadMapData() {
-    if (!mapInitialized) return;
-    Object.values(markers).forEach(m => map.removeLayer(m));
-    Object.values(labels).forEach(l => map.removeLayer(l));
-    Object.values(polylines).forEach(p => map.removeLayer(p));
-    markers = {}; labels = {}; polylines = {};
-    
-    const pins = (await database.ref('map_pins').once('value')).val() || {};
-    for (let id in pins) {
-      const pin = pins[id];
-      const marker = L.marker([pin.lat, pin.lng]).addTo(map);
-      const descriptionWithLinks = convertUrlsToHtml(pin.description || '');
-      marker.bindPopup(`<b>📍 ${pin.title}</b><br><p>${descriptionWithLinks}</p>${adminMode ? '<br><button onclick="editPin(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;margin:2px;">✏️</button><button onclick="deletePin(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;margin:2px;">🗑️</button>' : ''}`);
-      marker.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>📍 ${pin.title}</strong><br><p>${descriptionWithLinks}</p>`);
-      markers[id] = marker;
-    }
-    
-    const mapLabels = (await database.ref('map_labels').once('value')).val() || {};
-    for (let id in mapLabels) {
-      const label = mapLabels[id];
-      const labelMarker = createCustomLabel(label.lat, label.lng, label.text);
-      labelMarker.addTo(map);
-      const labelDescriptionWithLinks = convertUrlsToHtml(label.description || '');
-      labelMarker.bindPopup(`<b>🏷️ ${label.text}</b><br><p>${labelDescriptionWithLinks}</p>${adminMode ? '<br><button onclick="editLabel(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;">✏️</button><button onclick="deleteLabel(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;">🗑️</button>' : ''}`);
-      labelMarker.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>🏷️ ${label.text}</strong><br><p>${labelDescriptionWithLinks}</p>`);
-      labels[id] = labelMarker;
-    }
-    
-    const paths = (await database.ref('map_paths').once('value')).val() || {};
-    for (let id in paths) {
-      const path = paths[id];
-      const latlngs = path.points.map(p => [p.lat, p.lng]);
-      const polyline = L.polyline(latlngs, { color: '#2c5e2e', weight: 4, opacity: 0.8 }).addTo(map);
-      const pathDescriptionWithLinks = convertUrlsToHtml(path.description || '');
-      polyline.bindPopup(`<b>🗺️ ${path.title || 'مسار'}</b><br><p>${pathDescriptionWithLinks}</p>${adminMode ? '<br><button onclick="editPath(\'' + id + '\')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;">✏️</button><button onclick="deletePath(\'' + id + '\')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;">🗑️</button>' : ''}`);
-      polyline.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>🗺️ ${path.title || 'مسار'}</strong><br><p>${pathDescriptionWithLinks}</p>`);
-      polylines[id] = polyline;
-    }
-  }
-
-  window.editPin = async function(id) { if (!adminMode) return; const newTitle = prompt('الاسم الجديد:'); if (!newTitle) return; const newDesc = prompt('الوصف الجديد:'); const data = (await database.ref(`map_pins/${id}`).once('value')).val(); if (data) { await database.ref(`map_pins/${id}`).set({ ...data, title: newTitle, description: newDesc || '' }); loadMapData(); } };
-  window.deletePin = async function(id) { if (!adminMode) return; if (confirm('حذف هذه النقطة؟')) { await database.ref(`map_pins/${id}`).remove(); loadMapData(); } };
-  window.editLabel = async function(id) { if (!adminMode) return; const newText = prompt('النص الجديد:'); if (!newText) return; const newDesc = prompt('الوصف الجديد:'); const data = (await database.ref(`map_labels/${id}`).once('value')).val(); if (data) { await database.ref(`map_labels/${id}`).set({ ...data, text: newText, description: newDesc || '' }); loadMapData(); } };
-  window.deleteLabel = async function(id) { if (!adminMode) return; if (confirm('حذف هذه التسمية؟')) { await database.ref(`map_labels/${id}`).remove(); loadMapData(); } };
-  window.editPath = async function(id) { if (!adminMode) return; const newTitle = prompt('اسم المسار الجديد:'); if (!newTitle) return; const newDesc = prompt('الوصف الجديد:'); const data = (await database.ref(`map_paths/${id}`).once('value')).val(); if (data) { await database.ref(`map_paths/${id}`).set({ ...data, title: newTitle, description: newDesc || '' }); loadMapData(); } };
-  window.deletePath = async function(id) { if (!adminMode) return; if (confirm('حذف هذا المسار؟')) { await database.ref(`map_paths/${id}`).remove(); loadMapData(); } };
-
-  function initMap() {
-    if (mapInitialized) return;
-    map = L.map('map').setView([27.0, 30.0], 4);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '© OSM' }).addTo(map);
-    mapInitialized = true;
-    loadMapData();
-    
-    map.on('click', async (e) => {
-      if (!adminMode) return;
-      if (deleteModeActive) { alert('⚠️ اخرج من وضع الحذف أولاً'); return; }
-      
-      if (currentDrawMode === 'pin') {
-        const title = prompt('📍 اسم النقطة (اسم النبي أو المكان):');
-        if (title) {
-          const desc = prompt('📝 وصف القصة:');
-          const newId = `pin_${Date.now()}`;
-          await database.ref(`map_pins/${newId}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, title: title, description: desc || '' });
-          loadMapData();
-        }
-        currentDrawMode = null;
-        document.getElementById('drawingInstruction').style.display = 'none';
-        document.getElementById('addPinBtn').classList.remove('active');
-      } 
-      else if (currentDrawMode === 'label') {
-        const text = prompt('🏷️ النص (اسم الدولة/المدينة):');
-        if (text) {
-          const desc = prompt('📝 وصف إضافي:');
-          const newId = `label_${Date.now()}`;
-          await database.ref(`map_labels/${newId}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, text: text, description: desc || '' });
-          loadMapData();
-        }
-        currentDrawMode = null;
-        document.getElementById('drawingInstruction').style.display = 'none';
-        document.getElementById('addLabelBtn').classList.remove('active');
-      }
-      else if (currentDrawMode === 'path') {
-        currentPathPoints.push(e.latlng);
-        if (currentPolyline) map.removeLayer(currentPolyline);
-        currentPolyline = L.polyline(currentPathPoints, { color: '#ff9800', weight: 5, opacity: 0.9 }).addTo(map);
-      }
-    });
-  }
-
-  document.getElementById('addPinBtn').onclick = () => {
-    if (!adminMode) { alert('❌ فقط المشرف يمكنه إضافة نقاط'); return; }
-    currentDrawMode = 'pin';
-    currentPathPoints = [];
-    if (currentPolyline) map.removeLayer(currentPolyline);
-    document.getElementById('drawingInstruction').innerHTML = '📍 وضع إضافة النقاط - انقر على الخريطة لإضافة نقطة جديدة';
-    document.getElementById('drawingInstruction').style.display = 'block';
-    document.getElementById('addPinBtn').classList.add('active');
-    document.getElementById('addLabelBtn').classList.remove('active');
-    document.getElementById('addPathBtn').classList.remove('active');
-    document.getElementById('finishPathBtn').style.display = 'none';
+// Add card buttons
+['athkar','tafsir','trueHadith','weakHadith'].forEach(type => {
+  const labels = { athkar: 'أذكار', tafsir: 'تفسير', trueHadith: 'حديث صحيح', weakHadith: 'حديث ضعيف أو بدعة' };
+  const btn = document.getElementById(type + 'AddBtn') || document.getElementById(type.replace('H','H') + 'AddBtn');
+  const addBtn = document.getElementById(type === 'trueHadith' ? 'trueHadithAddBtn' : type === 'weakHadith' ? 'weakHadithAddBtn' : type + 'AddBtn');
+  if (addBtn) addBtn.onclick = () => {
+    pendingAddType = type;
+    document.getElementById('addFormTitle').innerHTML = `➕ إضافة ${labels[type]} جديد`;
+    document.getElementById('addFormModal').style.display = 'flex';
   };
+});
+document.getElementById('saveNewCardBtn').onclick = async () => { if (pendingAddType) await addNewCard(pendingAddType); };
+document.getElementById('cancelAddBtn').onclick = () => {
+  document.getElementById('addFormModal').style.display = 'none';
+  document.getElementById('newCardTitle').value = '';
+  document.getElementById('newCardBody').value = '';
+  document.getElementById('newCardFooter').value = '';
+};
+['modalHeader','modalBody','modalFooter'].forEach(id => document.getElementById(id).addEventListener('blur', saveContent));
 
-  document.getElementById('addLabelBtn').onclick = () => {
-    if (!adminMode) { alert('❌ فقط المشرف يمكنه إضافة نصوص'); return; }
-    currentDrawMode = 'label';
-    currentPathPoints = [];
-    if (currentPolyline) map.removeLayer(currentPolyline);
-    document.getElementById('drawingInstruction').innerHTML = '🏷️ وضع إضافة النصوص - انقر على الخريطة لإضافة تسمية (اسم دولة/مدينة)';
-    document.getElementById('drawingInstruction').style.display = 'block';
-    document.getElementById('addLabelBtn').classList.add('active');
-    document.getElementById('addPinBtn').classList.remove('active');
-    document.getElementById('addPathBtn').classList.remove('active');
-    document.getElementById('finishPathBtn').style.display = 'none';
-  };
+// ════════════════════════════════════════════════
+// ZAKAT
+// ════════════════════════════════════════════════
+document.getElementById('calculateZakatBtn').addEventListener('click', () => {
+  const wealth = parseFloat(document.getElementById('wealthAmount').value);
+  const currency = document.getElementById('currencySelect').value;
+  const symbols = { SAR:'﷼', USD:'$', EUR:'€', EGP:'ج.م', AED:'د.إ', KWD:'د.ك', GBP:'£', TRY:'₺', LBP:'ل.ل' };
+  if (isNaN(wealth) || wealth <= 0) { alert('الرجاء إدخال مبلغ صحيح'); return; }
+  document.getElementById('zakatAmount').innerHTML = `${(wealth * 0.025).toFixed(2)} ${symbols[currency] || currency}`;
+  document.getElementById('zakatResult').style.display = 'block';
+});
 
-  document.getElementById('addPathBtn').onclick = () => {
-    if (!adminMode) { alert('❌ فقط المشرف يمكنه رسم المسارات'); return; }
-    currentDrawMode = 'path';
-    currentPathPoints = [];
-    if (currentPolyline) map.removeLayer(currentPolyline);
-    document.getElementById('drawingInstruction').innerHTML = '✏️ وضع رسم المسار - انقر على الخريطة لتحديد النقاط، ثم اضغط "إنهاء المسار"';
-    document.getElementById('drawingInstruction').style.display = 'block';
-    document.getElementById('addPathBtn').classList.add('active');
-    document.getElementById('addPinBtn').classList.remove('active');
-    document.getElementById('addLabelBtn').classList.remove('active');
-    document.getElementById('finishPathBtn').style.display = 'inline-block';
-  };
+// ════════════════════════════════════════════════
+// HIJRI CONVERTER
+// ════════════════════════════════════════════════
+document.getElementById('convertType').addEventListener('change', function() {
+  document.getElementById('gregorianInput').style.display = this.value === 'gregToHijri' ? 'flex' : 'none';
+  document.getElementById('hijriInput').style.display = this.value === 'hijriToGreg' ? 'flex' : 'none';
+});
+document.getElementById('convertBtn').addEventListener('click', () => {
+  const type = document.getElementById('convertType').value;
+  if (type === 'gregToHijri') {
+    const d = parseInt(document.getElementById('day').value), m = parseInt(document.getElementById('month').value), y = parseInt(document.getElementById('year').value);
+    if (isNaN(d)||isNaN(m)||isNaN(y)) { alert('الرجاء إدخال تاريخ صحيح'); return; }
+    document.getElementById('convertedDate').innerHTML = new Intl.DateTimeFormat('ar-TN-u-ca-islamic', { day:'numeric', month:'long', year:'numeric' }).format(new Date(y, m-1, d));
+  } else { alert('جاري تطوير هذه الميزة قريباً'); }
+});
 
-  document.getElementById('finishPathBtn').onclick = async () => {
-    if (!adminMode) return;
-    if (currentPathPoints.length < 2) {
-      alert('يلزم نقطتان على الأقل لرسم مسار');
-      return;
+// ════════════════════════════════════════════════
+// CALENDAR
+// ════════════════════════════════════════════════
+let currentYear = new Date().getFullYear(), currentMonth = new Date().getMonth(), events = {};
+
+async function loadEvents() { events = (await database.ref('events').once('value')).val() || {}; renderCalendar(); }
+
+async function deleteEventFromDay(dateKey) {
+  if (!adminMode) return;
+  if (confirm('هل تريد حذف هذا الحدث؟')) {
+    delete events[dateKey];
+    await database.ref(`events/${dateKey}`).remove();
+    renderCalendar();
+  }
+}
+
+async function addEventToDay(dateKey) {
+  if (events[dateKey]?.description) { alert(`📅 حدث هذا اليوم:\n\n${events[dateKey].description}`); return; }
+  if (!adminMode) { alert('لا توجد مناسبة في هذا اليوم.'); return; }
+  const desc = prompt('📝 أضف وصفاً لهذا اليوم:');
+  if (desc?.trim()) {
+    events[dateKey] = { description: desc };
+    await database.ref(`events/${dateKey}`).set({ description: desc });
+    renderCalendar();
+  }
+}
+
+function renderCalendar() {
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+  const grid = document.getElementById('calendarDays');
+  if (!grid) return;
+  grid.innerHTML = '';
+  ['أحد','إثنين','ثلاثاء','أربعاء','خميس','جمعة','سبت'].forEach(day => {
+    const d = document.createElement('div'); d.className = 'weekday'; d.innerText = day; grid.appendChild(d);
+  });
+  for (let i = 0; i < firstDay; i++) { const e = document.createElement('div'); e.className = 'day-cell'; grid.appendChild(e); }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const cell = document.createElement('div'); cell.className = 'day-cell'; cell.innerText = d;
+    const dateKey = `${currentYear}-${currentMonth+1}-${d}`;
+    if (events[dateKey]?.description) {
+      cell.classList.add('has-event');
+      const prev = document.createElement('div'); prev.className = 'day-event-preview';
+      prev.innerText = events[dateKey].description.substring(0, 12) + (events[dateKey].description.length > 12 ? '...' : '');
+      cell.appendChild(prev);
+      if (adminMode) {
+        const delBtn = document.createElement('button'); delBtn.className = 'delete-event-btn'; delBtn.innerHTML = '×';
+        delBtn.onclick = e => { e.stopPropagation(); deleteEventFromDay(dateKey); };
+        cell.appendChild(delBtn);
+      }
     }
-    const title = prompt('🏷️ اسم المسار (مثل: هجرة النبي ﷺ):');
-    if (title) {
-      const desc = prompt('📝 وصف المسار:');
-      const newId = `path_${Date.now()}`;
-      await database.ref(`map_paths/${newId}`).set({
-        points: currentPathPoints.map(p => ({ lat: p.lat, lng: p.lng })),
-        title: title,
-        description: desc || ''
-      });
+    cell.onclick = () => addEventToDay(dateKey);
+    grid.appendChild(cell);
+  }
+  document.getElementById('monthYear').innerHTML = `${currentYear}/${currentMonth+1}`;
+}
+document.getElementById('prevMonth').addEventListener('click', () => { currentMonth--; if(currentMonth<0){currentMonth=11;currentYear--;} renderCalendar(); });
+document.getElementById('nextMonth').addEventListener('click', () => { currentMonth++; if(currentMonth>11){currentMonth=0;currentYear++;} renderCalendar(); });
+
+// ════════════════════════════════════════════════
+// MAP
+// ════════════════════════════════════════════════
+function createCustomLabel(lat, lng, text) {
+  return L.marker([lat, lng], { icon: L.divIcon({ className: 'custom-label', html: `<div style="background:#2c5e2e;color:white;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:bold;font-family:Tajawal;">${text}</div>`, iconSize: [null, null] }) });
+}
+
+async function loadMapData() {
+  if (!mapInitialized) return;
+  [...Object.values(markers), ...Object.values(labels), ...Object.values(polylines)].forEach(l => map.removeLayer(l));
+  markers = {}; labels = {}; polylines = {};
+  const pins = (await database.ref('map_pins').once('value')).val() || {};
+  for (let id in pins) {
+    const pin = pins[id];
+    const m = L.marker([pin.lat, pin.lng]).addTo(map);
+    const desc = convertUrlsToHtml(pin.description || '');
+    m.bindPopup(`<b>📍 ${pin.title}</b><br><p>${desc}</p>${adminMode ? `<br><button onclick="editPin('${id}')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;margin:2px;cursor:pointer;font-family:Tajawal;">✏️</button><button onclick="deletePin('${id}')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;margin:2px;cursor:pointer;font-family:Tajawal;">🗑️</button>` : ''}`);
+    m.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>📍 ${pin.title}</strong><br><p>${desc}</p>`);
+    markers[id] = m;
+  }
+  const mapLabels = (await database.ref('map_labels').once('value')).val() || {};
+  for (let id in mapLabels) {
+    const label = mapLabels[id];
+    const lm = createCustomLabel(label.lat, label.lng, label.text);
+    lm.addTo(map);
+    const desc = convertUrlsToHtml(label.description || '');
+    lm.bindPopup(`<b>🏷️ ${label.text}</b><br><p>${desc}</p>${adminMode ? `<br><button onclick="editLabel('${id}')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;cursor:pointer;font-family:Tajawal;">✏️</button><button onclick="deleteLabel('${id}')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;cursor:pointer;font-family:Tajawal;">🗑️</button>` : ''}`);
+    lm.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>🏷️ ${label.text}</strong><br><p>${desc}</p>`);
+    labels[id] = lm;
+  }
+  const paths = (await database.ref('map_paths').once('value')).val() || {};
+  for (let id in paths) {
+    const path = paths[id];
+    const pl = L.polyline(path.points.map(p => [p.lat, p.lng]), { color: '#2c5e2e', weight: 4, opacity: 0.8 }).addTo(map);
+    const desc = convertUrlsToHtml(path.description || '');
+    pl.bindPopup(`<b>🗺️ ${path.title || 'مسار'}</b><br><p>${desc}</p>${adminMode ? `<br><button onclick="editPath('${id}')" style="background:#2c5e2e;color:white;border:none;padding:3px 8px;border-radius:15px;cursor:pointer;font-family:Tajawal;">✏️</button><button onclick="deletePath('${id}')" style="background:#f44336;color:white;border:none;padding:3px 8px;border-radius:15px;cursor:pointer;font-family:Tajawal;">🗑️</button>` : ''}`);
+    pl.on('click', () => document.getElementById('storyContent').innerHTML = `<strong>🗺️ ${path.title || 'مسار'}</strong><br><p>${desc}</p>`);
+    polylines[id] = pl;
+  }
+}
+
+window.editPin = async id => { if (!adminMode) return; const t = prompt('الاسم الجديد:'); if (!t) return; const d = prompt('الوصف:'); const data = (await database.ref(`map_pins/${id}`).once('value')).val(); if (data) { await database.ref(`map_pins/${id}`).set({ ...data, title: t, description: d || '' }); loadMapData(); } };
+window.deletePin = async id => { if (!adminMode||!confirm('حذف؟')) return; await database.ref(`map_pins/${id}`).remove(); loadMapData(); };
+window.editLabel = async id => { if (!adminMode) return; const t = prompt('النص الجديد:'); if (!t) return; const d = prompt('الوصف:'); const data = (await database.ref(`map_labels/${id}`).once('value')).val(); if (data) { await database.ref(`map_labels/${id}`).set({ ...data, text: t, description: d || '' }); loadMapData(); } };
+window.deleteLabel = async id => { if (!adminMode||!confirm('حذف؟')) return; await database.ref(`map_labels/${id}`).remove(); loadMapData(); };
+window.editPath = async id => { if (!adminMode) return; const t = prompt('اسم المسار:'); if (!t) return; const d = prompt('الوصف:'); const data = (await database.ref(`map_paths/${id}`).once('value')).val(); if (data) { await database.ref(`map_paths/${id}`).set({ ...data, title: t, description: d || '' }); loadMapData(); } };
+window.deletePath = async id => { if (!adminMode||!confirm('حذف؟')) return; await database.ref(`map_paths/${id}`).remove(); loadMapData(); };
+
+function initMap() {
+  if (mapInitialized) return;
+  map = L.map('map').setView([27.0, 30.0], 4);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '© OSM' }).addTo(map);
+  mapInitialized = true;
+  loadMapData();
+  map.on('click', async e => {
+    if (!adminMode || deleteModeActive) return;
+    if (currentDrawMode === 'pin') {
+      const title = prompt('📍 اسم النقطة:'); if (!title) return;
+      const desc = prompt('📝 وصف القصة:');
+      const newId = `pin_${Date.now()}`;
+      await database.ref(`map_pins/${newId}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, title, description: desc || '' });
       loadMapData();
+      currentDrawMode = null; document.getElementById('drawingInstruction').style.display = 'none'; document.getElementById('addPinBtn').classList.remove('active');
+    } else if (currentDrawMode === 'label') {
+      const text = prompt('🏷️ النص:'); if (!text) return;
+      const desc = prompt('📝 وصف:');
+      await database.ref(`map_labels/label_${Date.now()}`).set({ lat: e.latlng.lat, lng: e.latlng.lng, text, description: desc || '' });
+      loadMapData();
+      currentDrawMode = null; document.getElementById('drawingInstruction').style.display = 'none'; document.getElementById('addLabelBtn').classList.remove('active');
+    } else if (currentDrawMode === 'path') {
+      currentPathPoints.push(e.latlng);
+      if (currentPolyline) map.removeLayer(currentPolyline);
+      currentPolyline = L.polyline(currentPathPoints, { color: '#ff9800', weight: 5, opacity: 0.9 }).addTo(map);
     }
-    currentDrawMode = null;
-    if (currentPolyline) map.removeLayer(currentPolyline);
-    currentPathPoints = [];
-    document.getElementById('drawingInstruction').style.display = 'none';
-    document.getElementById('addPathBtn').classList.remove('active');
-    document.getElementById('finishPathBtn').style.display = 'none';
-  };
-
-  document.getElementById('cancelDrawBtn').onclick = () => {
-    currentDrawMode = null;
-    if (currentPolyline) map.removeLayer(currentPolyline);
-    currentPathPoints = [];
-    document.getElementById('drawingInstruction').style.display = 'none';
-    document.getElementById('addPinBtn').classList.remove('active');
-    document.getElementById('addLabelBtn').classList.remove('active');
-    document.getElementById('addPathBtn').classList.remove('active');
-    document.getElementById('finishPathBtn').style.display = 'none';
-  };
-
-  document.getElementById('deleteModeBtn').onclick = () => {
-    if (!adminMode) return;
-    deleteModeActive = !deleteModeActive;
-    document.getElementById('deleteModeBtn').style.background = deleteModeActive ? '#d32f2f' : '#f44336';
-    document.getElementById('deleteModeBtn').innerHTML = deleteModeActive ? '🚫 خروج من الحذف' : '🗑️ وضع الحذف';
-    if (deleteModeActive) alert('🗑️ وضع الحذف مفعل. انقر على أي عنصر (نقطة، تسمية، مسار) ثم اضغط زر الحذف في النافذة المنبثقة');
-  };
-
-  document.querySelectorAll('.subpage-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.subpage-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.querySelectorAll('.subpage-content').forEach(c => c.classList.remove('active'));
-      document.getElementById(btn.getAttribute('data-subpage')).classList.add('active');
-    });
   });
+}
 
-  document.querySelectorAll('.nav-link').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(btn.getAttribute('data-page')).classList.add('active');
-      if (btn.getAttribute('data-page') === 'stories') initMap();
-      if (btn.getAttribute('data-page') === 'days') loadEvents();
-      searchResults.style.display = 'none'; searchInput.value = '';
-    });
+document.getElementById('addPinBtn').onclick = () => { if(!adminMode)return; currentDrawMode='pin'; currentPathPoints=[]; if(currentPolyline)map.removeLayer(currentPolyline); document.getElementById('drawingInstruction').innerHTML='📍 انقر على الخريطة لإضافة نقطة'; document.getElementById('drawingInstruction').style.display='block'; document.getElementById('addPinBtn').classList.add('active'); document.getElementById('addLabelBtn').classList.remove('active'); document.getElementById('addPathBtn').classList.remove('active'); document.getElementById('finishPathBtn').style.display='none'; };
+document.getElementById('addLabelBtn').onclick = () => { if(!adminMode)return; currentDrawMode='label'; currentPathPoints=[]; if(currentPolyline)map.removeLayer(currentPolyline); document.getElementById('drawingInstruction').innerHTML='🏷️ انقر على الخريطة لإضافة تسمية'; document.getElementById('drawingInstruction').style.display='block'; document.getElementById('addLabelBtn').classList.add('active'); document.getElementById('addPinBtn').classList.remove('active'); document.getElementById('addPathBtn').classList.remove('active'); document.getElementById('finishPathBtn').style.display='none'; };
+document.getElementById('addPathBtn').onclick = () => { if(!adminMode)return; currentDrawMode='path'; currentPathPoints=[]; if(currentPolyline)map.removeLayer(currentPolyline); document.getElementById('drawingInstruction').innerHTML='✏️ انقر لتحديد النقاط ثم اضغط "إنهاء المسار"'; document.getElementById('drawingInstruction').style.display='block'; document.getElementById('addPathBtn').classList.add('active'); document.getElementById('addPinBtn').classList.remove('active'); document.getElementById('addLabelBtn').classList.remove('active'); document.getElementById('finishPathBtn').style.display='inline-block'; };
+document.getElementById('finishPathBtn').onclick = async () => {
+  if (!adminMode||currentPathPoints.length<2) { alert('يلزم نقطتان على الأقل'); return; }
+  const title = prompt('🏷️ اسم المسار:'); if (!title) return;
+  const desc = prompt('📝 وصف المسار:');
+  await database.ref(`map_paths/path_${Date.now()}`).set({ points: currentPathPoints.map(p => ({ lat: p.lat, lng: p.lng })), title, description: desc || '' });
+  loadMapData();
+  currentDrawMode=null; if(currentPolyline)map.removeLayer(currentPolyline); currentPathPoints=[];
+  document.getElementById('drawingInstruction').style.display='none'; document.getElementById('addPathBtn').classList.remove('active'); document.getElementById('finishPathBtn').style.display='none';
+};
+document.getElementById('cancelDrawBtn').onclick = () => { currentDrawMode=null; if(currentPolyline)map.removeLayer(currentPolyline); currentPathPoints=[]; document.getElementById('drawingInstruction').style.display='none'; ['addPinBtn','addLabelBtn','addPathBtn'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('active');}); document.getElementById('finishPathBtn').style.display='none'; };
+document.getElementById('deleteModeBtn').onclick = () => { if(!adminMode)return; deleteModeActive=!deleteModeActive; document.getElementById('deleteModeBtn').style.background=deleteModeActive?'#b71c1c':'#f44336'; document.getElementById('deleteModeBtn').innerHTML=deleteModeActive?'🚫 خروج من الحذف':'🗑️ وضع الحذف'; if(deleteModeActive)alert('🗑️ اضغط على العنصر في الخريطة ثم زر الحذف في النافذة'); };
+
+// ════════════════════════════════════════════════
+// SUBPAGE TABS
+// ════════════════════════════════════════════════
+document.querySelectorAll('.subpage-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.subpage-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.subpage-content').forEach(c => c.classList.remove('active'));
+    document.getElementById(btn.dataset.subpage).classList.add('active');
   });
+});
 
-  function initializeFeatures() {
-    updateHijriDate(); setInterval(updateHijriDate, 60000);
-    const v = getDailyVerse(quranVerses); document.getElementById('verseText').innerHTML = `﴿ ${v.text} ﴾`; document.getElementById('verseReference').innerHTML = v.ref;
-    const z = getDailyVerse(zakatVerses); document.getElementById('zakatVerseText').innerHTML = `﴿ ${z.text} ﴾`; document.getElementById('zakatVerseRef').innerHTML = z.ref;
-    const h = getDailyVerse(hijriVerses); document.getElementById('hijriVerseText').innerHTML = `﴿ ${h.text} ﴾`; document.getElementById('hijriVerseRef').innerHTML = h.ref;
-    const mh = getDailyHadith(mainHadiths); document.getElementById('mainHadithText').innerHTML = `﴿ ${mh.text} ﴾`; document.getElementById('mainHadithSource').innerHTML = mh.source;
-    const th = getDailyHadith(trueHadiths); document.getElementById('trueHadithText').innerHTML = `﴿ ${th.text} ﴾`; document.getElementById('trueHadithSource').innerHTML = th.source;
-    const wh = getWeakHadith(); document.getElementById('weakHadithText').innerHTML = `﴿ ${wh.text} ﴾`; document.getElementById('weakHadithSource').innerHTML = wh.source;
-  }
+// ════════════════════════════════════════════════
+// NAV
+// ════════════════════════════════════════════════
+document.querySelectorAll('.nav-link').forEach(btn => {
+  btn.addEventListener('click', () => navTo(btn.dataset.page));
+});
 
-  document.getElementById('calculateZakatBtn').addEventListener('click', calculateZakat);
-  document.getElementById('convertBtn').addEventListener('click', convertDate);
-  initializeFeatures(); loadEvents(); renderCalendar();
-  console.log('✅ Platform ready with fixed calendar (everyone can see events, admin can add/delete)!');
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+function init() {
+  document.getElementById('hijriDateDisplay').innerHTML = getHijriDate();
+  setInterval(() => { document.getElementById('hijriDateDisplay').innerHTML = getHijriDate(); }, 60000);
+
+  const v = getDailyItem(quranVerses);
+  document.getElementById('verseText').innerHTML = v.text;
+  document.getElementById('verseReference').innerHTML = v.ref;
+
+  const z = getDailyItem(zakatVerses);
+  document.getElementById('zakatVerseText').innerHTML = z.text;
+  document.getElementById('zakatVerseRef').innerHTML = z.ref;
+
+  const h = getDailyItem(hijriVerses);
+  document.getElementById('hijriVerseText').innerHTML = h.text;
+  document.getElementById('hijriVerseRef').innerHTML = h.ref;
+
+  const mh = getDailyItem(mainHadiths);
+  document.getElementById('mainHadithText').innerHTML = `﴿ ${mh.text} ﴾`;
+  document.getElementById('mainHadithSource').innerHTML = mh.source;
+
+  const th = getDailyItem(trueHadiths);
+  document.getElementById('trueHadithText').innerHTML = `﴿ ${th.text} ﴾`;
+  document.getElementById('trueHadithSource').innerHTML = th.source;
+
+  const wh = getDailyItem(weakHadiths);
+  document.getElementById('weakHadithText').innerHTML = `﴿ ${wh.text} ﴾`;
+  document.getElementById('weakHadithSource').innerHTML = wh.source;
+
+  // Set prayer verse
+  const pv = getDailyItem(prayerVerses);
+  document.getElementById('prayerVerseText').innerHTML = pv.text;
+  document.getElementById('prayerVerseRef').innerHTML = `<span>${pv.ref}</span>`;
+
+  loadEvents();
+  renderCalendar();
+  navTo('home');
+}
+
+init();
 </script>
 </body>
 </html>
